@@ -230,7 +230,7 @@ public class TurkeyBot extends PircBot
 		try{
 			botName = accountSettingsFile.getSetting("AccountName");
 			setName(botName);
-			connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
+			connect("irc.twitch.tv", 6667);
 			//ConsoleTab.output(Level.Normal, SecretStuff.oAuth);
 			connected = true;
 		}catch(Exception e){connected = false; ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());return;}
