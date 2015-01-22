@@ -23,7 +23,7 @@ public class AddCommandGui implements ActionListener
 	private JTextField commandName;
 	private JLabel responseLabel;
 	private TextArea response;
-	
+
 	private JLabel permissionLabel;
 	private JComboBox<?> permSelect;
 
@@ -55,12 +55,12 @@ public class AddCommandGui implements ActionListener
 		responseLabel.setLocation(10,50);
 		responseLabel.setSize(75, 25);
 		popup.add(responseLabel);
-		
+
 		permissionLabel = new JLabel("Permission Level");
 		permissionLabel.setLocation(10,110);
 		permissionLabel.setSize(150, 25);
 		popup.add(permissionLabel);
-		
+
 		permSelect = new JComboBox(TurkeyBot.getPermissions());
 		permSelect.setLocation(125,110);
 		permSelect.setSize(100, 25);
@@ -94,13 +94,16 @@ public class AddCommandGui implements ActionListener
 				Command command = new Command(commandName.getText(), response.getText());
 				command.setPermissionLevel((String)permSelect.getSelectedItem());
 				Gui.getBot().addCommand(command);
-				Gui.getBot().sendMessage("Added Command " + "!" + commandName.getText());
+				if(Gui.getBot().settings.getSettingAsBoolean("outputchanges"))
+				{
+					Gui.getBot().sendMessage("Added Command " + "!" + commandName.getText());
+				}
 				Gui.reloadTab();
 				popup.dispose();
 			}
 		}
 	}
-	
+
 	public void error(String error)
 	{
 		JFrame errorpopup = new JFrame();
@@ -111,7 +114,7 @@ public class AddCommandGui implements ActionListener
 		errorpopup.setTitle("Error");
 		errorpopup.setVisible(true);
 		errorpopup.setResizable(false);
-		
+
 		JLabel commandLabel = new JLabel(error);
 		commandLabel.setLocation(10,15);
 		commandLabel.setSize(300, 25);

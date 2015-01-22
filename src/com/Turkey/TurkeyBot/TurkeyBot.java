@@ -122,7 +122,7 @@ public class TurkeyBot extends PircBot
 					Command c = getCommandFromName("!" + name);
 					c.getFile().loadCommand();
 				}
-				
+
 			}catch(IOException e){}
 		}
 	}
@@ -394,7 +394,10 @@ public class TurkeyBot extends PircBot
 	{
 		commands.remove(("!" + command.getName()).toLowerCase());
 		command.getFile().removeCommand();
-		sendMessage("Removed command " + command.getName());
+		if(settings.getSettingAsBoolean("outputchanges"))
+		{
+			sendMessage("Removed command " + command.getName());
+		}
 	}
 
 	public String getCurrencyName()

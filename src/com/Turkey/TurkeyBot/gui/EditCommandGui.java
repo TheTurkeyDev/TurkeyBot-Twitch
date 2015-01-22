@@ -69,7 +69,7 @@ public class EditCommandGui implements ActionListener
 		permissionLabel.setLocation(10,110);
 		permissionLabel.setSize(75, 25);
 		popup.add(permissionLabel);
-		
+
 		permSelect = new JComboBox(TurkeyBot.getPermissions());
 		permSelect.setLocation(125,110);
 		permSelect.setSize(100, 25);
@@ -100,7 +100,10 @@ public class EditCommandGui implements ActionListener
 			command.setResponse(response.getText());
 			command.setPermissionLevel((String)permSelect.getSelectedItem());
 			command.getFile().updateCommand();
-			Gui.getBot().sendMessage("Command !" + command.getName() + " was successfully edited");
+			if(Gui.getBot().settings.getSettingAsBoolean("outputchanges"))
+			{
+				Gui.getBot().sendMessage("Command !" + command.getName() + " was successfully edited");
+			}
 			popup.dispose();
 		}
 	}
