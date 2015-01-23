@@ -56,6 +56,11 @@ public class ConsoleTab extends Tab implements KeyListener
 		consoleEntry.setVisible(false);
 	}
 
+	/**
+	 * Outputs the given message to the console.
+	 * @param level The level of the message. Added onto the beginning of the message in the console window.
+	 * @param message The message to be added to the console window.
+	 */
 	public static void output(Level level, String message)
 	{
 		if(level == Level.Chat)

@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 public class Tab
 {
+	//TODO: HOLY MOTHER OF BALLS I NEED TO CHANGE THIS. THIS IS SO BAD.
 	JFrame frame;
 	
 	public Tab(JFrame jframe)
@@ -11,10 +12,17 @@ public class Tab
 		frame = jframe;
 	}
 	
+	/**
+	 * Loads the elements of the tab.
+	 */
 	public void load()
 	{
 		
 	}
+	
+	/**
+	 * Unloads the elements of the tab.
+	 */
 	public void unLoad()
 	{
 		

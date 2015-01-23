@@ -19,6 +19,10 @@ public class AccountSettings extends BotFile
 		loadSettings();
 	}
 
+	/**
+	 * Loads the default settings of the properties file.
+	 * @throws IOException
+	 */
 	public void loadSettings() throws IOException
 	{
 		Properties defaultproperties = new Properties();
@@ -39,6 +43,10 @@ public class AccountSettings extends BotFile
 		save();
 	}
 
+	/**
+	 * Gets all of the keys of the file.
+	 * @return
+	 */
 	public Set<Object> getSettings()
 	{
 		return properties.keySet();

@@ -23,6 +23,9 @@ public class Start
 		}
 	}
 
+	/**
+	 * Checks for an update to the bot.
+	 */
 	private static void checkVersion()
 	{
 		String result = "";

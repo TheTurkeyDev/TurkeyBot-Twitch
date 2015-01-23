@@ -104,6 +104,10 @@ public class AddCommandGui implements ActionListener
 		}
 	}
 
+	/**
+	 * Called if an error occurs while changing the settings.
+	 * @param error
+	 */
 	public void error(String error)
 	{
 		JFrame errorpopup = new JFrame();

@@ -36,6 +36,10 @@ public class ResponseSettings extends BotFile
 		save();
 	}
 	
+	/**
+	 * Gets all of the Keys of the settings in the file.
+	 * @return The keys of the settings.
+	 */
 	public Set<Object> getSettings()
 	{
 		return properties.keySet();

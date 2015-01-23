@@ -49,6 +49,12 @@ public class ModerateChat
 		}catch(Exception e){};
 	}
 
+	/**
+	 * Returns if the given message is valid to be said in chat or if the chat message should be filtered
+	 * @param message The chat message to parse through.
+	 * @param sender the username that sent the message
+	 * @return if the message is ok or false if it should be filtered
+	 */
 	public boolean isValidChat(String m, String sender)
 	{
 		message = m.split(" ");
@@ -86,8 +92,15 @@ public class ModerateChat
 		return true;
 	}
 
+	/**
+	 * Parses through the words of the message and checks for any flags in the chat message.
+	 * Checks for Caps, length, Blacklisted words/ Astrixs, Emotes and Symbols.
+	 * @return The Error Type of the chat message. ErrorType.None if no flag is raised.
+	 */
 	public ErrorType passesWordCheck()
-	{	
+	{
+		//TODO: Fix emotes check as not all emotes are checked for.
+		
 		int caps = 0;
 		int letters = 0;
 		int symbols = 0;
@@ -149,8 +162,13 @@ public class ModerateChat
 		return ErrorType.None;
 	}
 
+	/**
+	 * Checks for possible links in the chat message.
+	 * @return ErrorType.Link if a link is used or ErrorType.None is chat message has no links.
+	 */
 	public ErrorType passesLinkCheck()
 	{
+		//TODO: Need a better way to check for valid links. Also needs to check for links within words.
 		if(!Boolean.parseBoolean(bot.chatSettings.getSetting("BlockLinks")))
 		{
 			return ErrorType.None;
@@ -173,6 +191,11 @@ public class ModerateChat
 		return ErrorType.None;
 	}
 
+	/**
+	 * Checks if the given word is on the black list.
+	 * @param tocheck The word to check against the black list.
+	 * @return If the word is black listed or not.
+	 */
 	public boolean isBlackListed(String tocheck)
 	{
 		for(String blackword: blackList)
@@ -183,6 +206,10 @@ public class ModerateChat
 		return false;
 	}
 
+	/**
+	 * Possible error Types on a given chat message
+	 *
+	 */
 	public enum ErrorType
 	{
 		Caps,

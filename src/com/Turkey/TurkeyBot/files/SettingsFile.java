@@ -37,6 +37,11 @@ public class SettingsFile extends BotFile
 		save();
 	}
 	
+	/**
+	 * Returns the given settings as a boolean
+	 * @param key The key to get the setting/ value of.
+	 * @return The boolean value of the given key.
+	 */
 	public boolean getSettingAsBoolean(String key)
 	{
 		try{
@@ -45,6 +50,10 @@ public class SettingsFile extends BotFile
 		}catch(Exception e){ConsoleTab.output(Level.Error, "Value for " + key + " is not a boolean!");return false;}
 	}
 	
+	/**
+	 * Gets all of the Keys of the settings in the file.
+	 * @return The keys of the settings.
+	 */
 	public Set<Object> getSettings()
 	{
 		return properties.keySet();

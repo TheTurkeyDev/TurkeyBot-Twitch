@@ -6,6 +6,10 @@ import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 
 public class ConsoleCommands
 {
+	/**
+	 * Called when someone enters a line in the console.
+	 * @param args The arguments of the message
+	 */
 	public static void onCommand(String[] args)
 	{
 		if(args[0].substring(0,1).equalsIgnoreCase("/"))

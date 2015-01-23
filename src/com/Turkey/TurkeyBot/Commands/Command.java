@@ -52,6 +52,15 @@ public class Command
 		args = higharg;
 	}
 
+	/**
+	 * Called when a command is entered in the chat.
+	 * @param bot The TurkryBot instance.
+	 * @param channel The current channel the bot is in.
+	 * @param sender The user that sent the command.
+	 * @param login Not sure what this is.
+	 * @param hostname Twitch by default as we are on twitch servers if moderating a stream.
+	 * @param message The full message entered.
+	 */
 	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
 	{
 		if(response == "")
@@ -69,11 +78,20 @@ public class Command
 		bot.sendMessage(resposeEdited);
 	}
 
+	/**
+	 * Gets the permission level of the command.
+	 * User by default.
+	 * @return The permission level of the command.
+	 */
 	public String getPermissionLevel()
 	{
 		return permLevel;
 	}
 
+	/**
+	 * Sets the permission level of the command.
+	 * @param level The level to change the permission to.
+	 */
 	public void setPermissionLevel(String lev)
 	{
 		if(isValidPerm(lev))
@@ -83,6 +101,11 @@ public class Command
 
 	}
 
+	/**
+	 * Returns if the permission level is valid.
+	 * @param perm The permission level to test validity of.
+	 * @return If the permission level is valid.
+	 */
 	public boolean isValidPerm(String p)
 	{
 		String perm = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
@@ -92,37 +115,71 @@ public class Command
 		return false;
 	}
 
+	/**
+	 * If the command can be edited.
+	 * @return If the command is editable.
+	 */
 	public boolean canEdit()
 	{
 		return true;
 	}
 
+	/**
+	 * Returns the name of the command.
+	 * @return The command name.
+	 */
 	public String getName()
 	{
 		return name;
 	}
+	
+	/**
+	 * Gets the text response of the command if the command is entered.
+	 * @return The commands response.
+	 */
 	public String getReponse()
 	{
 		return response;
 	}
+	
+	/**
+	 * Sets the text response of the command.
+	 * @param res The new response for the command.
+	 */
 	public void setResponse(String res)
 	{
 		response = res;
 	}
 
+	/**
+	 * Enables the command to be used.
+	 */
 	public void enable()
 	{
 		enabled = true;
 	}
+	
+	/**
+	 * Disables the command from being used.
+	 */
 	public void disable()
 	{
 		enabled = false;
 	}
+	
+	/**
+	 * Returns if the command is enabled or not. 
+	 * @return If the command is enabled.
+	 */
 	public boolean isEnabled()
 	{
 		return enabled;
 	}
 
+	/**
+	 * Gets the command file of the command containing all of the command data that is stored on a file.
+	 * @return The commands file.
+	 */
 	public CommandFile getFile()
 	{
 		return file;

@@ -31,17 +31,30 @@ public class BotFile
 		properties.load(iStream);
 	}
 	
+	/**
+	 * Outputs a given setting to the file.
+	 * @param key The key of the setting.
+	 * @param value The value of the key to be stored.
+	 */
 	public void setSetting(String key, Object o)
 	{
 		properties.setProperty(key, o.toString());
 		save();
 	}
 	
+	/**
+	 * Gets a given value or setting based on the given key.
+	 * @param key The key of the setting to get the value of.
+	 * @return The value of the given key.
+	 */
 	public String getSetting(String key)
 	{
 		return properties.getProperty(key);
 	}
 	
+	/**
+	 * Saves the given file.
+	 */
 	public void save()
 	{
 		try

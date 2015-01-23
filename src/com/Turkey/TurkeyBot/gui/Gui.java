@@ -33,7 +33,10 @@ public class Gui extends JFrame implements ActionListener
 
 	private static TurkeyBot bot;
 
-	// constructor
+	/**
+	 * Initiates the Gui side of the bot.
+	 * @param b The instance of the bot.
+	 */
 	public Gui(TurkeyBot b)
 	{
 		bot = b;
@@ -189,11 +192,18 @@ public class Gui extends JFrame implements ActionListener
 
 	}
 
+	/**
+	 * Gets the instance of the bot
+	 * @return
+	 */
 	public static TurkeyBot getBot()
 	{
 		return bot;
 	}
 
+	/**
+	 * Reloads the current tab.
+	 */
 	public static void reloadTab()
 	{
 		currentTab.unLoad();

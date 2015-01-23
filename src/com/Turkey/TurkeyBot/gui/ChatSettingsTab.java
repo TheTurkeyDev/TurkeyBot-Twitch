@@ -140,6 +140,9 @@ public class ChatSettingsTab extends Tab implements ActionListener
 		components.clear();
 	}
 
+	/**
+	 * Saves settings of the bot from this tab
+	 */
 	public void saveSettings()
 	{
 		for(JComponent comp: components)

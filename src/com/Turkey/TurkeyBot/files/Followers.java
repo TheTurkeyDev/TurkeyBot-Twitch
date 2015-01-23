@@ -26,6 +26,9 @@ public class Followers extends BotFile implements Runnable
 		thread.start();
 	}
 
+	/**
+	 * Starts the thread the controls the follower check
+	 */
 	@Override
 	public void run()
 	{
@@ -76,6 +79,9 @@ public class Followers extends BotFile implements Runnable
 		}
 	}
 
+	/**
+	 * Checks for any new followers since last time the bot ran.
+	 */
 	public void loadFollowers()
 	{
 		String result = "";
@@ -138,6 +144,9 @@ public class Followers extends BotFile implements Runnable
 		System.out.println("Added Followers");
 	}
 
+	/**
+	 * Checks for new followers.
+	 */
 	public void checkFollowers()
 	{
 		String result = "";

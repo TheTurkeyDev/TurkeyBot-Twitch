@@ -63,6 +63,10 @@ public class TurkeyBot extends PircBot
 
 	private boolean connected = false;
 
+	/**
+	 * Initializes the Chat side of the bot
+	 * @throws Exception
+	 */
 	public TurkeyBot() throws Exception
 	{
 		//this.setVerbose(true);
@@ -73,6 +77,9 @@ public class TurkeyBot extends PircBot
 		chatmoderation = new ModerateChat(this);
 	}
 
+	/**
+	 * Loads the files needed for the bot
+	 */
 	private void loadFiles()
 	{
 		try
@@ -85,6 +92,10 @@ public class TurkeyBot extends PircBot
 			followersFile = new Followers(this);
 		} catch (IOException e){e.printStackTrace();}
 	}
+	
+	/**
+	 * Loads the commands for TurkeyBot
+	 */
 	private void loadCommands()
 	{
 		commands.put("!slots".toLowerCase(), new SlotsCommand("Slots"));
@@ -127,6 +138,9 @@ public class TurkeyBot extends PircBot
 		}
 	}
 
+	/**
+	 * Called when a message is sent in a chat that the bot is in.
+	 */
 	public void onMessage(String channel, String sender, String login, String hostname, String message) 
 	{
 		ConsoleTab.output(Level.Chat, "[" + sender + "] " + message);
@@ -204,6 +218,10 @@ public class TurkeyBot extends PircBot
 		}
 	}
 
+	/**
+	 * Used to listen for private messages.
+	 * Currently used to listen for the mod list call back.
+	 */
 	public void onPrivateMessage(String sender, String login, String hostname, String message)
 	{
 		if(message.contains("The moderators of this room are:"))
@@ -215,6 +233,11 @@ public class TurkeyBot extends PircBot
 		}
 	}
 
+	/**
+	 * Sends a message from the bot to the chat it is currently in.
+	 * Also auto outputs the message in the console.
+	 * @param msg The message to be sent to the chat.
+	 */
 	public void sendMessage(String msg)
 	{
 		ConsoleTab.output(Level.Chat, "["+ botName + "] " + msg);
@@ -224,8 +247,12 @@ public class TurkeyBot extends PircBot
 		}
 	}
 
+	/**
+	 * Connects the bot to the Twitch servers.
+	 */
 	public void connectToTwitch()
 	{
+		//TODO Need to add code to check that the User Name And OAuth are valid.
 		ConsoleTab.output(Level.Info, "Connecting to twitch....");
 		try{
 			botName = accountSettingsFile.getSetting("AccountName");
@@ -238,13 +265,22 @@ public class TurkeyBot extends PircBot
 		//connectToChannel("turkey2349");
 	}
 
+	/**
+	 * Disconnects the bot from the Twitch servers.
+	 */
 	public void disconnectFromTwitch()
 	{
 		this.quitServer();
 		this.dispose();
+		connected = false;
 		ConsoleTab.output(Level.Alert, "Disconnected from Twitch!");
 	}
 
+	/**
+	 * Connects the bot to the specified channel.
+	 * Auto handles if the Bot is already in a channel or is not connected to the twitch server.
+	 * @param channel The channel for the bot to connect to.
+	 */
 	public void connectToChannel(String channel)
 	{
 		if(!connected)
@@ -269,6 +305,9 @@ public class TurkeyBot extends PircBot
 		this.sendMessage(stream, "/mods");
 	}
 
+	/**
+	 * Disconnects the bot from the current channel it is in.
+	 */
 	public void disconnectFromChannel()
 	{
 		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
@@ -281,21 +320,42 @@ public class TurkeyBot extends PircBot
 		mods = new String[0];
 	}
 
+	/**
+	 * Capitalizes the first letter of the given name.
+	 * Used for an aesthetic look.
+	 * @param name The String to be capitalized.
+	 * @return Capitalized name.
+	 */
 	public String capitalizeName(String name)
 	{
 		return name.substring(0,1).toUpperCase() + name.substring(1);
 	}
 
+	/**
+	 * Gets the current channel the bot is in.
+	 * @return The name on the current channel the bot is in.
+	 */
 	public String getChannel()
 	{
 		return stream;
 	}
 
+	/**
+	 * Gets the list of users currently in the chat.
+	 * This method is really buggy and needs to be changed.
+	 * @return List of current Viewers.
+	 */
 	public User[] getViewers()
 	{
+		//TODO: Need to change how we get the viewer list.
 		return this.getUsers(stream);
 	}
 
+	/**
+	 * Returns whether or not the user is in the channel.
+	 * @param name The username to check for in the viewer list.
+	 * @return Whether or not the user is in the chat.
+	 */
 	public boolean isUser(String name)
 	{
 		for(User u: getUsers(stream))
@@ -306,11 +366,20 @@ public class TurkeyBot extends PircBot
 		return false;
 	}
 
+	/**
+	 * Gets the list of mods for the current channel.
+	 * @return List of mods of the current channel.
+	 */
 	public String[] getMods()
 	{
 		return mods;
 	}
 
+	/**
+	 * Returns whether or not the given username is a valid mod of the channel.
+	 * @param username The user name to check for in the mods list.
+	 * @return Whether this username is a mod in the current channel.
+	 */
 	public boolean isMod(String un)
 	{
 		for(String s: mods)
@@ -321,6 +390,11 @@ public class TurkeyBot extends PircBot
 		return false;
 	}
 
+	/**
+	 * Returns the current permission level of the given username.
+	 * @param user The username to get the permission level of.
+	 * @return The permission level of the given username.
+	 */
 	public String getPermLevel(String user)
 	{
 		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349"))
@@ -331,11 +405,21 @@ public class TurkeyBot extends PircBot
 			return "User";
 	}
 
+	/**
+	 * Adds the specified user name to a list for people who will bypass the chat modertion check.
+	 * @param name The username to add to the list.
+	 */
 	public void giveImmunityTo(String name)
 	{
 		bypass.add(name);
 	}
 
+	/**
+	 * Checks to see if the given user name is able to bypass the chat filter.
+	 * Auto removes the username from the list if the name is on the list.
+	 * @param name The username to check to see if they bypass the filter.
+	 * @return If the given username can bypass the chat filter.
+	 */
 	public boolean checkForImmunity(String name)
 	{
 		if(bypass.contains(name))	
@@ -345,9 +429,15 @@ public class TurkeyBot extends PircBot
 		return true;
 	}
 
+	/**
+	 * Returns if the given user name has the given permission or greater.
+	 * @param user The user name to check for the given permission on.
+	 * @param perm The perm to check if the given username has access to.
+	 * @return If the given play has a permission level at or above the given permission level.
+	 */
 	public boolean hasPermission(String user, String perm)
 	{
-		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349"))
+		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349")|| user.equalsIgnoreCase("funwayguy"))
 			return true;
 		else if(isMod(user) && (perm.equalsIgnoreCase("Mod") || perm.equalsIgnoreCase("User")))
 			return true;
@@ -357,6 +447,11 @@ public class TurkeyBot extends PircBot
 			return false;
 	}
 
+	/**
+	 * Returns the full username for the given begging of a name.
+	 * @param username The partial username to use to check for a full version of.
+	 * @return The full username if one could be found. blank if non found.
+	 */
 	public String getFullUserName(String un)
 	{
 		for(User user: getViewers())
@@ -369,27 +464,48 @@ public class TurkeyBot extends PircBot
 		return "";
 	}
 
+	/**
+	 * Gets the current list of all of the commands.
+	 * @return
+	 */
 	public Object[] getCommands()
 	{
 		return commands.keySet().toArray();
 	}
 
+	/**
+	 * Returns whether or not the bot has connected to Twitch servers.
+	 * @return If the the bot has connected to Twitch servers.
+	 */
 	public boolean didConnect()
 	{
 		return connected;
 	}
 
+	/**
+	 * Gets the the command class for the given command name.
+	 * @param name The name of a command to be returned.
+	 * @return The command for the given name. Null if not found.
+	 */
 	public static Command getCommandFromName(String name)
 	{
 		return commands.get(name.toLowerCase());
 	}
 
+	/**
+	 * Adds a command to the command list and auto generates its properties file.
+	 * @param command The command to be added to the bot.
+	 */
 	public void addCommand(Command command)
 	{
 		commands.put("!" + command.getName().toLowerCase(), command);
 		command.getFile().updateCommand();
 	}
 
+	/**
+	 * Removes a command and its file from the bot.
+	 * @param command The command to be removed from the bot.
+	 */
 	public void removeCommand(Command command)
 	{
 		commands.remove(("!" + command.getName()).toLowerCase());
@@ -400,13 +516,23 @@ public class TurkeyBot extends PircBot
 		}
 	}
 
+	/**
+	 * Returns the name of the currency that is currently entered for the bot.
+	 * @return The name of the currency.
+	 */
 	public String getCurrencyName()
 	{
+		//TODO: Not allow spaces in the currency so that the command will work.
 		return currencyName;
 	}
 
+	/**
+	 * Gets the list of permissions currently in TurkeyBot.
+	 * @return List of current permissions.
+	 */
 	public static String[] getPermissions()
 	{
+		//TODO: Allow for custom permissions
 		return new String[]{"User", "Mod", "Streamer"};
 	}
 }

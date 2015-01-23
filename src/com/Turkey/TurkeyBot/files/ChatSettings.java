@@ -18,6 +18,10 @@ public class ChatSettings extends BotFile
 		loadSettings();
 	}
 	
+	/**
+	 * Loads the default settings of the properties file.
+	 * @throws IOException
+	 */
 	public void loadSettings() throws IOException
 	{
 		Properties defaultproperties = new Properties();
@@ -35,6 +39,10 @@ public class ChatSettings extends BotFile
 		save();
 	}
 	
+	/**
+	 * Gets the list of keys in the propertied file.
+	 * @return
+	 */
 	public Set<Object> getSettings()
 	{
 		return properties.keySet();
