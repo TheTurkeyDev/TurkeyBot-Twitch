@@ -16,6 +16,7 @@ import com.Turkey.TurkeyBot.Commands.AddCommand;
 import com.Turkey.TurkeyBot.Commands.AutoTurtleCommand;
 import com.Turkey.TurkeyBot.Commands.BypassCommand;
 import com.Turkey.TurkeyBot.Commands.Command;
+import com.Turkey.TurkeyBot.Commands.CurrencyCommand;
 import com.Turkey.TurkeyBot.Commands.DeleteCommand;
 import com.Turkey.TurkeyBot.Commands.EditCommand;
 import com.Turkey.TurkeyBot.Commands.EditPermission;
@@ -99,7 +100,7 @@ public class TurkeyBot extends PircBot
 	private void loadCommands()
 	{
 		commands.put("!slots".toLowerCase(), new SlotsCommand("Slots"));
-		//commands.put(("!"+currencyName).toLowerCase(), new CurrencyCommand("Currency"));
+		commands.put(("!"+currencyName.replaceAll(" ", "")).toLowerCase(), new CurrencyCommand("Currency"));
 		commands.put("!upTime".toLowerCase(), new upTimeCommand("Uptime"));
 		//commands.put("!Math".toLowerCase(), new MathCommand("Math"));
 		commands.put("!Winner".toLowerCase(), new WinnerCommand("Winner"));
@@ -131,6 +132,8 @@ public class TurkeyBot extends PircBot
 				else
 				{
 					Command c = getCommandFromName("!" + name);
+					if(c== null)
+						c = commands.get(("!"+currencyName.replaceAll(" ", "")).toLowerCase());
 					c.getFile().loadCommand();
 				}
 
@@ -257,8 +260,7 @@ public class TurkeyBot extends PircBot
 		try{
 			botName = accountSettingsFile.getSetting("AccountName");
 			setName(botName);
-			connect("irc.twitch.tv", 6667);
-			//ConsoleTab.output(Level.Normal, SecretStuff.oAuth);
+			connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
 			connected = true;
 		}catch(Exception e){connected = false; ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());return;}
 		ConsoleTab.output(Level.Info, "Connected!");
@@ -522,7 +524,6 @@ public class TurkeyBot extends PircBot
 	 */
 	public String getCurrencyName()
 	{
-		//TODO: Not allow spaces in the currency so that the command will work.
 		return currencyName;
 	}
 

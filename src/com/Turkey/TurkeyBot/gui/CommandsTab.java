@@ -8,8 +8,9 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.Commands.Command;
@@ -17,11 +18,16 @@ import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 
 public class CommandsTab extends Tab implements ActionListener
 {
-	List<JComponent> components = new ArrayList<JComponent>();
+	private static final long serialVersionUID = 1L;
+	private List<JComponent> components = new ArrayList<JComponent>();
+	private JPanel commandspanel = new JPanel();
+	private JScrollPane scroller;
 
-	public CommandsTab(JFrame jframe)
+	public CommandsTab()
 	{
-		super(jframe);
+		commandspanel.setSize(800, 550);
+		commandspanel.setLocation(0, 0);
+		commandspanel.setLayout(null);
 	}
 
 	public void load()
@@ -47,7 +53,7 @@ public class CommandsTab extends Tab implements ActionListener
 		{
 			String commandName = commands[i];
 
-			if((row*25)+20 > (frame.getHeight()-100))
+			if((row*25)+20 > (commandspanel.getHeight()-100))
 			{
 				x+=325;
 				row = 0;
@@ -57,7 +63,7 @@ public class CommandsTab extends Tab implements ActionListener
 			label.setLocation(x, (row*25) + 20);
 			label.setSize(200, 25);
 			label.setVisible(true);
-			frame.add(label);
+			commandspanel.add(label);
 			components.add(label);
 
 			Command command = TurkeyBot.getCommandFromName(commandName);
@@ -69,7 +75,7 @@ public class CommandsTab extends Tab implements ActionListener
 			editbutton.setVisible(true);
 			editbutton.setText("Edit");
 			editbutton.addActionListener(this);
-			frame.add(editbutton);
+			commandspanel.add(editbutton);
 			components.add(editbutton);
 			
 			if(command.canEdit())
@@ -81,7 +87,7 @@ public class CommandsTab extends Tab implements ActionListener
 				deletebutton.setVisible(true);
 				deletebutton.setText("Delete");
 				deletebutton.addActionListener(this);
-				frame.add(deletebutton);
+				commandspanel.add(deletebutton);
 				components.add(deletebutton);
 			}
 			
@@ -94,7 +100,7 @@ public class CommandsTab extends Tab implements ActionListener
 				enablebutton.setVisible(true);
 				enablebutton.setText("Enable");
 				enablebutton.addActionListener(this);
-				frame.add(enablebutton);
+				commandspanel.add(enablebutton);
 				components.add(enablebutton);
 			}
 			else
@@ -106,13 +112,18 @@ public class CommandsTab extends Tab implements ActionListener
 				disablebutton.setVisible(true);
 				disablebutton.setText("Disable");
 				disablebutton.addActionListener(this);
-				frame.add(disablebutton);
+				commandspanel.add(disablebutton);
 				components.add(disablebutton);
 			}
 
 			row++;
 		}
-		frame.repaint();
+		scroller = new JScrollPane(commandspanel);
+		scroller.setLocation(0, 0);
+		scroller.setSize(800, 550);
+		scroller.setVisible(true);
+		super.add(scroller);
+		super.setVisible(true);
 	}
 
 	public void unLoad()
@@ -120,9 +131,10 @@ public class CommandsTab extends Tab implements ActionListener
 		for(JComponent comp: components)
 		{
 			comp.setVisible(false);
-			frame.remove(comp);
+			scroller.remove(comp);
 		}
-		components.clear();
+		super.remove(scroller);
+		super.setVisible(false);
 	}
 
 	@Override

@@ -7,14 +7,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 import com.Turkey.TurkeyBot.Commands.ConsoleCommands;
 
 
 public class ConsoleTab extends Tab implements KeyListener
 {
-
+	private static final long serialVersionUID = 1L;
 	public static TextArea consoleWindow;
 	public static TextField consoleEntry;
 
@@ -22,9 +20,8 @@ public class ConsoleTab extends Tab implements KeyListener
 	private String currentString = "";
 	int timesUp = 0;
 
-	public ConsoleTab(JFrame jframe)
+	public ConsoleTab()
 	{
-		super(jframe);
 		// console tab
 		consoleWindow = new TextArea();
 		consoleWindow.setLocation(50, 50);
@@ -33,7 +30,7 @@ public class ConsoleTab extends Tab implements KeyListener
 		consoleWindow.setBackground(Color.black);
 		consoleWindow.setForeground(Color.white);
 		consoleWindow.setVisible(false);
-		frame.add(consoleWindow);
+		super.add(consoleWindow);
 
 		consoleEntry = new TextField();
 		consoleEntry.setLocation(50,475);
@@ -42,18 +39,20 @@ public class ConsoleTab extends Tab implements KeyListener
 		consoleEntry.setForeground(Color.white);
 		consoleEntry.addKeyListener(this);
 		consoleEntry.setVisible(false);
-		frame.add(consoleEntry);
+		super.add(consoleEntry);
 	}
 
 	public void load()
 	{
 		consoleWindow.setVisible(true);
 		consoleEntry.setVisible(true);
+		super.setVisible(true);
 	}
 	public void unLoad()
 	{
 		consoleWindow.setVisible(false);
 		consoleEntry.setVisible(false);
+		super.setVisible(false);
 	}
 
 	/**

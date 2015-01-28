@@ -40,13 +40,13 @@ public class Gui extends JFrame implements ActionListener
 	public Gui(TurkeyBot b)
 	{
 		bot = b;
-		console = new ConsoleTab(this);
-		viewers = new Viewers(this);
-		listcommands = new CommandsTab(this);
-		settingsTab = new SettingsTab(this);
-		chatSettingsTab = new ChatSettingsTab(this);
-		spamResponseTab = new SpamResponseTab(this);
-		accountSettingsTab = new AccountSettingsTab(this);
+		console = new ConsoleTab();
+		viewers = new Viewers();
+		listcommands = new CommandsTab();
+		settingsTab = new SettingsTab();
+		chatSettingsTab = new ChatSettingsTab();
+		spamResponseTab = new SpamResponseTab();
+		accountSettingsTab = new AccountSettingsTab();
 		Dimension size = new Dimension(800, 600);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setSize(size);
@@ -142,52 +142,26 @@ public class Gui extends JFrame implements ActionListener
 		if(e.getSource() instanceof JMenuItem)
 		{
 			JMenuItem eItem = (JMenuItem) e.getSource();
+			currentTab.unLoad();
+			super.remove(currentTab);
 			if(eItem.getText().equalsIgnoreCase("Console"))
-			{
-				currentTab.unLoad();
 				currentTab = console;
-				currentTab.load();
-			}
 			else if(eItem.getText().equalsIgnoreCase("Viewers"))
-			{
-				currentTab.unLoad();
 				currentTab = viewers;
-				currentTab.load();
-			}
 			else if(eItem.getText().equalsIgnoreCase("List commands"))
-			{
-				currentTab.unLoad();
 				currentTab = listcommands;
-				currentTab.load();
-			}
 			else if(eItem.getText().equalsIgnoreCase("Add command"))
-			{
 				new AddCommandGui();
-			}
 			else if(eItem.getText().equalsIgnoreCase("Settings"))
-			{
-				currentTab.unLoad();
 				currentTab = settingsTab;
-				currentTab.load();
-			}
 			else if(eItem.getText().equalsIgnoreCase("Chat Settings"))
-			{
-				currentTab.unLoad();
 				currentTab = chatSettingsTab;
-				currentTab.load();
-			}
 			else if(eItem.getText().equalsIgnoreCase("Response Settings"))
-			{
-				currentTab.unLoad();
 				currentTab = spamResponseTab;
-				currentTab.load();
-			}
 			else if(eItem.getText().equalsIgnoreCase("Account Settings"))
-			{
-				currentTab.unLoad();
 				currentTab = accountSettingsTab;
-				currentTab.load();
-			}
+			super.add(currentTab);
+			currentTab.load();
 		}
 
 	}

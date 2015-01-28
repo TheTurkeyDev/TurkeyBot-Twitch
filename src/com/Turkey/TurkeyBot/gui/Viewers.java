@@ -1,6 +1,5 @@
 package com.Turkey.TurkeyBot.gui;
 
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -8,7 +7,8 @@ import org.jibble.pircbot.User;
 
 public class Viewers extends Tab
 {
-
+	
+	private static final long serialVersionUID = 1L;
 	private User[] viewers;
 	public static final String[] columnNames = {
 		"User Name", "Rank", "Following since", ""
@@ -17,9 +17,8 @@ public class Viewers extends Tab
 	private JTable table;
 	private JScrollPane scroller;
 
-	public Viewers(JFrame jframe)
+	public Viewers()
 	{
-		super(jframe);
 	}
 
 	public void load()
@@ -71,12 +70,13 @@ public class Viewers extends Tab
 		scroller.setLocation(40, 0);
 		scroller.setSize(700, 500);
 		scroller.setVisible(true);
-		frame.add(scroller);
+		super.add(scroller);
+		super.setVisible(true);
 	}
 
 
 	public void unLoad()
 	{
-		scroller.setVisible(false);
+		super.setVisible(false);
 	}
 }

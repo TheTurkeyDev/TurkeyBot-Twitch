@@ -1,15 +1,16 @@
 package com.Turkey.TurkeyBot.gui;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Tab
+public class Tab extends JPanel
 {
-	//TODO: HOLY MOTHER OF BALLS I NEED TO CHANGE THIS. THIS IS SO BAD.
-	JFrame frame;
-	
-	public Tab(JFrame jframe)
+	protected static final long serialVersionUID = 1L;
+
+	public Tab()
 	{
-		frame = jframe;
+		super.setSize(800, 600);
+		super.setLocation(0, 0);
+		super.setLayout(null);
 	}
 	
 	/**

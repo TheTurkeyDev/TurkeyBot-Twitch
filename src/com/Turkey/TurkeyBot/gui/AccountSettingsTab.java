@@ -7,12 +7,13 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 public class AccountSettingsTab extends Tab implements ActionListener
 {
+	private static final long serialVersionUID = 1L;
+
 	List<JComponent> components = new ArrayList<JComponent>();
 
 	JButton save;
@@ -24,26 +25,20 @@ public class AccountSettingsTab extends Tab implements ActionListener
 
 	JLabel info;
 
-	public AccountSettingsTab(JFrame jframe)
+	public AccountSettingsTab()
 	{
-		super(jframe);
-	}
-
-	public void load()
-	{
-
 		save = new JButton("Save");
 		save.setName("Save");
-		save.setLocation((frame.getWidth()/2)- 50, frame.getHeight() - 100);
+		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
 		save.setSize(100, 25);
 		save.addActionListener(this);
-		frame.add(save);
+		super.add(save);
 
 		namelabel = new JLabel("Account Name");
 		namelabel.setLocation(0, 20);
 		namelabel.setSize(200, 25);
 		namelabel.setVisible(true);
-		frame.add(namelabel);
+		super.add(namelabel);
 		components.add(namelabel);
 
 		nametext = new JTextArea();
@@ -52,14 +47,14 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		nametext.setSize(200, 15);
 		nametext.setVisible(true);
 		nametext.setText(Gui.getBot().accountSettingsFile.getSetting("AccountName"));
-		frame.add(nametext);
+		super.add(nametext);
 		components.add(nametext);
 
 		oAuthlabel = new JLabel("Account oAuth");
 		oAuthlabel.setLocation(0, 40);
 		oAuthlabel.setSize(200, 25);
 		oAuthlabel.setVisible(true);
-		frame.add(oAuthlabel);
+		super.add(oAuthlabel);
 		components.add(oAuthlabel);
 
 		oAuthtext = new JTextArea();
@@ -68,22 +63,18 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		oAuthtext.setSize(200, 15);
 		oAuthtext.setVisible(true);
 		oAuthtext.setText(Gui.getBot().accountSettingsFile.getSetting("AccountOAuth"));
-		frame.add(oAuthtext);
+		super.add(oAuthtext);
 		components.add(oAuthtext);
+	}
 
-		frame.repaint();
+	public void load()
+	{
+		super.setVisible(true);
 	}
 
 	public void unLoad()
 	{
-		for(JComponent comp: components)
-		{
-			comp.setVisible(false);
-			frame.remove(comp);
-		}
-		save.setVisible(false);
-		frame.remove(save);
-		components.clear();
+		super.setVisible(false);
 	}
 
 	/**

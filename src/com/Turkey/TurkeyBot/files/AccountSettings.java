@@ -37,8 +37,8 @@ public class AccountSettings extends BotFile
 				properties.setProperty(key, defaultproperties.getProperty(key));
 			}
 		}
-		if(properties.get("AccountoAuth") != null)
-			SecretStuff.oAuth = (String) properties.get("AccountoAuth");
+		if(properties.get("AccountOAuth") != null)
+			SecretStuff.oAuth = (String) properties.get("AccountOAuth");
 		
 		save();
 	}

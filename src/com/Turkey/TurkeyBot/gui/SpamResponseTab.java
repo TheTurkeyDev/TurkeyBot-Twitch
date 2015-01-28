@@ -7,18 +7,18 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 public class SpamResponseTab extends Tab implements ActionListener
 {
+	private static final long serialVersionUID = 1L;
+
 	List<JComponent> components = new ArrayList<JComponent>();
 
 	JButton save;
-	public SpamResponseTab(JFrame jframe)
+	public SpamResponseTab()
 	{
-		super(jframe);
 	}
 
 	public void load()
@@ -29,10 +29,10 @@ public class SpamResponseTab extends Tab implements ActionListener
 
 		save = new JButton("Save");
 		save.setName("Save");
-		save.setLocation((frame.getWidth()/2)- 50, frame.getHeight() - 100);
+		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
 		save.setSize(100, 25);
 		save.addActionListener(this);
-		frame.add(save);	
+		super.add(save);	
 
 		int x = 10;
 		int row = 0;
@@ -40,7 +40,7 @@ public class SpamResponseTab extends Tab implements ActionListener
 		{
 			String settingsName = (String) settings[i];
 
-			if((row*25)+20 > frame.getHeight())
+			if((row*25)+20 > super.getHeight())
 			{
 				x+=1000;
 				row = 0;
@@ -50,7 +50,7 @@ public class SpamResponseTab extends Tab implements ActionListener
 			label.setLocation(x, (row*25) + 20);
 			label.setSize(200, 25);
 			label.setVisible(true);
-			frame.add(label);
+			super.add(label);
 			components.add(label);
 
 			text = new JTextArea();
@@ -59,12 +59,12 @@ public class SpamResponseTab extends Tab implements ActionListener
 			text.setSize(600, 15);
 			text.setVisible(true);
 			text.setText(Gui.getBot().spamResponseFile.getSetting(settingsName));
-			frame.add(text);
+			super.add(text);
 			components.add(text);
 
 			row++;
 		}
-		frame.repaint();
+		super.setVisible(true);
 	}
 
 	public void unLoad()
@@ -72,11 +72,12 @@ public class SpamResponseTab extends Tab implements ActionListener
 		for(JComponent comp: components)
 		{
 			comp.setVisible(false);
-			frame.remove(comp);
+			super.remove(comp);
 		}
 		save.setVisible(false);
-		frame.remove(save);
+		super.remove(save);
 		components.clear();
+		super.setVisible(false);
 	}
 
 	/**

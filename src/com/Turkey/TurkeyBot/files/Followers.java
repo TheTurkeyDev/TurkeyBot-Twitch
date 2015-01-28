@@ -1,13 +1,10 @@
 package com.Turkey.TurkeyBot.files;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
+import com.Turkey.TurkeyBot.util.HTTPConnect;
 
 public class Followers extends BotFile implements Runnable
 {
@@ -34,25 +31,7 @@ public class Followers extends BotFile implements Runnable
 	{
 		while(run)
 		{
-			String result = "";
-			try
-			{
-				URL url = new URL("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0");
-				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setRequestMethod("GET");
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line = "";
-				while((line = reader.readLine()) != null)
-				{
-					result += line;
-				}
-				reader.close();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-
+			String result = HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0");
 			int index = 0;
 			while(index > -1)
 			{
@@ -84,48 +63,15 @@ public class Followers extends BotFile implements Runnable
 	 */
 	public void loadFollowers()
 	{
-		String result = "";
-		try
-		{
-			URL url = new URL("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=1&offset=0");
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line = "";
-			while((line = reader.readLine()) != null)
-			{
-				result += line;
-			}
-			reader.close();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		String result = HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=1&offset=0");
+		
 		int total = Integer.parseInt(result.substring(result.indexOf("_total") + 8, result.indexOf(",", result.indexOf("_total"))));
 		int current = 0;
 		result= "";
 		String nexturl = "https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0";
 		while(current < total)
 		{
-			result = "";
-			try
-			{
-				URL url = new URL(nexturl);
-				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setRequestMethod("GET");
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line = "";
-				while((line = reader.readLine()) != null)
-				{
-					result += line;
-				}
-				reader.close();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			result  = HTTPConnect.GetResponsefrom(nexturl);
 			try{
 				nexturl = result.substring(result.indexOf("\"next\":") + 8, result.indexOf(",", result.indexOf("\"next\":")));
 			}catch(IndexOutOfBoundsException e){nexturl = result.substring(result.indexOf("\"next\":") + 8, result.indexOf("}", result.indexOf("\"next\":")));}
@@ -149,24 +95,7 @@ public class Followers extends BotFile implements Runnable
 	 */
 	public void checkFollowers()
 	{
-		String result = "";
-		try
-		{
-			URL url = new URL("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0");
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line = "";
-			while((line = reader.readLine()) != null)
-			{
-				result += line;
-			}
-			reader.close();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		String result = HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0");
 
 		int index = 0;
 		while(index > -1)
@@ -182,5 +111,4 @@ public class Followers extends BotFile implements Runnable
 			index = result.indexOf("display_name");
 		}
 	}
-
 }

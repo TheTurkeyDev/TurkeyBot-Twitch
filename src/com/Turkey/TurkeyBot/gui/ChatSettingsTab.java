@@ -7,21 +7,22 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 public class ChatSettingsTab extends Tab implements ActionListener
 {
+	private static final long serialVersionUID = 1L;
+
 	private List<JComponent> components = new ArrayList<JComponent>();
 
 	private JButton save;
 	private String[] groups = {"Caps", "Emotes", "Symbols", "other"};
 	private JPanel panel;
-	public ChatSettingsTab(JFrame jframe)
+	public ChatSettingsTab()
 	{
-		super(jframe);
+		
 	}
 
 	public void load()
@@ -31,10 +32,10 @@ public class ChatSettingsTab extends Tab implements ActionListener
 
 		save = new JButton("Save");
 		save.setName("Save");
-		save.setLocation((frame.getWidth()/2)- 50, frame.getHeight() - 100);
+		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
 		save.setSize(100, 25);
 		save.addActionListener(this);
-		frame.add(save);
+		super.add(save);
 		
 		for(int i = 0; i < groups.length; i++)
 		{
@@ -121,11 +122,11 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setText(Gui.getBot().chatSettings.getSetting("MaxPercentOf" + s + "Used"));
 				panel.add(text);
 			}
-			frame.add(panel);
+			super.add(panel);
 			components.add(panel);
 		}
 		
-		frame.repaint();
+		super.setVisible(true);
 	}
 
 	public void unLoad()
@@ -133,11 +134,12 @@ public class ChatSettingsTab extends Tab implements ActionListener
 		for(JComponent comp: components)
 		{
 			comp.setVisible(false);
-			frame.remove(comp);
+			super.remove(comp);
 		}
 		save.setVisible(false);
-		frame.remove(save);
+		super.remove(save);
 		components.clear();
+		super.setVisible(false);
 	}
 
 	/**
