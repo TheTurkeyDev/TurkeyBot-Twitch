@@ -22,7 +22,7 @@ public class upTimeCommand extends Command
 		String result = "";
 		try
 		{
-			URL url = new URL("https://api.twitch.tv/kraken/streams/" + bot.getChannel().toLowerCase().substring(1));
+			URL url = new URL("https://api.twitch.tv/kraken/streams/" + bot.getChannel(false));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -48,7 +48,7 @@ public class upTimeCommand extends Command
 			remainder = (remainder - mins * 60000);
 			int secs = remainder / 1000;
 
-			bot.sendMessage(bot.capitalizeName(bot.getChannel().toLowerCase().substring(1)) + " has been streaming for " + hours + " hours " + mins + " minutes and " + secs + " seconds!");
+			bot.sendMessage(bot.capitalizeName(bot.getChannel(false)) + " has been streaming for " + hours + " hours " + mins + " minutes and " + secs + " seconds!");
 
 		} catch (Exception e){e.printStackTrace();}
 	}

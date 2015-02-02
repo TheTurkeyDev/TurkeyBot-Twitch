@@ -151,6 +151,7 @@ public class ConsoleTab extends Tab implements KeyListener
 		Important("IMPORTANT"),
 		Alert("Alert"),
 		Warning("Warning"),
+		DeBug("DeBug"),
 		Error("ERROR");
 
 		private String level;

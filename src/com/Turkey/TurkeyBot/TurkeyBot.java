@@ -90,7 +90,6 @@ public class TurkeyBot extends PircBot
 			chatSettings = new ChatSettings(this);
 			spamResponseFile = new ResponseSettings(this);
 			accountSettingsFile = new AccountSettings(this);
-			followersFile = new Followers(this);
 		} catch (IOException e){e.printStackTrace();}
 	}
 	
@@ -244,7 +243,7 @@ public class TurkeyBot extends PircBot
 	public void sendMessage(String msg)
 	{
 		ConsoleTab.output(Level.Chat, "["+ botName + "] " + msg);
-		if(stream != "")
+		if(stream != "" || this.settings.getSettingAsBoolean("isSilent"))
 		{
 			this.sendMessage(stream, msg);
 		}
@@ -295,6 +294,11 @@ public class TurkeyBot extends PircBot
 		stream = "#"+channel;
 		joinChannel(stream);
 		ConsoleTab.output(Level.Info, "Connected to " + stream.substring(1) + "'s channel!");
+		try
+		{
+			followersFile = new Followers(this);
+		} catch (IOException e){e.printStackTrace();}
+		followersFile.initFollowerTracker();
 		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
 		{
 			if(!botName.equalsIgnoreCase("TurkeyChatBot"))
@@ -318,6 +322,7 @@ public class TurkeyBot extends PircBot
 			ConsoleTab.output(Level.Alert, "Disconnected to the channel silently!");
 		this.partChannel(stream);
 		ConsoleTab.output(Level.Alert, "Disconnected from " + stream.substring(1) + "'schannel!");
+		followersFile.stopFollowerTracker();
 		stream = "";
 		mods = new String[0];
 	}
@@ -337,9 +342,11 @@ public class TurkeyBot extends PircBot
 	 * Gets the current channel the bot is in.
 	 * @return The name on the current channel the bot is in.
 	 */
-	public String getChannel()
+	public String getChannel(boolean includeSymbol)
 	{
-		return stream;
+		if(includeSymbol)
+			return stream;
+		return stream.substring(1);
 	}
 
 	/**

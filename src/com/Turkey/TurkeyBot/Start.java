@@ -45,6 +45,7 @@ public class Start
 		} catch (Exception e)
 		{
 			ConsoleTab.output(Level.Error, "Could not connect to the server to check for the current version of TurkeyBot");
+			return;
 		}
 
 		if(!result.equalsIgnoreCase(TurkeyBot.VERSION))

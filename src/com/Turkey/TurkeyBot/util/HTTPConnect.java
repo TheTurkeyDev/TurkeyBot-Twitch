@@ -1,8 +1,8 @@
 package com.Turkey.TurkeyBot.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HTTPConnect
@@ -11,29 +11,32 @@ public class HTTPConnect
 	/**
 	 * This method is used to connect to a website and return its response.
 	 * Mainly used for connecting to API's
-	 * @param link The URL of the website
+	 * 
+	 * @param link
+	 *            The URL of the website
 	 * @return The response from the website
 	 */
 	public static String GetResponsefrom(String link)
 	{
-		String result = "";
+		BufferedReader reader = null;
+		StringBuilder buffer = new StringBuilder();
+
 		try
 		{
-			URL url = new URL(link);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
+			reader = new BufferedReader(new InputStreamReader(new URL(link).openStream()));
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line = "";
-			while((line = reader.readLine()) != null)
-			{
-				result += line;
-			}
-			reader.close();
-		} catch (Exception e)
+			int read;
+			char[] chars = new char[1024];
+			while ((read = reader.read(chars)) != -1)
+				buffer.append(chars, 0, read);
+		} catch (Exception e){} 
+		finally
 		{
-			e.printStackTrace();
+			try
+			{
+				if (reader != null) reader.close();
+			} catch (IOException e){}
 		}
-		return result;
+		return buffer.toString();
 	}
 }

@@ -4,23 +4,42 @@ import java.io.File;
 import java.io.IOException;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
+import com.Turkey.TurkeyBot.gui.ConsoleTab;
+import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.Turkey.TurkeyBot.util.HTTPConnect;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Followers extends BotFile implements Runnable
 {
-	private static String propName = "Followers.properties";
-	
+	private JsonParser json = new JsonParser();
 	public static boolean run = true;
 
 	public Followers(TurkeyBot b) throws IOException
 	{
-		super(b,  "C:" + File.separator + "TurkeyBot" + File.separator + "properties" + File.separator + propName);
+		super(b,  "C:" + File.separator + "TurkeyBot" + File.separator + "follower tracking" + File.separator + "Followers_"+b.getChannel(false)+".properties");
+	}
 
+	/**
+	 * Starts the follower tracker for the bot in the channel
+	 */
+	public void initFollowerTracker()
+	{
 		if(super.properties.isEmpty())
 			loadFollowers();
-		checkFollowers();
+		checkFollowers(false);
+		run = true;
 		Thread thread = new Thread(this);
 		thread.start();
+	}
+
+	/**
+	 * Stops the follower tracker for the bot in the channel
+	 */
+	public void stopFollowerTracker()
+	{
+		run = false;
 	}
 
 	/**
@@ -31,26 +50,14 @@ public class Followers extends BotFile implements Runnable
 	{
 		while(run)
 		{
-			String result = HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0");
-			int index = 0;
-			while(index > -1)
-			{
-				String temp = result.substring(result.indexOf("display_name") + 15, result.indexOf(",", result.indexOf("display_name")) -1);
-				if(!super.properties.containsKey(temp))
-				{
-					System.out.println("New Follower");
-					super.setSetting(temp, System.currentTimeMillis());
-				}
-				index = result.indexOf(",", result.indexOf("display_name"));
-				result = result.substring(index);
-				index = result.indexOf("display_name");
-			}
-
-			System.out.println("checking");
-
+			checkFollowers(true);
+			//ConsoleTab.output(Level.DeBug, "Checked for new followers");
 			try
 			{
-				Thread.sleep(60000);
+				synchronized(this)
+				{
+					this.wait(10000);
+				}
 			} catch (InterruptedException e)
 			{
 				e.printStackTrace();
@@ -63,52 +70,59 @@ public class Followers extends BotFile implements Runnable
 	 */
 	public void loadFollowers()
 	{
-		String result = HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=1&offset=0");
-		
-		int total = Integer.parseInt(result.substring(result.indexOf("_total") + 8, result.indexOf(",", result.indexOf("_total"))));
+		JsonObject obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?direction=DESC&limit=100")).getAsJsonObject();
+
+		int total = obj.get("_total").getAsInt();
 		int current = 0;
-		result= "";
-		String nexturl = "https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0";
+		String nexturl = "https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?direction=DESC&limit=100";
 		while(current < total)
 		{
-			result  = HTTPConnect.GetResponsefrom(nexturl);
-			try{
-				nexturl = result.substring(result.indexOf("\"next\":") + 8, result.indexOf(",", result.indexOf("\"next\":")));
-			}catch(IndexOutOfBoundsException e){nexturl = result.substring(result.indexOf("\"next\":") + 8, result.indexOf("}", result.indexOf("\"next\":")));}
-			//System.out.println(nexturl);
-			int index = 0;
-			while(index > -1)
+			boolean success = false;
+			int loops = 0;
+			while(!success)
 			{
-				String temp = result.substring(result.indexOf("display_name") + 15, result.indexOf(",", result.indexOf("display_name")) -1);
+				try{
+					obj  = json.parse(HTTPConnect.GetResponsefrom(nexturl)).getAsJsonObject();
+					success = true;
+				}catch(IllegalStateException e){loops++; if(loops > 10)return;}
+			}
+			try{
+				nexturl = obj.get("_links").getAsJsonObject().get("next").getAsString();
+			}catch(IndexOutOfBoundsException e){nexturl = obj.get("_links").getAsJsonObject().get("next").getAsString();}
+			JsonArray list = obj.get("follows").getAsJsonArray();
+			for(int i = 0; i < list.size(); i++)
+			{
+				String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
 				super.setSetting(temp, System.currentTimeMillis());
-				index = result.indexOf(",", result.indexOf("display_name"));
-				result = result.substring(index);
-				index = result.indexOf("display_name");
 			}
 			current+=100;
 		}
-		System.out.println("Added Followers");
+		ConsoleTab.output(Level.Info, "Updated follower list for " + this.bot.getChannel(false));
 	}
 
 	/**
 	 * Checks for new followers.
 	 */
-	public void checkFollowers()
+	public void checkFollowers(boolean output)
 	{
-		String result = HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/turkey2349/follows?direction=DESC&limit=100&offset=0");
-
-		int index = 0;
-		while(index > -1)
+		JsonObject obj;
+		try{
+			obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?direction=DESC&limit=100")).getAsJsonObject();
+		}catch(IllegalStateException ex){return;}
+		JsonArray list = obj.get("follows").getAsJsonArray();
+		for(int i = 0; i < list.size(); i++)
 		{
-			String temp = result.substring(result.indexOf("display_name") + 15, result.indexOf(",", result.indexOf("display_name")) -1);
+
+			String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
 			if(!super.properties.containsKey(temp))
 			{
-				System.out.println("New Follower");
+				if(output)
+				{
+					this.bot.sendMessage(temp + "Has just followed!!!");
+				}
 				super.setSetting(temp, System.currentTimeMillis());
 			}
-			index = result.indexOf(",", result.indexOf("display_name"));
-			result = result.substring(index);
-			index = result.indexOf("display_name");
 		}
 	}
+
 }

@@ -23,7 +23,7 @@ public class UpdateTitleCommand extends Command
 	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
 	{
 		try{
-			String url = "https://api.twitch.tv/kraken/channels/"+bot.getChannel().toLowerCase().substring(1)+"?oauth_token=" + SecretStuff.oAuth;
+			String url = "https://api.twitch.tv/kraken/channels/"+bot.getChannel(false).toLowerCase().substring(1)+"?oauth_token=" + SecretStuff.oAuth;
 			URL obj = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 			conn.setRequestProperty("Accept", "application/vnd.twitchtv.v2+json");

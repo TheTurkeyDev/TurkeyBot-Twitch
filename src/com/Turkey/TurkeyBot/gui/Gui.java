@@ -125,7 +125,7 @@ public class Gui extends JFrame implements ActionListener
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) 
 			{
-				if(!bot.settings.getSettingAsBoolean("SilentJoinLeave") && !bot.getChannel().equalsIgnoreCase(""))
+				if(!bot.settings.getSettingAsBoolean("SilentJoinLeave") && !bot.getChannel(false).equalsIgnoreCase(""))
 					bot.sendMessage("GoodBye!!!");
 				System.exit(0);
 				Followers.run = false;
