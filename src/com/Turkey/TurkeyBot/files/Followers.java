@@ -15,6 +15,7 @@ public class Followers extends BotFile implements Runnable
 {
 	private JsonParser json = new JsonParser();
 	public static boolean run = true;
+	private int i = 0;
 
 	public Followers(TurkeyBot b) throws IOException
 	{
@@ -28,7 +29,8 @@ public class Followers extends BotFile implements Runnable
 	{
 		if(super.properties.isEmpty())
 			loadFollowers();
-		checkFollowers(false);
+		else
+			checkFollowers(false);
 		run = true;
 		Thread thread = new Thread(this);
 		thread.start();
@@ -70,11 +72,11 @@ public class Followers extends BotFile implements Runnable
 	 */
 	public void loadFollowers()
 	{
-		JsonObject obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?direction=DESC&limit=100")).getAsJsonObject();
+		JsonObject obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?limit=100")).getAsJsonObject();
 
 		int total = obj.get("_total").getAsInt();
 		int current = 0;
-		String nexturl = "https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?direction=DESC&limit=100";
+		String nexturl = "https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?limit=100";
 		while(current < total)
 		{
 			boolean success = false;
@@ -93,7 +95,7 @@ public class Followers extends BotFile implements Runnable
 			for(int i = 0; i < list.size(); i++)
 			{
 				String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
-				super.setSetting(temp, System.currentTimeMillis());
+				super.setSetting(temp.toLowerCase(), System.currentTimeMillis());
 			}
 			current+=100;
 		}
@@ -107,20 +109,21 @@ public class Followers extends BotFile implements Runnable
 	{
 		JsonObject obj;
 		try{
-			obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?direction=DESC&limit=100")).getAsJsonObject();
+			obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/"+this.bot.getChannel(false)+"/follows?limit=2" + i)).getAsJsonObject();
+			i = i==0?1:0;
 		}catch(IllegalStateException ex){return;}
 		JsonArray list = obj.get("follows").getAsJsonArray();
 		for(int i = 0; i < list.size(); i++)
 		{
 
 			String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
-			if(!super.properties.containsKey(temp))
+			if(!super.properties.containsKey(temp.toLowerCase()))
 			{
 				if(output)
 				{
-					this.bot.sendMessage(temp + "Has just followed!!!");
+					this.bot.sendMessage(temp + " Has just followed!!!");
 				}
-				super.setSetting(temp, System.currentTimeMillis());
+				super.setSetting(temp.toLowerCase(), System.currentTimeMillis());
 			}
 		}
 	}

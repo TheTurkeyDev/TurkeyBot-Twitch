@@ -51,6 +51,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				label = new JLabel("Block Links");
 				label.setLocation(0, 25);
 				label.setSize(150, 25);
+				components.add(label);
 				panel.add(label);
 				
 				text = new JTextArea();
@@ -58,11 +59,13 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setLocation(150, 25);
 				text.setSize(60, 15);
 				text.setText(Gui.getBot().chatSettings.getSetting("BlockLinks"));
+				components.add(text);
 				panel.add(text);
 				
 				label = new JLabel("Max Message Length");
 				label.setLocation(0, 50);
 				label.setSize(150, 25);
+				components.add(label);
 				panel.add(label);
 				
 				text = new JTextArea();
@@ -70,11 +73,13 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setLocation(150, 50);
 				text.setSize(60, 15);
 				text.setText(Gui.getBot().chatSettings.getSetting("MaxMessageLength"));
+				components.add(text);
 				panel.add(text);
 				
 				label = new JLabel("Word Black List");
 				label.setLocation(0, 75);
 				label.setSize(150, 25);
+				components.add(label);
 				panel.add(label);
 				
 				text = new JTextArea();
@@ -82,6 +87,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setLocation(150, 75);
 				text.setSize(60, 15);
 				text.setText(Gui.getBot().chatSettings.getSetting("WordBlackList"));
+				components.add(text);
 				panel.add(text);
 			}
 			else
@@ -89,37 +95,43 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				label = new JLabel("Minimum " + s);
 				label.setLocation(0, 25);
 				label.setSize(150, 25);
+				components.add(label);
 				panel.add(label);
 				
 				text = new JTextArea();
 				text.setName("Minimum " + s);
 				text.setLocation(150, 25);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting(s+"TypedMinmumforAffect"));
+				text.setText(Gui.getBot().chatSettings.getSetting("Minimum" + s));
+				components.add(text);
 				panel.add(text);
 				
 				label = new JLabel("Max " + s);
 				label.setLocation(0, 50);
 				label.setSize(150, 25);
+				components.add(label);
 				panel.add(label);
 
 				text = new JTextArea();
 				text.setName("Max " + s);
 				text.setLocation(150, 50);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting(s+"TypedMaximum"));
+				text.setText(Gui.getBot().chatSettings.getSetting("Max" + s));
+				components.add(text);
 				panel.add(text);
 				
 				label = new JLabel("Max percent of " + s);
 				label.setLocation(0, 75);
 				label.setSize(150, 25);
+				components.add(label);
 				panel.add(label);
 
 				text = new JTextArea();
 				text.setName("Max percent of " + s);
 				text.setLocation(150, 75);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("MaxPercentOf" + s + "Used"));
+				text.setText(Gui.getBot().chatSettings.getSetting("Maxpercentof" + s));
+				components.add(text);
 				panel.add(text);
 			}
 			super.add(panel);
@@ -151,7 +163,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 		{
 			if(comp instanceof JTextArea)
 			{
-				Gui.getBot().chatSettings.setSetting(comp.getName(), ((JTextArea) comp).getText());
+				Gui.getBot().chatSettings.setSetting(comp.getName().replace(" ", ""), ((JTextArea) comp).getText());
 			}
 		}
 	}

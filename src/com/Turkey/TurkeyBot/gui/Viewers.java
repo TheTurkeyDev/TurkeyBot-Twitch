@@ -1,5 +1,7 @@
 package com.Turkey.TurkeyBot.gui;
 
+import java.util.Date;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -48,8 +50,8 @@ public class Viewers extends Tab
 						rows[y][x] = Gui.getBot().getPermLevel(viewers[y].getNick());
 					else if(x == 2)
 					{
-						String response =Gui.getBot().followersFile.getSetting(viewers[y].getNick());
-						rows[y][x] = response != null ? response : "Not following";
+						String response = Gui.getBot().followersFile.getSetting(viewers[y].getNick());
+						rows[y][x] = response != null ? (new Date(Long.parseLong(response))).toString() : "Not following";
 					}
 					else if(x == 3)
 					{
