@@ -36,6 +36,10 @@ import com.Turkey.TurkeyBot.files.ResponseSettings;
 import com.Turkey.TurkeyBot.files.SettingsFile;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
+import com.Turkey.TurkeyBot.util.HTTPConnect;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
@@ -60,7 +64,11 @@ public class TurkeyBot extends PircBot
 	private ModerateChat chatmoderation;
 
 	private String[] mods;
+	private ArrayList<String> viewers;
+
 	private List<String> bypass = new ArrayList<String>();
+
+	public static JsonParser json;
 
 	private boolean connected = false;
 
@@ -71,6 +79,7 @@ public class TurkeyBot extends PircBot
 	public TurkeyBot() throws Exception
 	{
 		//this.setVerbose(true);
+		json = new JsonParser();
 		loadFiles();
 		currencyName = settings.getSetting("CurrencyName");
 		loadCommands();
@@ -92,7 +101,7 @@ public class TurkeyBot extends PircBot
 			accountSettingsFile = new AccountSettings(this);
 		} catch (IOException e){e.printStackTrace();}
 	}
-	
+
 	/**
 	 * Loads the commands for TurkeyBot
 	 */
@@ -234,6 +243,24 @@ public class TurkeyBot extends PircBot
 			ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
 		}
 	}
+	
+	/**
+	 * Called when someone join the channel that the bot is in.
+	 */
+	public void onJoin(String channel, String sender, String login, String hostname) 
+	{
+		if(!viewers.contains(sender))
+			viewers.add(sender);
+	}
+	
+	/**
+	 * Called when someone join the channel that the bot is in.
+	 */
+	public void onPart(String channel, String sender, String login, String hostname) 
+	{
+		if(viewers.contains(sender))
+			viewers.remove(sender);
+	}
 
 	/**
 	 * Sends a message from the bot to the chat it is currently in.
@@ -309,6 +336,8 @@ public class TurkeyBot extends PircBot
 		else
 			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
 		this.sendMessage(stream, "/mods");
+
+		loadViewers();
 	}
 
 	/**
@@ -344,20 +373,43 @@ public class TurkeyBot extends PircBot
 	 */
 	public String getChannel(boolean includeSymbol)
 	{
-		if(includeSymbol)
+		if(includeSymbol || stream == "")
 			return stream;
 		return stream.substring(1);
 	}
 
 	/**
 	 * Gets the list of users currently in the chat.
-	 * This method is really buggy and needs to be changed.
 	 * @return List of current Viewers.
 	 */
-	public User[] getViewers()
+	public ArrayList<String> getViewers()
 	{
-		//TODO: Need to change how we get the viewer list.
-		return this.getUsers(stream);
+		return viewers;
+	}
+
+	/**
+	 * Loads all of the viewers for the the current channel that the bot is in.
+	 */
+	public void loadViewers()
+	{
+		JsonObject obj = json.parse(HTTPConnect.GetResponsefrom("https://tmi.twitch.tv/group/user/" + this.getChannel(false) + "/chatters")).getAsJsonObject();
+		viewers = new ArrayList<String>();
+		obj = obj.get("chatters").getAsJsonObject();
+		JsonArray mods = obj.get("moderators").getAsJsonArray();
+		JsonArray staff = obj.get("staff").getAsJsonArray();
+		JsonArray admins = obj.get("admins").getAsJsonArray();
+		JsonArray globalMod = obj.get("global_mods").getAsJsonArray();
+		JsonArray watchers = obj.get("viewers").getAsJsonArray();
+		for(int i = 0; i < mods.size(); i++)
+			viewers.add(mods.get(i).getAsString());
+		for(int i = 0; i < staff.size(); i++)
+			viewers.add(staff.get(i).getAsString());
+		for(int i = 0; i < admins.size(); i++)
+			viewers.add(admins.get(i).getAsString());
+		for(int i = 0; i < globalMod.size(); i++)
+			viewers.add(globalMod.get(i).getAsString());
+		for(int i = 0; i < watchers.size(); i++)
+			viewers.add(watchers.get(i).getAsString());
 	}
 
 	/**
@@ -463,11 +515,11 @@ public class TurkeyBot extends PircBot
 	 */
 	public String getFullUserName(String un)
 	{
-		for(User user: getViewers())
+		for(String user: getViewers())
 		{
-			if(user.getNick().startsWith(un))
+			if(user.startsWith(un))
 			{
-				return user.getNick();
+				return user;
 			}
 		}
 		return "";

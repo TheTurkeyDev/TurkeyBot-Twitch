@@ -1,17 +1,18 @@
 package com.Turkey.TurkeyBot.gui;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.TimeZone;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
-import org.jibble.pircbot.User;
 
 public class Viewers extends Tab
 {
 	
 	private static final long serialVersionUID = 1L;
-	private User[] viewers;
+	private ArrayList<String> viewers;
 	public static final String[] columnNames = {
 		"User Name", "Rank", "Following since", ""
 	};
@@ -28,7 +29,7 @@ public class Viewers extends Tab
 		viewers = Gui.getBot().getViewers();
 		String[][] rows;
 
-		if(viewers.length == 0)
+		if(viewers == null || viewers.size() == 0)
 		{
 			rows = new String[1][4];
 			rows[0][0] = "No viewers in chat!";
@@ -38,20 +39,29 @@ public class Viewers extends Tab
 		}
 		else
 		{
-			rows = new String[viewers.length][4];
+			rows = new String[viewers.size()][4];
 
-			for(int y = 0; y < viewers.length; y++)
+			for(int y = 0; y < viewers.size(); y++)
 			{
 				for(int x = 0; x < 4; x++)
 				{
 					if(x == 0)
-						rows[y][x] = viewers[y].getNick();
+						rows[y][x] = viewers.get(y);
 					else if(x == 1)
-						rows[y][x] = Gui.getBot().getPermLevel(viewers[y].getNick());
+						rows[y][x] = Gui.getBot().getPermLevel(viewers.get(y));
 					else if(x == 2)
 					{
-						String response = Gui.getBot().followersFile.getSetting(viewers[y].getNick());
-						rows[y][x] = response != null ? (new Date(Long.parseLong(response))).toString() : "Not following";
+						String response = Gui.getBot().followersFile.getSetting(viewers.get(y));
+						response= response!=null ? response.replaceAll("\"", ""): null;
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+						format.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String parse = "";
+						try
+						{
+							parse = response != null ? format.parse(response).toString() : "Not following";
+						} catch (ParseException e)
+						{parse = "Error";}
+						rows[y][x] = parse;
 					}
 					else if(x == 3)
 					{

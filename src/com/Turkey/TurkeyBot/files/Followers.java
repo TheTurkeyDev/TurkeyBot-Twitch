@@ -13,13 +13,14 @@ import com.google.gson.JsonParser;
 
 public class Followers extends BotFile implements Runnable
 {
-	private JsonParser json = new JsonParser();
+	private JsonParser json;
 	public static boolean run = true;
 	private int i = 0;
 
 	public Followers(TurkeyBot b) throws IOException
 	{
 		super(b,  "C:" + File.separator + "TurkeyBot" + File.separator + "follower tracking" + File.separator + "Followers_"+b.getChannel(false)+".properties");
+		json = TurkeyBot.json;
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class Followers extends BotFile implements Runnable
 			for(int i = 0; i < list.size(); i++)
 			{
 				String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
-				super.setSetting(temp.toLowerCase(), System.currentTimeMillis());
+				super.setSetting(temp.toLowerCase(), list.get(i).getAsJsonObject().get("created_at"));
 			}
 			current+=100;
 		}
@@ -123,9 +124,8 @@ public class Followers extends BotFile implements Runnable
 				{
 					this.bot.sendMessage(temp + " Has just followed!!!");
 				}
-				super.setSetting(temp.toLowerCase(), System.currentTimeMillis());
+				super.setSetting(temp.toLowerCase(), list.get(i).getAsJsonObject().get("created_at"));
 			}
 		}
 	}
-
 }
