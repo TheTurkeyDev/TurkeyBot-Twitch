@@ -270,10 +270,8 @@ public class TurkeyBot extends PircBot
 	public void sendMessage(String msg)
 	{
 		ConsoleTab.output(Level.Chat, "["+ botName + "] " + msg);
-		if(stream != "" || this.settings.getSettingAsBoolean("isSilent"))
-		{
+		if(stream != "" || !this.settings.getSettingAsBoolean("isSilent"))
 			this.sendMessage(stream, msg);
-		}
 	}
 
 	/**

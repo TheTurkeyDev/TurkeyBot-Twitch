@@ -68,9 +68,10 @@ public class ModerateChat
 		}
 
 		ErrorType error;
-
+		
 		if((error = passesWordCheck()) != ErrorType.None)
 		{
+			System.out.println("failed");
 			if(error == ErrorType.Caps)
 				bot.sendMessage(bot.spamResponseFile.getSetting("CapsMessage"));
 			if(error == ErrorType.Length)
@@ -100,7 +101,6 @@ public class ModerateChat
 	public ErrorType passesWordCheck()
 	{
 		//TODO: Fix emotes check as not all emotes are checked for.
-		
 		int caps = 0;
 		int letters = 0;
 		int symbols = 0;
@@ -129,36 +129,36 @@ public class ModerateChat
 				charecters++;
 			}
 		}
-
-		int capsMax = Integer.parseInt(bot.chatSettings.getSetting("CapsTypedMaximum"));
-		int capsMin = Integer.parseInt(bot.chatSettings.getSetting("CapsTypedMinmumforAffect"));
-		int capsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxPercentOfCapsUsed"));
-
+		int capsMax = Integer.parseInt(bot.chatSettings.getSetting("MaxCaps"));
+		int capsMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumCaps"));
+		int capsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofCaps"));
 		if(capsMax != -1 && caps > capsMax)
 			return ErrorType.Caps;
 		if(( capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double)letters)*100) > capsPercent))
 			return ErrorType.Caps;
 
-		int emotesMax = Integer.parseInt(bot.chatSettings.getSetting("EmotesTypedMaximum"));
-		int emotesMin = Integer.parseInt(bot.chatSettings.getSetting("EmotesTypedMinmumforAffect"));
-		int emotesPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxPercentOfEmotesUsed"));
+		
+		int emotesMax = Integer.parseInt(bot.chatSettings.getSetting("MaxEmotes"));
+		int emotesMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumEmotes"));
+		int emotesPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofEmotes"));
 
 		if(emotesMax != -1 && numofemotes > emotesMax)
 			return ErrorType.Emotes;
 		if(( emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double)message.length)*100) > emotesPercent))
 			return ErrorType.Emotes;
-
+		
 		if(letters > Integer.parseInt(bot.chatSettings.getSetting("MaxMessageLength")))
 			return ErrorType.Length;
 		
-		int symbolsMax = Integer.parseInt(bot.chatSettings.getSetting("CapsTypedMaximum"));
-		int symbolsMin = Integer.parseInt(bot.chatSettings.getSetting("CapsTypedMinmumforAffect"));
-		int symbolsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxPercentOfCapsUsed"));
-
+		int symbolsMax = Integer.parseInt(bot.chatSettings.getSetting("MaxSymbols"));
+		int symbolsMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumSymbols"));
+		int symbolsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofSymbols"));
+		
 		if(symbolsMax != -1 && symbols > symbolsMax)
 			return ErrorType.Sybols;
 		if(( symbolsMin != -1 && symbols > symbolsMin) && (symbolsPercent != -1 && (((double) symbols / (double)charecters)*100) > symbolsPercent))
 			return ErrorType.Sybols;
+		
 		return ErrorType.None;
 	}
 
