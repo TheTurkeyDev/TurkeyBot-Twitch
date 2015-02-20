@@ -2,10 +2,10 @@ package com.Turkey.TurkeyBot.Commands;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
 
-public class EditCommand extends Command
+public class AddResponse extends Command
 {
 
-	public EditCommand(String n)
+	public AddResponse(String n)
 	{
 		super(n, "");
 	}
@@ -14,7 +14,7 @@ public class EditCommand extends Command
 	{
 		String[] contents = message.split(" ");
 		if(contents.length < 3)
-			bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !editCommand <command> <response>");
+			bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !addResponse <command> <response>");
 		String commandName  = contents[1];
 		if(!commandName.substring(0,1).equalsIgnoreCase("!"))
 			commandName = "!"+commandName;
@@ -22,9 +22,9 @@ public class EditCommand extends Command
 		String response = message.substring(message.toLowerCase().indexOf(commandName.substring(1).toLowerCase()) + commandName.length());
 		if(c!=null)
 		{
-			c.setFirstResponse(response);
+			c.addResponse(response);
 			c.getFile().updateCommand();
-			bot.sendMessage(bot.capitalizeName(sender) + ": The command !" + c.getName() + " has been changed!");
+			bot.sendMessage(bot.capitalizeName(sender) + ": The response for the command !" + c.getName() + " has been added!");
 		}
 		else
 		{

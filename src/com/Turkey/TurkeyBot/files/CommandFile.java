@@ -1,39 +1,35 @@
 package com.Turkey.TurkeyBot.files;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import com.Turkey.TurkeyBot.Commands.Command;
+import com.Turkey.TurkeyBot.gui.ConsoleTab;
+import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class CommandFile
 {
-	private String commandName;
-	private String propName = "commands.properties";
-	private BotFile botfile;
 	private Command command;
+	private File file;
+	private Gson gson;
+	private JsonObject mainFile;
 
 	public CommandFile(Command c) throws IOException
 	{
 		command = c;
-		commandName = command.getName();
-		propName = commandName + ".properties";
-		botfile = new BotFile(null, "C:" + File.separator + "TurkeyBot" + File.separator + "commands" + File.separator + propName);
-		loadCommand();
-	}
-
-	/**
-	 * Loads a command from its property file.
-	 * @throws IOException
-	 */
-	public void loadCommand()
-	{
-		String response = command.getReponse();
-		botfile.properties.put(commandName , response);
-		botfile.properties.put(commandName + "_State", "Enabled");
-		botfile.properties.put(commandName + "_PermLevel", command.getPermissionLevel());
-		botfile.properties.put(commandName + "_LoadFile", command.canEdit());
-
-		botfile.save();
+		gson = new Gson();
+		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + "commands" + File.separator + command.getName() +".json");
+		if(!file.exists())
+		{
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			updateCommand();
+		}
 	}
 
 	/**
@@ -41,22 +37,28 @@ public class CommandFile
 	 */
 	public void updateCommand()
 	{
-		String response = command.getReponse();
-		if(!botfile.properties.containsKey(commandName))
+		mainFile = new JsonObject();
+		mainFile.add("State", gson.toJsonTree(command.isEnabled()));
+		mainFile.add("PermLevel", gson.toJsonTree(command.getPermissionLevel()));
+		mainFile.add("LoadFile", gson.toJsonTree(command.canEdit()));
+		mainFile.add("Number_Of_Responses", gson.toJsonTree(command.getNumberOfResponses()));
+
+		JsonObject responses = new JsonObject();
+		ArrayList<String> list = command.getResponses();
+		for(int i = 0; i < list.size(); i++)
 		{
-			botfile.properties.put(commandName , response);
-			botfile.properties.put(commandName + "_State", "Enabled");
-			botfile.properties.put(commandName + "_PermLevel", command.getPermissionLevel());
-			botfile.properties.put(commandName + "_LoadFile", command.canEdit());
+			responses.addProperty("" + i, list.get(i));
 		}
-		else
-		{
-			botfile.properties.setProperty(commandName, response);
-			botfile.properties.setProperty(commandName + "_State", "Enabled");
-			botfile.properties.setProperty(commandName + "_PermLevel", command.getPermissionLevel());
-			botfile.properties.setProperty(commandName + "_LoadFile", "" + command.canEdit());
-		}
-		botfile.save();
+
+		mainFile.add("Responses", responses);
+		try{
+			FileOutputStream outputStream = new FileOutputStream(file);
+			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+			writer.append(mainFile.toString());
+			writer.close();
+			outputStream.close();
+		}catch(IOException ex){ConsoleTab.output(Level.Error, "Could not write to json file for the command "  + command.getName());}
+	
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class CommandFile
 	 */
 	public void removeCommand()
 	{
-		botfile.file.delete();
+		file.delete();
 	}
 
 	/**
@@ -72,17 +74,15 @@ public class CommandFile
 	 */
 	public void disableCommand()
 	{
-		botfile.properties.setProperty(commandName + "_State", "Disabled");
-		botfile.save();
+		mainFile.addProperty("State", "Disabled");
 	}
-	
+
 	/**
 	 * Enables the command in the file.
 	 */
 	public void enableCommand()
 	{
-		botfile.properties.setProperty(commandName + "_State", "Enabled");
-		botfile.save();
+		mainFile.addProperty("State", "Enabled");
 	}
 
 	/**
@@ -91,8 +91,7 @@ public class CommandFile
 	 */
 	public void setPermLevel(String level)
 	{
-		botfile.properties.setProperty(commandName + "_PermLevel", level);
-		botfile.save();
+		mainFile.addProperty("PermLevel", level);
 	}
 
 	/**
@@ -101,6 +100,6 @@ public class CommandFile
 	 */
 	public String getPermLevel()
 	{
-		return botfile.properties.getProperty(commandName + "_PermLevel");
+		return mainFile.get("PermLevel").getAsString();
 	}
 }

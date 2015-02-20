@@ -1,18 +1,20 @@
 package com.Turkey.TurkeyBot;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
 import com.Turkey.TurkeyBot.Chat.ModerateChat;
 import com.Turkey.TurkeyBot.Commands.AddCommand;
+import com.Turkey.TurkeyBot.Commands.AddResponse;
 import com.Turkey.TurkeyBot.Commands.AutoTurtleCommand;
 import com.Turkey.TurkeyBot.Commands.BypassCommand;
 import com.Turkey.TurkeyBot.Commands.Command;
@@ -115,6 +117,7 @@ public class TurkeyBot extends PircBot
 		commands.put("!bypass".toLowerCase(), new BypassCommand("Bypass"));
 		commands.put("!addCommand".toLowerCase(), new AddCommand("AddCommand"));
 		commands.put("!editCommand".toLowerCase(), new EditCommand("EditCommand"));
+		commands.put("!addResponse".toLowerCase(), new AddResponse("AddResponse"));
 		commands.put("!editPermission".toLowerCase(), new EditPermission("EditPermission"));
 		commands.put("!deleteCommand".toLowerCase(), new DeleteCommand("DeleteCommand"));
 		commands.put("!setTitle".toLowerCase(), new UpdateTitleCommand("SetTitle"));
@@ -128,13 +131,26 @@ public class TurkeyBot extends PircBot
 		{
 			try{
 				File f = new File(filesfolder.getAbsolutePath() + File.separator + s);
-				FileInputStream iStream = new FileInputStream(f);
-				Properties prop = new Properties();
-				prop.load(iStream);
-				String name = f.getName().substring(0, f.getName().indexOf("."));
-				if(Boolean.parseBoolean(prop.getProperty(name + "__LoadFile")))
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+				String result = "";
+				String line = "";
+				while((line = reader.readLine()) != null)
 				{
-					Command c = new Command(name, prop.getProperty(name));
+					result += line;
+				}
+				reader.close();
+				
+				String name = f.getName().substring(0, f.getName().indexOf("."));
+				JsonObject obj = json.parse(result).getAsJsonObject();
+
+				if(obj.get("LoadFile").getAsBoolean())
+				{
+					Command c = new Command(name, obj.get("Responses").getAsJsonObject().get("0").getAsString());
+					JsonObject responses = obj.get("Responses").getAsJsonObject();
+					for(int i = 1; i < obj.get("Number_Of_Responses").getAsInt(); i++)
+					{
+						c.addResponse(responses.get("" + i).getAsString());
+					}
 					this.addCommand(c);
 				}
 				else
@@ -142,7 +158,7 @@ public class TurkeyBot extends PircBot
 					Command c = getCommandFromName("!" + name);
 					if(c== null)
 						c = commands.get(("!"+currencyName.replaceAll(" ", "")).toLowerCase());
-					c.getFile().loadCommand();
+					c.getFile().updateCommand();
 				}
 
 			}catch(IOException e){}
@@ -235,7 +251,7 @@ public class TurkeyBot extends PircBot
 	 */
 	public void onPrivateMessage(String sender, String login, String hostname, String message)
 	{
-		if(message.contains("The moderators of this room are:"))
+		if(message.contains("The moderators of this channel are:"))
 		{
 			message = message.substring(message.indexOf(":") + 2);
 			message += ", " + stream.substring(stream.indexOf("#") + 1);
@@ -243,7 +259,7 @@ public class TurkeyBot extends PircBot
 			ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
 		}
 	}
-	
+
 	/**
 	 * Called when someone join the channel that the bot is in.
 	 */
@@ -252,7 +268,7 @@ public class TurkeyBot extends PircBot
 		if(!viewers.contains(sender))
 			viewers.add(sender);
 	}
-	
+
 	/**
 	 * Called when someone join the channel that the bot is in.
 	 */
@@ -334,7 +350,6 @@ public class TurkeyBot extends PircBot
 		else
 			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
 		this.sendMessage(stream, "/mods");
-
 		loadViewers();
 	}
 
@@ -441,6 +456,8 @@ public class TurkeyBot extends PircBot
 	 */
 	public boolean isMod(String un)
 	{
+		if(mods == null)
+			return false;
 		for(String s: mods)
 		{
 			if(s.equalsIgnoreCase(un) || un.equalsIgnoreCase("turkey2349"))

@@ -53,6 +53,7 @@ public class Gui extends JFrame implements ActionListener
 		super.setLayout(null);
 		super.setTitle("TurkeyBot");
 		super.setVisible(true);
+		super.setLocationRelativeTo(null);
 
 		currentTab = console;
 		currentTab.load();
@@ -134,6 +135,7 @@ public class Gui extends JFrame implements ActionListener
 
 		b.connectToTwitch();
 		//ConsoleTab.output(Level.Alert, "Type /connect to connect to twitch!");
+		this.revalidate();
 	}
 
 
@@ -162,6 +164,7 @@ public class Gui extends JFrame implements ActionListener
 				currentTab = accountSettingsTab;
 			super.add(currentTab);
 			currentTab.load();
+			this.revalidate();
 		}
 
 	}
@@ -182,5 +185,6 @@ public class Gui extends JFrame implements ActionListener
 	{
 		currentTab.unLoad();
 		currentTab.load();
+		
 	}
 }

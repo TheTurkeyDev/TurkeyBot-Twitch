@@ -58,20 +58,14 @@ public class ModerateChat
 	public boolean isValidChat(String m, String sender)
 	{
 		message = m.split(" ");
-		if(bot.isMod(sender))
-		{
-			return true;
-		}
-		else if(bot.checkForImmunity(sender))
+		if(bot.isMod(sender) || bot.checkForImmunity(sender))
 		{
 			return true;
 		}
 
 		ErrorType error;
-		
 		if((error = passesWordCheck()) != ErrorType.None)
 		{
-			System.out.println("failed");
 			if(error == ErrorType.Caps)
 				bot.sendMessage(bot.spamResponseFile.getSetting("CapsMessage"));
 			if(error == ErrorType.Length)
