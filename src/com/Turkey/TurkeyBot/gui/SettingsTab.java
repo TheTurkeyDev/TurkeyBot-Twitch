@@ -14,9 +14,9 @@ public class SettingsTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
-	List<JComponent> components = new ArrayList<JComponent>();
+	private List<JComponent> components = new ArrayList<JComponent>();
 
-	JButton save;
+	private JButton save;
 	public SettingsTab()
 	{
 	}

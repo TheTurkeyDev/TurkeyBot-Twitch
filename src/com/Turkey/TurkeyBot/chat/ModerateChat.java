@@ -1,4 +1,4 @@
-package com.Turkey.TurkeyBot.Chat;
+package com.Turkey.TurkeyBot.chat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

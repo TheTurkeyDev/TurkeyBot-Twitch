@@ -2,19 +2,20 @@ package com.Turkey.TurkeyBot.gui;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class Viewers extends Tab
 {
 	
 	private static final long serialVersionUID = 1L;
-	private ArrayList<String> viewers;
 	public static final String[] columnNames = {
-		"User Name", "Rank", "Following since", ""
+		"User Name", "Rank", "Following since", "Currency"
 	};
 
 	private JTable table;
@@ -26,12 +27,12 @@ public class Viewers extends Tab
 
 	public void load()
 	{
-		viewers = Gui.getBot().getViewers();
+		List<String> viewers = Gui.getBot().getViewers();
 		String[][] rows;
 
 		if(viewers == null || viewers.size() == 0)
 		{
-			rows = new String[1][4];
+			rows = new String[1][columnNames.length];
 			rows[0][0] = "No viewers in chat!";
 			rows[0][1] = "";
 			rows[0][2] = "";
@@ -43,15 +44,17 @@ public class Viewers extends Tab
 
 			for(int y = 0; y < viewers.size(); y++)
 			{
-				for(int x = 0; x < 4; x++)
+				for(int x = 0; x < columnNames.length; x++)
 				{
+					String viewer = viewers.get(y);
+					TurkeyBot bot =  Gui.getBot();
 					if(x == 0)
-						rows[y][x] = viewers.get(y);
+						rows[y][x] = viewer;
 					else if(x == 1)
-						rows[y][x] = Gui.getBot().getPermLevel(viewers.get(y));
+						rows[y][x] = bot.getPermLevel(viewer);
 					else if(x == 2)
 					{
-						String response = Gui.getBot().followersFile.getSetting(viewers.get(y));
+						String response = bot.followersFile.getSetting(viewer);
 						response= response!=null ? response.replaceAll("\"", ""): null;
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 						format.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -65,17 +68,18 @@ public class Viewers extends Tab
 					}
 					else if(x == 3)
 					{
-						rows[y][x] = "";
+						rows[y][x] = "" + bot.currency.getCurrencyFor(viewer) + " " + bot.getCurrencyName();
 					}
 				}
 			}
 		}
+		
 		table = new JTable(rows, columnNames)
 		{
 			private static final long serialVersionUID = 1L;
 
 			public boolean isCellEditable(int row, int column) {                
-				return false;        
+				return false;
 			};
 		};
 		scroller = new JScrollPane(table);
@@ -89,6 +93,7 @@ public class Viewers extends Tab
 
 	public void unLoad()
 	{
+		super.remove(scroller);
 		super.setVisible(false);
 	}
 }

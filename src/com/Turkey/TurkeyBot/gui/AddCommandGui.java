@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
-import com.Turkey.TurkeyBot.Commands.Command;
+import com.Turkey.TurkeyBot.commands.Command;
 
 public class AddCommandGui implements ActionListener
 {

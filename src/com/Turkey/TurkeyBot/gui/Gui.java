@@ -1,9 +1,11 @@
 package com.Turkey.TurkeyBot.gui;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -54,19 +56,19 @@ public class Gui extends JFrame implements ActionListener
 		super.setTitle("TurkeyBot");
 		super.setVisible(true);
 		super.setLocationRelativeTo(null);
-
-		currentTab = console;
-		currentTab.load();
+		
+		ImageIcon icon = new ImageIcon ( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/logo.jpg")));
+		super.setIconImage(icon.getImage());
 
 		// Menu Bar
 		menuBar = new JMenuBar();
 
 		// Console Menu Item
-		menu = new JMenu("Console");
+		menu = new JMenu("Chat");
 		menuBar.add(menu);
 
 		//Console Items
-		item = new JMenuItem("Console");
+		item = new JMenuItem("Chat");
 		item.addActionListener(this);
 		menu.add(item);
 
@@ -117,9 +119,10 @@ public class Gui extends JFrame implements ActionListener
 		item.addActionListener(this);
 		menu.add(item);
 
-
-
 		super.setJMenuBar(menuBar);
+		currentTab = console;
+		super.add(currentTab);
+		currentTab.load();
 		super.setVisible(true);
 
 		super.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -146,7 +149,7 @@ public class Gui extends JFrame implements ActionListener
 			JMenuItem eItem = (JMenuItem) e.getSource();
 			currentTab.unLoad();
 			super.remove(currentTab);
-			if(eItem.getText().equalsIgnoreCase("Console"))
+			if(eItem.getText().equalsIgnoreCase("Chat"))
 				currentTab = console;
 			else if(eItem.getText().equalsIgnoreCase("Viewers"))
 				currentTab = viewers;
@@ -165,6 +168,7 @@ public class Gui extends JFrame implements ActionListener
 			super.add(currentTab);
 			currentTab.load();
 			this.revalidate();
+			this.repaint();
 		}
 
 	}

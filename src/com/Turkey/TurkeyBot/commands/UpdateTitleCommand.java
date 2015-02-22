@@ -1,4 +1,4 @@
-package com.Turkey.TurkeyBot.Commands;
+package com.Turkey.TurkeyBot.commands;
 
 import java.io.BufferedReader;
 import java.io.IOException;

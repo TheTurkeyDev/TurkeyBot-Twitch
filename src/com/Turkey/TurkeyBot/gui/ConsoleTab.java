@@ -2,19 +2,29 @@ package com.Turkey.TurkeyBot.gui;
 
 import java.awt.Color;
 import java.awt.TextArea;
-import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-import com.Turkey.TurkeyBot.Commands.ConsoleCommands;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import com.Turkey.TurkeyBot.TurkeyBot;
+import com.Turkey.TurkeyBot.commands.ConsoleCommands;
 
 
-public class ConsoleTab extends Tab implements KeyListener
+public class ConsoleTab extends Tab implements KeyListener, ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	public static TextArea consoleWindow;
-	public static TextField consoleEntry;
+	public JTextField consoleEntry;
+	public JLabel streamToJoinLabel;
+	public JTextField streamToJoin;
+	public JButton joinButton;
+	public TextArea viewersList;
 
 	private ArrayList<String> pastEntries = new ArrayList<String>();
 	private String currentString = "";
@@ -22,36 +32,77 @@ public class ConsoleTab extends Tab implements KeyListener
 
 	public ConsoleTab()
 	{
+		streamToJoinLabel = new JLabel("Join: ");
+		streamToJoinLabel.setLocation(10, 25);
+		streamToJoinLabel.setSize(100, 25);
+		super.add(streamToJoinLabel);
+
+		streamToJoin = new JTextField();
+		streamToJoin.setLocation(50,25);
+		streamToJoin.setSize(300, 25);
+		streamToJoin.setBackground(Color.black);
+		streamToJoin.setForeground(Color.white);
+		super.add(streamToJoin);
+
+		joinButton = new JButton("Join");
+		joinButton.setLocation(375, 25);
+		joinButton.setSize(75,25);
+		joinButton.addActionListener(this);
+		super.add(joinButton);
+
 		// console tab
 		consoleWindow = new TextArea();
-		consoleWindow.setLocation(50, 50);
-		consoleWindow.setSize(700,425);
+		consoleWindow.setLocation(10, 75);
+		consoleWindow.setSize(600,425);
 		consoleWindow.setEditable(false);
 		consoleWindow.setBackground(Color.black);
 		consoleWindow.setForeground(Color.white);
-		consoleWindow.setVisible(false);
 		super.add(consoleWindow);
 
-		consoleEntry = new TextField();
-		consoleEntry.setLocation(50,475);
-		consoleEntry.setSize(700, 25);
+		consoleEntry = new JTextField();
+		consoleEntry.setLocation(10,500);
+		consoleEntry.setSize(600, 25);
 		consoleEntry.setBackground(Color.black);
 		consoleEntry.setForeground(Color.white);
 		consoleEntry.addKeyListener(this);
-		consoleEntry.setVisible(false);
 		super.add(consoleEntry);
+		
+		viewersList = new TextArea();
+		viewersList.setLocation(625, 25);
+		viewersList.setSize(160,500);
+		viewersList.setEditable(false);
+		viewersList.setBackground(Color.black);
+		viewersList.setForeground(Color.white);
+		super.add(viewersList);
 	}
 
 	public void load()
 	{
-		consoleWindow.setVisible(true);
-		consoleEntry.setVisible(true);
+		if(Gui.getBot().getChannel(false).equals(""))
+		{
+			joinButton.setText("Join");
+			streamToJoin.setEditable(true);
+			viewersList.append("Viewers: 0 \n");
+			viewersList.append("---------------------------------- \n");
+			viewersList.append("You are not in a channel \n");
+		}
+		else
+		{
+			joinButton.setText("Leave");
+			streamToJoin.setEditable(false);
+			viewersList.append("Viewers: " +  Gui.getBot().getViewers().size() + " \n");
+			viewersList.append("---------------------------------- \n");
+			for(String s: Gui.getBot().getViewers())
+			{
+				viewersList.append(s + " \n");
+			}
+		}
+		
 		super.setVisible(true);
 	}
 	public void unLoad()
 	{
-		consoleWindow.setVisible(false);
-		consoleEntry.setVisible(false);
+		viewersList.setText("");
 		super.setVisible(false);
 	}
 
@@ -143,6 +194,36 @@ public class ConsoleTab extends Tab implements KeyListener
 	@Override public void keyReleased(KeyEvent e){}@Override public void keyTyped(KeyEvent e){}
 
 
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getSource().equals(joinButton))
+		{
+			TurkeyBot bot = Gui.getBot();
+			if(bot.getChannel(false).equals(""))
+			{
+				if(!streamToJoin.getText().equals(""))
+				{
+					bot.connectToChannel(streamToJoin.getText());
+					Gui.reloadTab();
+				}
+			}
+			else
+			{
+				bot.disconnectFromChannel();
+				Gui.reloadTab();
+			}
+		}
+	}
+	
+	/**
+	 * Clears the console window.
+	 */
+	public static void clearConsole()
+	{
+		consoleWindow.setText("");
+	}
+
 	public enum Level
 	{
 		None(""),
@@ -165,5 +246,4 @@ public class ConsoleTab extends Tab implements KeyListener
 			return level;
 		}
 	}
-
 }

@@ -1,4 +1,4 @@
-package com.Turkey.TurkeyBot.Commands;
+package com.Turkey.TurkeyBot.commands;
 
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.Gui;

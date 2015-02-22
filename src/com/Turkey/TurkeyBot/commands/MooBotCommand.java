@@ -1,20 +1,19 @@
-package com.Turkey.TurkeyBot.Commands;
+package com.Turkey.TurkeyBot.commands;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
 
-public class AutoTurtleCommand extends Command
+public class MooBotCommand extends Command
 {
-	public AutoTurtleCommand(String n)
+	public MooBotCommand(String n)
 	{
 		super(n, "");
 	}
 
 	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
 	{
-		bot.sendMessage("First MooBot, Then TurkeyBot, now autoTurtle? Man its becoming a zoo in here.");
+		bot.sendMessage("MooBot? More like GobbleBot");
 	}
 	
-	@Override
 	public boolean canEdit()
 	{
 		return false;

@@ -16,7 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
-import com.Turkey.TurkeyBot.Commands.Command;
+import com.Turkey.TurkeyBot.commands.Command;
 
 public class EditCommandGui implements ActionListener
 {
@@ -37,12 +37,11 @@ public class EditCommandGui implements ActionListener
 	private int editing = -1;
 
 	private JLabel permissionLabel;
-	@SuppressWarnings("rawtypes")
-	private JComboBox permSelect;
+
+	private JComboBox<String> permSelect;
 
 	private JButton save;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EditCommandGui(Command c)
 	{
 		command = c;
@@ -72,7 +71,7 @@ public class EditCommandGui implements ActionListener
 		permissionLabel.setSize(75, 25);
 		popup.add(permissionLabel);
 
-		permSelect = new JComboBox(TurkeyBot.getPermissions());
+		permSelect = new JComboBox<String>(TurkeyBot.getPermissions());
 		permSelect.setLocation(125,50);
 		permSelect.setSize(100, 25);
 		String perm = command.getPermissionLevel();
@@ -89,12 +88,15 @@ public class EditCommandGui implements ActionListener
 		responseLabel.setSize(75, 25);
 		popup.add(responseLabel);
 
-		responseAdd = new JButton("Add");
-		responseAdd.setName("Add");
-		responseAdd.setLocation(125,90);
-		responseAdd.setSize(100, 25);
-		responseAdd.addActionListener(this);
-		popup.add(responseAdd);
+		if(command.canEdit())
+		{
+			responseAdd = new JButton("Add");
+			responseAdd.setName("Add");
+			responseAdd.setLocation(125,90);
+			responseAdd.setSize(100, 25);
+			responseAdd.addActionListener(this);
+			popup.add(responseAdd);
+		}
 
 		ArrayList<String> list = command.getResponses();
 
@@ -254,23 +256,18 @@ public class EditCommandGui implements ActionListener
 				command.setPermissionLevel((String)permSelect.getSelectedItem());
 				command.getFile().updateCommand();
 				if(Gui.getBot().settings.getSettingAsBoolean("outputchanges"))
-				{
 					Gui.getBot().sendMessage("Command !" + command.getName() + " was successfully edited");
-				}
 				popup.dispose();
 			}
 			else if(button.getName().contains("Edit"))
 			{
 				if(editing != -1)
-				{
 					command.editResponse(editing, editResponse.getText());
-				}
 				editing = Integer.parseInt(button.getName().substring(5));
 				refresh();
 			}
 			else if(button.getName().contains("Done"))
 			{
-				System.out.println("Text:"+ editResponse.getText() + ".");
 				if(editResponse.getText().equals(""))
 				{
 					command.removeResponse(Integer.parseInt(button.getName().substring(5)));

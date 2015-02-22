@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-import com.Turkey.TurkeyBot.Commands.Command;
+import com.Turkey.TurkeyBot.commands.Command;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.google.gson.Gson;

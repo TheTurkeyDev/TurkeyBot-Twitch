@@ -12,24 +12,25 @@ import java.util.List;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
-import com.Turkey.TurkeyBot.Chat.ModerateChat;
-import com.Turkey.TurkeyBot.Commands.AddCommand;
-import com.Turkey.TurkeyBot.Commands.AddResponse;
-import com.Turkey.TurkeyBot.Commands.AutoTurtleCommand;
-import com.Turkey.TurkeyBot.Commands.BypassCommand;
-import com.Turkey.TurkeyBot.Commands.Command;
-import com.Turkey.TurkeyBot.Commands.CurrencyCommand;
-import com.Turkey.TurkeyBot.Commands.DeleteCommand;
-import com.Turkey.TurkeyBot.Commands.EditCommand;
-import com.Turkey.TurkeyBot.Commands.EditPermission;
-import com.Turkey.TurkeyBot.Commands.FunWayBotCommand;
-import com.Turkey.TurkeyBot.Commands.MathCommand;
-import com.Turkey.TurkeyBot.Commands.MooBotCommand;
-import com.Turkey.TurkeyBot.Commands.NightBotCommand;
-import com.Turkey.TurkeyBot.Commands.SlotsCommand;
-import com.Turkey.TurkeyBot.Commands.UpdateTitleCommand;
-import com.Turkey.TurkeyBot.Commands.WinnerCommand;
-import com.Turkey.TurkeyBot.Commands.upTimeCommand;
+import com.Turkey.TurkeyBot.chat.ModerateChat;
+import com.Turkey.TurkeyBot.commands.AddCommand;
+import com.Turkey.TurkeyBot.commands.AddResponse;
+import com.Turkey.TurkeyBot.commands.AutoTurtleCommand;
+import com.Turkey.TurkeyBot.commands.BypassCommand;
+import com.Turkey.TurkeyBot.commands.Command;
+import com.Turkey.TurkeyBot.commands.CurrencyCommand;
+import com.Turkey.TurkeyBot.commands.DeleteCommand;
+import com.Turkey.TurkeyBot.commands.EditCommand;
+import com.Turkey.TurkeyBot.commands.EditPermission;
+import com.Turkey.TurkeyBot.commands.FunWayBotCommand;
+import com.Turkey.TurkeyBot.commands.MathCommand;
+import com.Turkey.TurkeyBot.commands.MooBotCommand;
+import com.Turkey.TurkeyBot.commands.NightBotCommand;
+import com.Turkey.TurkeyBot.commands.SlotsCommand;
+import com.Turkey.TurkeyBot.commands.StatusCommand;
+import com.Turkey.TurkeyBot.commands.UpdateTitleCommand;
+import com.Turkey.TurkeyBot.commands.WinnerCommand;
+import com.Turkey.TurkeyBot.commands.upTimeCommand;
 import com.Turkey.TurkeyBot.files.AccountSettings;
 import com.Turkey.TurkeyBot.files.ChatSettings;
 import com.Turkey.TurkeyBot.files.CurrencyFile;
@@ -38,6 +39,7 @@ import com.Turkey.TurkeyBot.files.ResponseSettings;
 import com.Turkey.TurkeyBot.files.SettingsFile;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
+import com.Turkey.TurkeyBot.gui.Gui;
 import com.Turkey.TurkeyBot.util.HTTPConnect;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -45,7 +47,7 @@ import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
-	public static final String VERSION = "Beta 0.1.10";
+	public static final String VERSION = "Beta 1.0.0";
 
 	private static HashMap<String, Command> commands = new HashMap<String, Command>();
 
@@ -120,6 +122,7 @@ public class TurkeyBot extends PircBot
 		commands.put("!addResponse".toLowerCase(), new AddResponse("AddResponse"));
 		commands.put("!editPermission".toLowerCase(), new EditPermission("EditPermission"));
 		commands.put("!deleteCommand".toLowerCase(), new DeleteCommand("DeleteCommand"));
+		commands.put("!commandstatus".toLowerCase(), new StatusCommand("commandStatus"));
 		commands.put("!setTitle".toLowerCase(), new UpdateTitleCommand("SetTitle"));
 		commands.put("!nightbot".toLowerCase(), new NightBotCommand("NightBot"));
 		commands.put("!moobot".toLowerCase(), new MooBotCommand("MooBot"));
@@ -139,7 +142,7 @@ public class TurkeyBot extends PircBot
 					result += line;
 				}
 				reader.close();
-				
+
 				String name = f.getName().substring(0, f.getName().indexOf("."));
 				JsonObject obj = json.parse(result).getAsJsonObject();
 
@@ -218,8 +221,7 @@ public class TurkeyBot extends PircBot
 			else
 			{
 				int ammount;
-				try
-				{
+				try{
 					ammount = Integer.parseInt(args[1]);
 				}catch(NumberFormatException e){sendMessage("Invalid Integer"); return;}
 				for(User user: getUsers(channel))
@@ -266,7 +268,10 @@ public class TurkeyBot extends PircBot
 	public void onJoin(String channel, String sender, String login, String hostname) 
 	{
 		if(!viewers.contains(sender))
+		{
 			viewers.add(sender);
+			Gui.reloadTab();
+		}
 	}
 
 	/**
@@ -275,7 +280,10 @@ public class TurkeyBot extends PircBot
 	public void onPart(String channel, String sender, String login, String hostname) 
 	{
 		if(viewers.contains(sender))
+		{
 			viewers.remove(sender);
+			Gui.reloadTab();
+		}
 	}
 
 	/**
@@ -325,6 +333,7 @@ public class TurkeyBot extends PircBot
 	 */
 	public void connectToChannel(String channel)
 	{
+		ConsoleTab.clearConsole();
 		if(!connected)
 		{
 			ConsoleTab.output(Level.Alert, "You must first connect to twitch with /connect!");
@@ -335,11 +344,15 @@ public class TurkeyBot extends PircBot
 		stream = "#"+channel;
 		joinChannel(stream);
 		ConsoleTab.output(Level.Info, "Connected to " + stream.substring(1) + "'s channel!");
-		try
+		if(settings.getSettingAsBoolean("TrackFollowers"))
 		{
-			followersFile = new Followers(this);
-		} catch (IOException e){e.printStackTrace();}
-		followersFile.initFollowerTracker();
+			try
+			{
+				followersFile = new Followers(this);
+				followersFile.initFollowerTracker();
+			} catch (IOException e){ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
+			} catch (IllegalStateException e){disconnectFromChannel();ConsoleTab.output(Level.Error, "The channel you tried to connect to is invalid!");return;}
+		}
 		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
 		{
 			if(!botName.equalsIgnoreCase("TurkeyChatBot"))
@@ -607,7 +620,6 @@ public class TurkeyBot extends PircBot
 	 */
 	public static String[] getPermissions()
 	{
-		//TODO: Allow for custom permissions
 		return new String[]{"User", "Mod", "Streamer"};
 	}
 }

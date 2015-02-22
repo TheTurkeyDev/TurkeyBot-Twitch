@@ -1,4 +1,4 @@
-package com.Turkey.TurkeyBot.Commands;
+package com.Turkey.TurkeyBot.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;

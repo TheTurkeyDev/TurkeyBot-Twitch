@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
-import com.Turkey.TurkeyBot.Commands.Command;
+import com.Turkey.TurkeyBot.commands.Command;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 
 public class CommandsTab extends Tab implements ActionListener
