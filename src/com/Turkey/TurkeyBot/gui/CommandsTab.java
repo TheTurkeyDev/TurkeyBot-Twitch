@@ -1,5 +1,7 @@
 package com.Turkey.TurkeyBot.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,12 +24,13 @@ public class CommandsTab extends Tab implements ActionListener
 	private List<JComponent> components = new ArrayList<JComponent>();
 	private JPanel commandspanel = new JPanel();
 	private JScrollPane scroller;
+	private GridBagConstraints gbc = new GridBagConstraints();
 
 	public CommandsTab()
 	{
 		commandspanel.setSize(800, 550);
 		commandspanel.setLocation(0, 0);
-		commandspanel.setLayout(null);
+		commandspanel.setLayout(new GridBagLayout());
 	}
 
 	public void load()
@@ -47,7 +50,7 @@ public class CommandsTab extends Tab implements ActionListener
 		JButton enablebutton;
 		JButton disablebutton;
 		JButton deletebutton;
-		int x = 10;
+		int x = 1;
 		int row = 0;
 		for(int i = 0; i < commands.length; i++)
 		{
@@ -55,39 +58,42 @@ public class CommandsTab extends Tab implements ActionListener
 
 			if((row*25)+20 > (commandspanel.getHeight()-100))
 			{
-				x+=325;
+				x+=1;
 				row = 0;
 			}
 
 			label = new JLabel(commandName);
-			label.setLocation(x, (row*25) + 20);
+			gbc.gridx = x*4;
+			gbc.gridy = row;
 			label.setSize(200, 25);
 			label.setVisible(true);
-			commandspanel.add(label);
+			commandspanel.add(label,gbc);
 			components.add(label);
 
 			Command command = TurkeyBot.getCommandFromName(commandName);
 			
 			editbutton = new JButton();
 			editbutton.setName("Edit " + commandName);
-			editbutton.setLocation(x + 100, (row*25) + 20);
+			gbc.gridx = (x*4)+1;
+			gbc.gridy = row;
 			editbutton.setSize(60, 25);
 			editbutton.setVisible(true);
 			editbutton.setText("Edit");
 			editbutton.addActionListener(this);
-			commandspanel.add(editbutton);
+			commandspanel.add(editbutton,gbc);
 			components.add(editbutton);
 			
 			if(command.canEdit())
 			{
 				deletebutton = new JButton();
 				deletebutton.setName("Delete " + commandName);
-				deletebutton.setLocation(x + 240, (row*25) + 20);
+				gbc.gridx = (x*4)+3;
+				gbc.gridy = row;
 				deletebutton.setSize(70, 25);
 				deletebutton.setVisible(true);
 				deletebutton.setText("Delete");
 				deletebutton.addActionListener(this);
-				commandspanel.add(deletebutton);
+				commandspanel.add(deletebutton,gbc);
 				components.add(deletebutton);
 			}
 			
@@ -95,24 +101,26 @@ public class CommandsTab extends Tab implements ActionListener
 			{
 				enablebutton = new JButton();
 				enablebutton.setName("Enable " + commandName);
-				enablebutton.setLocation(x + 160, (row*25) + 20);
+				gbc.gridx = (x*4)+2;
+				gbc.gridy = row;
 				enablebutton.setSize(80, 25);
 				enablebutton.setVisible(true);
 				enablebutton.setText("Enable");
 				enablebutton.addActionListener(this);
-				commandspanel.add(enablebutton);
+				commandspanel.add(enablebutton,gbc);
 				components.add(enablebutton);
 			}
 			else
 			{
 				disablebutton = new JButton();
 				disablebutton.setName("Disable " + commandName);
-				disablebutton.setLocation(x + 160, (row*25) + 20);
+				gbc.gridx = (x*4)+2;
+				gbc.gridy = row;
 				disablebutton.setSize(80, 25);
 				disablebutton.setVisible(true);
 				disablebutton.setText("Disable");
 				disablebutton.addActionListener(this);
-				commandspanel.add(disablebutton);
+				commandspanel.add(disablebutton,gbc);
 				components.add(disablebutton);
 			}
 
@@ -120,7 +128,7 @@ public class CommandsTab extends Tab implements ActionListener
 		}
 		scroller = new JScrollPane(commandspanel);
 		scroller.setLocation(0, 0);
-		scroller.setSize(800, 550);
+		scroller.setSize(800, 540);
 		scroller.setVisible(true);
 		super.add(scroller);
 		super.setVisible(true);

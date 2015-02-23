@@ -303,16 +303,30 @@ public class TurkeyBot extends PircBot
 	 */
 	public void connectToTwitch()
 	{
-		//TODO Need to add code to check that the User Name And OAuth are valid.
 		ConsoleTab.output(Level.Info, "Connecting to twitch....");
-		try{
-			botName = accountSettingsFile.getSetting("AccountName");
-			setName(botName);
-			connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
-			connected = true;
-		}catch(Exception e){connected = false; ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());return;}
-		ConsoleTab.output(Level.Info, "Connected!");
+		if(!accountSettingsFile.getSetting("AccountName").replaceAll(" ", "").equals(""))
+		{
+			try{
+				botName = accountSettingsFile.getSetting("AccountName");
+				setName(botName);
+				connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
+				connected = true;
+			}catch(Exception e){connected = false; ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());return;}
+			ConsoleTab.output(Level.Info, "Connected!");
+		}
+		else
+		{
+			ConsoleTab.output(Level.Important, "No account entered for the bot to connect to!");
+			ConsoleTab.output(Level.Important, "Please enter this info into: Settings -> Acount Settings");
+			ConsoleTab.output(Level.Important, "Then connect the bot to twitch by entering /connect");
+		}
 		//connectToChannel("turkey2349");
+	}
+	
+	public void onDisconnect()
+	{
+		disconnectFromTwitch();
+		ConsoleTab.output(Level.Important, "This may be due to incorrect account information! Please check to make sure these are correct!");
 	}
 
 	/**
@@ -356,7 +370,7 @@ public class TurkeyBot extends PircBot
 		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
 		{
 			if(!botName.equalsIgnoreCase("TurkeyChatBot"))
-				this.sendMessage("Hello I am TurkeyBot! errrr I mean, I am " + botName + "!");
+				this.sendMessage("Hello I am TurkeyBot! errrr I mean, I am " + botName.substring(0, 1).toUpperCase() + botName.substring(1) + "!");
 			else
 				this.sendMessage("Hello I am TurkeyBot");
 		}
