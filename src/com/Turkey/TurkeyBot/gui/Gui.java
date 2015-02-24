@@ -28,6 +28,7 @@ public class Gui extends JFrame implements ActionListener
 	private ChatSettingsTab chatSettingsTab;
 	private SpamResponseTab spamResponseTab;
 	private AccountSettingsTab accountSettingsTab;
+	private AnnouncementTab announcementTab;
 
 	private JMenuBar menuBar;
 	private JMenu menu;
@@ -49,6 +50,7 @@ public class Gui extends JFrame implements ActionListener
 		chatSettingsTab = new ChatSettingsTab();
 		spamResponseTab = new SpamResponseTab();
 		accountSettingsTab = new AccountSettingsTab();
+		announcementTab = new AnnouncementTab();
 		Dimension size = new Dimension(800, 600);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setSize(size);
@@ -56,7 +58,7 @@ public class Gui extends JFrame implements ActionListener
 		super.setTitle("TurkeyBot");
 		super.setVisible(true);
 		super.setLocationRelativeTo(null);
-		
+
 		ImageIcon icon = new ImageIcon ( Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/logo.jpg")));
 		super.setIconImage(icon.getImage());
 
@@ -119,6 +121,20 @@ public class Gui extends JFrame implements ActionListener
 		item.addActionListener(this);
 		menu.add(item);
 
+		//Announcements
+		menu = new JMenu("Announcements");
+		menuBar.add(menu);
+
+		// List Announcements Menu Item
+		item = new JMenuItem("List Announcements");
+		item.addActionListener(this);
+		menu.add(item);
+
+		// Add Announcement Menu Item
+		item = new JMenuItem("Add Announcement");
+		item.addActionListener(this);
+		menu.add(item);
+
 		super.setJMenuBar(menuBar);
 		currentTab = console;
 		super.add(currentTab);
@@ -165,6 +181,10 @@ public class Gui extends JFrame implements ActionListener
 				currentTab = spamResponseTab;
 			else if(eItem.getText().equalsIgnoreCase("Account Settings"))
 				currentTab = accountSettingsTab;
+			else if(eItem.getText().equalsIgnoreCase("List Announcements"))
+				currentTab = announcementTab;
+			else if(eItem.getText().equalsIgnoreCase("Add Announcement"))
+				new AddAnnouncementGui();
 			super.add(currentTab);
 			currentTab.load();
 			this.revalidate();
@@ -189,6 +209,6 @@ public class Gui extends JFrame implements ActionListener
 	{
 		currentTab.unLoad();
 		currentTab.load();
-		
+
 	}
 }

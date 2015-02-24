@@ -12,6 +12,7 @@ import java.util.List;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
+import com.Turkey.TurkeyBot.chat.AutoAnnouncement;
 import com.Turkey.TurkeyBot.chat.ModerateChat;
 import com.Turkey.TurkeyBot.commands.AddCommand;
 import com.Turkey.TurkeyBot.commands.AddResponse;
@@ -32,6 +33,7 @@ import com.Turkey.TurkeyBot.commands.UpdateTitleCommand;
 import com.Turkey.TurkeyBot.commands.WinnerCommand;
 import com.Turkey.TurkeyBot.commands.upTimeCommand;
 import com.Turkey.TurkeyBot.files.AccountSettings;
+import com.Turkey.TurkeyBot.files.AnnouncementFile;
 import com.Turkey.TurkeyBot.files.ChatSettings;
 import com.Turkey.TurkeyBot.files.CurrencyFile;
 import com.Turkey.TurkeyBot.files.Followers;
@@ -64,8 +66,10 @@ public class TurkeyBot extends PircBot
 	public ResponseSettings spamResponseFile;
 	public AccountSettings accountSettingsFile;
 	public Followers followersFile;
+	public AnnouncementFile announceFile;
 
 	private ModerateChat chatmoderation;
+	private AutoAnnouncement announcer;
 
 	private String[] mods;
 	private ArrayList<String> viewers;
@@ -103,6 +107,7 @@ public class TurkeyBot extends PircBot
 			chatSettings = new ChatSettings(this);
 			spamResponseFile = new ResponseSettings(this);
 			accountSettingsFile = new AccountSettings(this);
+			announceFile = new AnnouncementFile();
 		} catch (IOException e){e.printStackTrace();}
 	}
 
@@ -367,6 +372,10 @@ public class TurkeyBot extends PircBot
 			} catch (IOException e){ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
 			} catch (IllegalStateException e){disconnectFromChannel();ConsoleTab.output(Level.Error, "The channel you tried to connect to is invalid!");return;}
 		}
+		if(!settings.getSetting("AnnounceDelay").equals("-1"))
+		{
+			announcer = new AutoAnnouncement(this);
+		}
 		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
 		{
 			if(!botName.equalsIgnoreCase("TurkeyChatBot"))
@@ -392,6 +401,7 @@ public class TurkeyBot extends PircBot
 		this.partChannel(stream);
 		ConsoleTab.output(Level.Alert, "Disconnected from " + stream.substring(1) + "'schannel!");
 		followersFile.stopFollowerTracker();
+		announcer.stop();
 		stream = "";
 		mods = new String[0];
 	}

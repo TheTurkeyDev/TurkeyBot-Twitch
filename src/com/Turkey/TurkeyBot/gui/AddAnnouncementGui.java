@@ -6,67 +6,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
-import com.Turkey.TurkeyBot.TurkeyBot;
-import com.Turkey.TurkeyBot.commands.Command;
-
-public class AddCommandGui implements ActionListener
+public class AddAnnouncementGui implements ActionListener
 {
 	private JFrame popup;
 
-	private JLabel commandLabel;
-	//private JLabel note;
-	private JTextField commandName;
 	private JLabel responseLabel;
 	private TextArea response;
 
-	private JLabel permissionLabel;
-	private JComboBox<?> permSelect;
-
 	private JButton addCommand;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public AddCommandGui()
+	public AddAnnouncementGui()
 	{
 		popup = new JFrame();
 		Dimension size = new Dimension(400, 300);
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		popup.setSize(size);
 		popup.setLayout(null);
-		popup.setTitle("New Command");
+		popup.setTitle("New Announcement");
 		popup.setVisible(true);
 		popup.setResizable(false);
 		popup.setLocationRelativeTo(null);
-
-		commandLabel = new JLabel("Command    !");
-		commandLabel.setLocation(10,5);
-		commandLabel.setSize(75, 25);
-		popup.add(commandLabel);
-
-		commandName = new JTextField();
-		commandName.setLocation(85,5);
-		commandName.setSize(250, 25);
-		popup.add(commandName);
 
 		responseLabel = new JLabel("Output");
 		responseLabel.setLocation(10,50);
 		responseLabel.setSize(75, 25);
 		popup.add(responseLabel);
-
-		permissionLabel = new JLabel("Permission Level");
-		permissionLabel.setLocation(10,110);
-		permissionLabel.setSize(150, 25);
-		popup.add(permissionLabel);
-
-		permSelect = new JComboBox(TurkeyBot.getPermissions());
-		permSelect.setLocation(125,110);
-		permSelect.setSize(100, 25);
-		permSelect.setSelectedIndex(0);
-		popup.add(permSelect);
 
 		response = new TextArea();
 		response.setLocation(85,50);
@@ -86,19 +53,12 @@ public class AddCommandGui implements ActionListener
 	{
 		if(e.getSource() == addCommand)
 		{
-			if(commandName.getText().equalsIgnoreCase("") ||  response.getText().equalsIgnoreCase(""))
+			if(response.getText().equalsIgnoreCase(""))
 				error("You have blank feilds");
-			else if(commandName.getText().contains("!"))
-				error("No ! mark needed in the command feild!");
 			else
 			{
-				Command command = new Command(commandName.getText(), response.getText());
-				command.setPermissionLevel((String)permSelect.getSelectedItem());
-				Gui.getBot().addCommand(command);
-				if(Gui.getBot().settings.getSettingAsBoolean("outputchanges"))
-				{
-					Gui.getBot().sendMessage("Added Command " + "!" + commandName.getText());
-				}
+				Gui.getBot().announceFile.addAnnouncement(response.getText());
+				Gui.getBot().announceFile.reloadAnnouncements();
 				Gui.reloadTab();
 				popup.dispose();
 			}
