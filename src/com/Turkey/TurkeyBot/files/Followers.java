@@ -128,4 +128,9 @@ public class Followers extends BotFile implements Runnable
 			}
 		}
 	}
+	
+	public boolean isFollower(String name)
+	{
+		return super.properties.containsKey(name);
+	}
 }

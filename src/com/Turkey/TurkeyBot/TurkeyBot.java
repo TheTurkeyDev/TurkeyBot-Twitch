@@ -24,7 +24,6 @@ import com.Turkey.TurkeyBot.commands.DeleteCommand;
 import com.Turkey.TurkeyBot.commands.EditCommand;
 import com.Turkey.TurkeyBot.commands.EditPermission;
 import com.Turkey.TurkeyBot.commands.FunWayBotCommand;
-import com.Turkey.TurkeyBot.commands.MathCommand;
 import com.Turkey.TurkeyBot.commands.MooBotCommand;
 import com.Turkey.TurkeyBot.commands.NightBotCommand;
 import com.Turkey.TurkeyBot.commands.SlotsCommand;
@@ -42,7 +41,11 @@ import com.Turkey.TurkeyBot.files.SettingsFile;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.Turkey.TurkeyBot.gui.Gui;
+import com.Turkey.TurkeyBot.gui.KeyWordRaffleTab;
+import com.Turkey.TurkeyBot.gui.QuestionRaffleTab;
+import com.Turkey.TurkeyBot.util.CurrencyThread;
 import com.Turkey.TurkeyBot.util.HTTPConnect;
+import com.Turkey.TurkeyBot.util.KeyWordRaffle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -66,6 +69,7 @@ public class TurkeyBot extends PircBot
 	public ResponseSettings spamResponseFile;
 	public AccountSettings accountSettingsFile;
 	public Followers followersFile;
+	public CurrencyThread currencyTrack;
 	public AnnouncementFile announceFile;
 
 	private ModerateChat chatmoderation;
@@ -237,17 +241,19 @@ public class TurkeyBot extends PircBot
 			}
 		}
 
-		if(MathCommand.isMathQuestion)
+		if(KeyWordRaffleTab.getCurrentRaffle() != null && KeyWordRaffleTab.getCurrentRaffle().isRunning())
 		{
-			int guess = 0;
-			try{
-				guess = Integer.parseInt(message);
-			}catch(Exception e){return;}
-			if(MathCommand.getAnswer() == guess)
+			KeyWordRaffle raffle = KeyWordRaffleTab.getCurrentRaffle();
+			if(raffle.getKeyWord().equalsIgnoreCase(message))
+				raffle.addEntry(sender.toLowerCase());
+		}
+
+		if(QuestionRaffleTab.isRunning())
+		{
+			if(QuestionRaffleTab.getAnswer().equalsIgnoreCase(message))
 			{
-				sendMessage(capitalizeName(sender) + " has got the answer correct!");
-				currency.addCurrencyFor(sender, 100);
-				MathCommand.isMathQuestion = false;
+				this.sendMessage(this.capitalizeName(sender) + " Has guessed the correct answer! The answer was: " + QuestionRaffleTab.getAnswer());
+				QuestionRaffleTab.end();
 			}
 		}
 	}
@@ -258,13 +264,15 @@ public class TurkeyBot extends PircBot
 	 */
 	public void onPrivateMessage(String sender, String login, String hostname, String message)
 	{
-		if(message.contains("The moderators of this channel are:"))
-		{
-			message = message.substring(message.indexOf(":") + 2);
-			message += ", " + stream.substring(stream.indexOf("#") + 1);
-			mods = message.split(", ");
-			ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
-		}
+		try{
+			if(message.contains("The moderators"))
+			{
+				message = message.substring(message.indexOf(":") + 2);
+				message += ", " + stream.substring(stream.indexOf("#") + 1);
+				mods = message.split(", ");
+				ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
+			}
+		}catch(Exception e){ConsoleTab.output(Level.Error, "An Error Has occured while getting the mods of this channel");};
 	}
 
 	/**
@@ -327,7 +335,7 @@ public class TurkeyBot extends PircBot
 		}
 		//connectToChannel("turkey2349");
 	}
-	
+
 	public void onDisconnect()
 	{
 		disconnectFromTwitch();
@@ -372,6 +380,14 @@ public class TurkeyBot extends PircBot
 			} catch (IOException e){ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
 			} catch (IllegalStateException e){disconnectFromChannel();ConsoleTab.output(Level.Error, "The channel you tried to connect to is invalid!");return;}
 		}
+		if(!settings.getSetting("AutoCurrencyDelay").equalsIgnoreCase("-1"))
+		{
+			try
+			{
+				currencyTrack = new CurrencyThread(Integer.parseInt(settings.getSetting("AutoCurrencyDelay")), Integer.parseInt(settings.getSetting("AutoCurrencyAmount")), this);
+				currencyTrack.initCurrencyThread();
+			} catch (NumberFormatException e){disconnectFromChannel();ConsoleTab.output(Level.Error, "Your Auto Currency Settings are invalid!");return;}
+		}
 		if(!settings.getSetting("AnnounceDelay").equals("-1"))
 		{
 			announcer = new AutoAnnouncement(this);
@@ -400,7 +416,10 @@ public class TurkeyBot extends PircBot
 			ConsoleTab.output(Level.Alert, "Disconnected to the channel silently!");
 		this.partChannel(stream);
 		ConsoleTab.output(Level.Alert, "Disconnected from " + stream.substring(1) + "'schannel!");
-		followersFile.stopFollowerTracker();
+		if(followersFile != null)
+			followersFile.stopFollowerTracker();
+		if(currencyTrack != null)
+			currencyTrack.stopThread();
 		announcer.stop();
 		stream = "";
 		mods = new String[0];

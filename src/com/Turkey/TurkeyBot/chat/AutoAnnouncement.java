@@ -30,7 +30,6 @@ public class AutoAnnouncement implements Runnable
 	{
 		while(run)
 		{
-			makeAnnouncement();
 			try
 			{
 				synchronized(this)
@@ -41,6 +40,7 @@ public class AutoAnnouncement implements Runnable
 			{
 				e.printStackTrace();
 			}
+			makeAnnouncement();
 		}
 	}
 

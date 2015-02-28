@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 
 public class AccountSettingsTab extends Tab implements ActionListener
@@ -21,7 +22,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 	JLabel namelabel;
 	JLabel oAuthlabel;
 	JTextArea nametext;
-	JTextArea oAuthtext;
+	JPasswordField oAuthtext;
 
 	JLabel info;
 
@@ -57,7 +58,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		super.add(oAuthlabel);
 		components.add(oAuthlabel);
 
-		oAuthtext = new JTextArea();
+		oAuthtext = new JPasswordField();
 		oAuthtext.setName("AccountOAuth");
 		oAuthtext.setLocation(100, 45);
 		oAuthtext.setSize(200, 15);

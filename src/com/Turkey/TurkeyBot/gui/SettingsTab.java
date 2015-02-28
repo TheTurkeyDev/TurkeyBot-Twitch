@@ -55,7 +55,7 @@ public class SettingsTab extends Tab implements ActionListener
 
 			text = new JTextArea();
 			text.setName(settingsName);
-			text.setLocation(x + 100, (row*25) + 25);
+			text.setLocation(x + 150, (row*25) + 25);
 			text.setSize(60, 15);
 			text.setVisible(true);
 			text.setText(Gui.getBot().settings.getSetting(settingsName));
