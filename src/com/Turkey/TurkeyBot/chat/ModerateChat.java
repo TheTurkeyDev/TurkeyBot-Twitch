@@ -74,6 +74,8 @@ public class ModerateChat
 				bot.sendMessage(bot.spamResponseFile.getSetting("BlockedWordMessage"));
 			if(error == ErrorType.Emotes)
 				bot.sendMessage(bot.spamResponseFile.getSetting("EmotesMessage"));
+			if(error == ErrorType.Sybols)
+				bot.sendMessage(bot.spamResponseFile.getSetting("SymbolsMessage"));
 			bot.sendMessage("/timeout "+ sender + " 1");
 			return false;
 		}

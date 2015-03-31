@@ -10,6 +10,7 @@ public class AutoAnnouncement implements Runnable
 	public static boolean run = true;
 	private int delay = 0;
 	private TurkeyBot bot;
+	private Thread thread;
 
 	public AutoAnnouncement(TurkeyBot bot)
 	{
@@ -17,8 +18,13 @@ public class AutoAnnouncement implements Runnable
 		try{
 			delay = Integer.parseInt(bot.settings.getSetting("AnnounceDelay"));
 		}catch(NumberFormatException e){ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");return;}
+		initAutoAnnouncemer();
+	}
+	
+	public void initAutoAnnouncemer()
+	{
 		run = true;
-		Thread thread = new Thread(this);
+		thread = new Thread(this);
 		thread.start();
 	}
 
@@ -30,7 +36,6 @@ public class AutoAnnouncement implements Runnable
 	{
 		while(run)
 		{
-			makeAnnouncement();
 			try
 			{
 				synchronized(this)
@@ -40,7 +45,9 @@ public class AutoAnnouncement implements Runnable
 			} catch (InterruptedException e)
 			{
 				e.printStackTrace();
+				this.stop();
 			}
+			makeAnnouncement();
 		}
 	}
 
@@ -54,5 +61,17 @@ public class AutoAnnouncement implements Runnable
 	public void stop()
 	{
 		run = false;
+		try
+		{
+			thread.join();
+		} catch (InterruptedException e)
+		{
+			
+		}
+	}
+	
+	public boolean isRunning()
+	{
+		return run;
 	}
 }

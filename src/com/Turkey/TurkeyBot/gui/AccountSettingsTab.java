@@ -8,7 +8,10 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
+
+import com.Turkey.TurkeyBot.SecretStuff;
 
 public class AccountSettingsTab extends Tab implements ActionListener
 {
@@ -21,7 +24,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 	JLabel namelabel;
 	JLabel oAuthlabel;
 	JTextArea nametext;
-	JTextArea oAuthtext;
+	JPasswordField oAuthtext;
 
 	JLabel info;
 
@@ -34,7 +37,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		save.addActionListener(this);
 		super.add(save);
 
-		namelabel = new JLabel("Account Name");
+		namelabel = new JLabel("AccountName");
 		namelabel.setLocation(0, 20);
 		namelabel.setSize(200, 25);
 		namelabel.setVisible(true);
@@ -50,14 +53,14 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		super.add(nametext);
 		components.add(nametext);
 
-		oAuthlabel = new JLabel("Account oAuth");
+		oAuthlabel = new JLabel("AccountOAuth");
 		oAuthlabel.setLocation(0, 40);
 		oAuthlabel.setSize(200, 25);
 		oAuthlabel.setVisible(true);
 		super.add(oAuthlabel);
 		components.add(oAuthlabel);
 
-		oAuthtext = new JTextArea();
+		oAuthtext = new JPasswordField();
 		oAuthtext.setName("AccountOAuth");
 		oAuthtext.setLocation(100, 45);
 		oAuthtext.setSize(200, 15);
@@ -82,14 +85,13 @@ public class AccountSettingsTab extends Tab implements ActionListener
 	 */
 	public void saveSettings()
 	{
-		for(JComponent comp: components)
-		{
-			if(comp instanceof JTextArea)
-			{
-				if(((JTextArea) comp).getText() != null)
-					Gui.getBot().accountSettingsFile.setSetting(comp.getName(), ((JTextArea) comp).getText());
-			}
-		}
+		Gui.getBot().accountSettingsFile.setSetting("AccountName", nametext.getText());
+		String pass = "";
+		char[] chars = oAuthtext.getPassword();
+		for(char c: chars)
+			pass+=c;
+		Gui.getBot().accountSettingsFile.setSetting("AccountOAuth", pass);
+		SecretStuff.oAuth = pass;
 	}
 
 	@Override

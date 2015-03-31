@@ -16,6 +16,7 @@ public class Followers extends BotFile implements Runnable
 	private JsonParser json;
 	public static boolean run = true;
 	private int i = 0;
+	private Thread thread;
 
 	public Followers(TurkeyBot b) throws IOException
 	{
@@ -33,7 +34,7 @@ public class Followers extends BotFile implements Runnable
 		else
 			checkFollowers(false);
 		run = true;
-		Thread thread = new Thread(this);
+		thread = new Thread(this);
 		thread.start();
 	}
 
@@ -43,6 +44,16 @@ public class Followers extends BotFile implements Runnable
 	public void stopFollowerTracker()
 	{
 		run = false;
+		if(thread != null)
+		{
+			try
+			{
+				thread.join();
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -64,6 +75,7 @@ public class Followers extends BotFile implements Runnable
 			} catch (InterruptedException e)
 			{
 				e.printStackTrace();
+				this.stopFollowerTracker();
 			}
 		}
 	}
@@ -127,5 +139,10 @@ public class Followers extends BotFile implements Runnable
 				super.setSetting(temp.toLowerCase(), list.get(i).getAsJsonObject().get("created_at"));
 			}
 		}
+	}
+
+	public boolean isRunning()
+	{
+		return run;
 	}
 }

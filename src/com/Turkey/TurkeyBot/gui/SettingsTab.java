@@ -26,6 +26,7 @@ public class SettingsTab extends Tab implements ActionListener
 		Object[] settings = Gui.getBot().settings.getSettings().toArray();
 		JLabel label;
 		JTextArea text;
+		JButton button;
 
 		save = new JButton("Save");
 		save.setName("Save");
@@ -55,13 +56,34 @@ public class SettingsTab extends Tab implements ActionListener
 
 			text = new JTextArea();
 			text.setName(settingsName);
-			text.setLocation(x + 100, (row*25) + 25);
+			text.setLocation(x + 200, (row*25) + 25);
 			text.setSize(60, 15);
 			text.setVisible(true);
 			text.setText(Gui.getBot().settings.getSetting(settingsName));
 			super.add(text);
 			components.add(text);
 
+			if(settingsName.equalsIgnoreCase("autocurrencydelay") || settingsName.equalsIgnoreCase("trackfollowers") || settingsName.equalsIgnoreCase("announcedelay"))
+			{
+				boolean running = false;
+
+				if(settingsName.equalsIgnoreCase("autocurrencydelay") && Gui.getBot().currencyTrack != null)
+					running = Gui.getBot().currencyTrack.isRunning();
+				if(settingsName.equalsIgnoreCase("trackfollowers") && Gui.getBot().followersFile != null)
+					running = Gui.getBot().followersFile.isRunning();
+				if(settingsName.equalsIgnoreCase("announcedelay") && Gui.getBot().announcer != null)
+					running = Gui.getBot().announcer.isRunning();
+
+				button = new JButton(running?"Stop":"Start");
+				button.setLocation(x+275, (row*25) + 20);
+				button.setName(settingsName);
+				button.setSize(75, 25);
+				button.setVisible(true);
+				button.addActionListener(this);
+				super.add(button);
+				components.add(button);
+			}
+			
 			row++;
 		}
 		super.setVisible(true);
@@ -100,6 +122,44 @@ public class SettingsTab extends Tab implements ActionListener
 		if(e.getSource().equals(save))
 		{
 			saveSettings();
+		}
+		else if(e.getSource() instanceof JButton)
+		{
+			JButton b = (JButton) e.getSource();
+
+			if(b.getName().equalsIgnoreCase("autocurrencydelay") && Gui.getBot().currencyTrack != null)
+			{
+				if(b.getText().equalsIgnoreCase("Stop"))
+				{
+					Gui.getBot().currencyTrack.stopThread();
+				}
+				else if(b.getText().equalsIgnoreCase("Start"))
+				{
+					Gui.getBot().currencyTrack.initCurrencyThread();
+				}
+			}
+			if(b.getName().equalsIgnoreCase("trackfollowers") && Gui.getBot().followersFile != null)
+			{
+				if(b.getText().equalsIgnoreCase("Stop"))
+				{
+					Gui.getBot().followersFile.stopFollowerTracker();
+				}
+				else if(b.getText().equalsIgnoreCase("Start"))
+				{
+					Gui.getBot().followersFile.initFollowerTracker();
+				}
+			}
+			if(b.getName().equalsIgnoreCase("announcedelay") && Gui.getBot().announcer != null)
+			{
+				if(b.getText().equalsIgnoreCase("Stop"))
+				{
+					Gui.getBot().announcer.stop();
+				}
+				else if(b.getText().equalsIgnoreCase("Start"))
+				{
+					Gui.getBot().announcer.initAutoAnnouncemer();
+				}
+			}
 		}
 	}
 

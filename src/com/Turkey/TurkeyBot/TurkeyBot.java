@@ -73,7 +73,7 @@ public class TurkeyBot extends PircBot
 	public AnnouncementFile announceFile;
 
 	private ModerateChat chatmoderation;
-	private AutoAnnouncement announcer;
+	public AutoAnnouncement announcer;
 
 	private String[] mods;
 	private ArrayList<String> viewers;
@@ -368,18 +368,17 @@ public class TurkeyBot extends PircBot
 		}
 		if(stream!="")
 			disconnectFromChannel();
-		stream = "#"+channel;
+		stream = "#"+channel.toLowerCase();
 		joinChannel(stream);
 		ConsoleTab.output(Level.Info, "Connected to " + stream.substring(1) + "'s channel!");
-		if(settings.getSettingAsBoolean("TrackFollowers"))
+
+		try
 		{
-			try
-			{
-				followersFile = new Followers(this);
+			followersFile = new Followers(this);
+			if(settings.getSettingAsBoolean("TrackFollowers"))
 				followersFile.initFollowerTracker();
-			} catch (IOException e){ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
-			} catch (IllegalStateException e){disconnectFromChannel();ConsoleTab.output(Level.Error, "The channel you tried to connect to is invalid!");return;}
-		}
+		} catch (IOException e){ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
+		} catch (IllegalStateException e){disconnectFromChannel();ConsoleTab.output(Level.Error, "The channel you tried to connect to is invalid!");return;}
 		if(!settings.getSetting("AutoCurrencyDelay").equalsIgnoreCase("-1"))
 		{
 			try
@@ -420,9 +419,11 @@ public class TurkeyBot extends PircBot
 			followersFile.stopFollowerTracker();
 		if(currencyTrack != null)
 			currencyTrack.stopThread();
-		announcer.stop();
+		if(announcer != null)
+			announcer.stop();
 		stream = "";
 		mods = new String[0];
+		this.viewers.clear();
 	}
 
 	/**
