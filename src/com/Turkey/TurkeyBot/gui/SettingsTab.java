@@ -137,6 +137,7 @@ public class SettingsTab extends Tab implements ActionListener
 				{
 					Gui.getBot().currencyTrack.initCurrencyThread();
 				}
+				Gui.reloadTab();
 			}
 			if(b.getName().equalsIgnoreCase("trackfollowers") && Gui.getBot().followersFile != null)
 			{
@@ -148,6 +149,7 @@ public class SettingsTab extends Tab implements ActionListener
 				{
 					Gui.getBot().followersFile.initFollowerTracker();
 				}
+				Gui.reloadTab();
 			}
 			if(b.getName().equalsIgnoreCase("announcedelay") && Gui.getBot().announcer != null)
 			{
@@ -159,6 +161,7 @@ public class SettingsTab extends Tab implements ActionListener
 				{
 					Gui.getBot().announcer.initAutoAnnouncemer();
 				}
+				Gui.reloadTab();
 			}
 		}
 	}

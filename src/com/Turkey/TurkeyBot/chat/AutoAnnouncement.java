@@ -7,7 +7,7 @@ import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 public class AutoAnnouncement implements Runnable
 {
 
-	public static boolean run = true;
+	public static boolean run = false;
 	private int delay = 0;
 	private TurkeyBot bot;
 	private Thread thread;
@@ -20,12 +20,15 @@ public class AutoAnnouncement implements Runnable
 		}catch(NumberFormatException e){ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");return;}
 		initAutoAnnouncemer();
 	}
-	
+
 	public void initAutoAnnouncemer()
 	{
 		run = true;
-		thread = new Thread(this);
-		thread.start();
+		if(thread == null || !thread.isAlive())
+		{
+			thread = new Thread(this);
+			thread.start();
+		}
 	}
 
 	/**
@@ -48,7 +51,15 @@ public class AutoAnnouncement implements Runnable
 				this.stop();
 			}
 			makeAnnouncement();
+			try{
+				delay = Integer.parseInt(bot.settings.getSetting("AnnounceDelay"));
+			}catch(NumberFormatException e){ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");return;}
 		}
+		try
+		{
+			thread.interrupt();
+			thread.join();
+		} catch (InterruptedException e){}
 	}
 
 	private void makeAnnouncement()
@@ -61,15 +72,8 @@ public class AutoAnnouncement implements Runnable
 	public void stop()
 	{
 		run = false;
-		try
-		{
-			thread.join();
-		} catch (InterruptedException e)
-		{
-			
-		}
 	}
-	
+
 	public boolean isRunning()
 	{
 		return run;

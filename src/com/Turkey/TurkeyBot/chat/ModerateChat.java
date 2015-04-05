@@ -20,11 +20,13 @@ public class ModerateChat
 	private String[] blackList;
 
 	private List<String> emotes = new ArrayList<String>();
+	
+	public static boolean Moderate = true;
 
 	public ModerateChat(TurkeyBot b)
 	{
 		bot = b;
-
+		
 		blackList = bot.chatSettings.getSetting("WordBlackList").split(",");
 		try{
 			URL url = new URL("https://api.twitch.tv/kraken/chat/turkey2349/emoticons");
@@ -58,7 +60,7 @@ public class ModerateChat
 	public boolean isValidChat(String m, String sender)
 	{
 		message = m.split(" ");
-		if(bot.isMod(sender) || bot.checkForImmunity(sender))
+		if(bot.isMod(sender) || bot.checkForImmunity(sender) || !Moderate)
 		{
 			return true;
 		}
@@ -104,7 +106,7 @@ public class ModerateChat
 		int numofemotes = 0;
 		for(String word: message)
 		{
-			if(word.equalsIgnoreCase("***"))
+			if(word.contains("***"))
 			{
 				return ErrorType.BlockedWord;
 			}

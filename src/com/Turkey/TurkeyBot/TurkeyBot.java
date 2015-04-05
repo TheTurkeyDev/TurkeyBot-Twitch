@@ -52,7 +52,7 @@ import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
-	public static final String VERSION = "Beta 1.0.0";
+	public static final String VERSION = "Beta 1.2.7";
 
 	private static HashMap<String, Command> commands = new HashMap<String, Command>();
 
@@ -188,6 +188,7 @@ public class TurkeyBot extends PircBot
 		int index = message.indexOf(" ");
 		if(index < 1)
 			index = message.length();
+		String[] args = message.split(" ");
 		if(commands.containsKey(message.substring(0, index).toLowerCase()))
 		{
 			Command command = commands.get(message.substring(0, index).toLowerCase());
@@ -208,6 +209,29 @@ public class TurkeyBot extends PircBot
 			disconnectFromChannel();
 			connectToChannel(lastchannel);
 		}
+		else if(args[0].equalsIgnoreCase("!moderate") && (sender.equalsIgnoreCase(stream.substring(1)) || sender.equalsIgnoreCase("turkey2349")))
+		{		
+			if(args.length < 2)
+			{
+				this.sendMessage(this.capitalizeName(sender) + ": invalid use of that command! Try !moderate <true:false>");
+			}
+			else
+			{
+				if(args[1].equalsIgnoreCase("true"))
+				{
+					ModerateChat.Moderate = true;
+					this.sendMessage(this.capitalizeName(sender) + "TurkeyBot is now moderating the chat!");
+					return;
+				}
+				else if(args[1].equalsIgnoreCase("false"))
+				{
+					ModerateChat.Moderate = false;
+					this.sendMessage(this.capitalizeName(sender) + "TurkeyBot is no longer moderating the chat!");
+					return;
+				}
+				this.sendMessage(this.capitalizeName(sender) + "The argument was not true or false");
+			}
+		}
 		/*else if(message.equalsIgnoreCase("!Commands") || message.equalsIgnoreCase("!Help"))
 		{
 			String toSend = "These are the available commands to use ";
@@ -222,7 +246,6 @@ public class TurkeyBot extends PircBot
 		}*/
 		else if((message.substring(0, index).equalsIgnoreCase("!Add"+currencyName) && sender.equalsIgnoreCase(stream.substring(1)))&& this.hasPermission(sender, "Streamer"))
 		{
-			String[] args = message.split(" ");
 			if(args.length != 2)
 			{
 				sendMessage("Invalid arguments");

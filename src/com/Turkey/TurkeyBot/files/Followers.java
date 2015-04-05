@@ -14,7 +14,7 @@ import com.google.gson.JsonParser;
 public class Followers extends BotFile implements Runnable
 {
 	private JsonParser json;
-	public static boolean run = true;
+	public static boolean run = false;
 	private int i = 0;
 	private Thread thread;
 
@@ -33,9 +33,13 @@ public class Followers extends BotFile implements Runnable
 			loadFollowers();
 		else
 			checkFollowers(false);
+		
 		run = true;
-		thread = new Thread(this);
-		thread.start();
+		if(thread == null || !thread.isAlive())
+		{
+			thread = new Thread(this);
+			thread.start();
+		}
 	}
 
 	/**
@@ -44,16 +48,6 @@ public class Followers extends BotFile implements Runnable
 	public void stopFollowerTracker()
 	{
 		run = false;
-		if(thread != null)
-		{
-			try
-			{
-				thread.join();
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -78,6 +72,11 @@ public class Followers extends BotFile implements Runnable
 				this.stopFollowerTracker();
 			}
 		}
+		try
+		{
+			thread.interrupt();
+			thread.join();
+		} catch (InterruptedException e){}
 	}
 
 	/**

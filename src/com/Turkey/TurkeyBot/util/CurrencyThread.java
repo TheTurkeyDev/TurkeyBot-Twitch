@@ -9,7 +9,7 @@ public class CurrencyThread implements Runnable
 	private int delay;
 	private int amount;
 	private TurkeyBot bot;
-	private boolean run;
+	private boolean run = false;
 	private Thread thread;
 
 	public CurrencyThread(int delay, int amount, TurkeyBot bot)
@@ -22,8 +22,11 @@ public class CurrencyThread implements Runnable
 	public void initCurrencyThread()
 	{
 		run = true;
-		thread = new Thread(this);
-		thread.start();
+		if(thread == null || !thread.isAlive())
+		{
+			thread = new Thread(this);
+			thread.start();
+		}
 	}
 	
 	@Override
@@ -44,6 +47,11 @@ public class CurrencyThread implements Runnable
 			
 			giveCurrency();
 		}
+		try
+		{
+			thread.interrupt();
+			thread.join();
+		} catch (InterruptedException e){}
 	}
 	
 	private void giveCurrency()
@@ -61,14 +69,6 @@ public class CurrencyThread implements Runnable
 	public void stopThread()
 	{
 		run = false;
-		
-		try
-		{
-			thread.join();
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	public boolean isRunning()
