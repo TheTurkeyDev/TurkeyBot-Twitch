@@ -141,6 +141,7 @@ public class CommandsTab extends Tab implements ActionListener
 			comp.setVisible(false);
 			scroller.remove(comp);
 		}
+		components.clear();
 		super.remove(scroller);
 		super.setVisible(false);
 	}

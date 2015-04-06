@@ -29,7 +29,9 @@ public class Gui extends JFrame implements ActionListener
 	private SpamResponseTab spamResponseTab;
 	private AccountSettingsTab accountSettingsTab;
 	private AnnouncementTab announcementTab;
-
+	private KeyWordRaffleTab keywordRaffleTab;
+	private QuestionRaffleTab questionRaffleTab;
+	
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem item;
@@ -51,6 +53,9 @@ public class Gui extends JFrame implements ActionListener
 		spamResponseTab = new SpamResponseTab();
 		accountSettingsTab = new AccountSettingsTab();
 		announcementTab = new AnnouncementTab();
+		keywordRaffleTab = new KeyWordRaffleTab();
+		questionRaffleTab = new QuestionRaffleTab();
+		
 		Dimension size = new Dimension(800, 600);
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setSize(size);
@@ -135,6 +140,20 @@ public class Gui extends JFrame implements ActionListener
 		item.addActionListener(this);
 		menu.add(item);
 
+		//Raffles
+		menu = new JMenu("Raffle");
+		menuBar.add(menu);
+		
+		//Keyword Raffle Menu Item
+		item = new JMenuItem("Keyword Raffle");
+		item.addActionListener(this);
+		menu.add(item);
+		
+		//Question Raffle Menu Item
+		item = new JMenuItem("Question Raffle");
+		item.addActionListener(this);
+		menu.add(item);
+
 		super.setJMenuBar(menuBar);
 		currentTab = console;
 		super.add(currentTab);
@@ -185,6 +204,10 @@ public class Gui extends JFrame implements ActionListener
 				currentTab = announcementTab;
 			else if(eItem.getText().equalsIgnoreCase("Add Announcement"))
 				new AddAnnouncementGui();
+			else if(eItem.getText().equalsIgnoreCase("Keyword Raffle"))
+				currentTab = keywordRaffleTab;
+			else if(eItem.getText().equalsIgnoreCase("Question Raffle"))
+				currentTab = questionRaffleTab;
 			super.add(currentTab);
 			currentTab.load();
 			this.revalidate();
