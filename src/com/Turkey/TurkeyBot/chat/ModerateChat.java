@@ -20,13 +20,13 @@ public class ModerateChat
 	private String[] blackList;
 
 	private List<String> emotes = new ArrayList<String>();
-	
+
 	public static boolean Moderate = true;
 
 	public ModerateChat(TurkeyBot b)
 	{
 		bot = b;
-		
+
 		blackList = bot.chatSettings.getSetting("WordBlackList").split(",");
 		try{
 			URL url = new URL("https://api.twitch.tv/kraken/chat/turkey2349/emoticons");
@@ -111,20 +111,25 @@ public class ModerateChat
 				return ErrorType.BlockedWord;
 			}
 			if(emotes.contains(word))
-				numofemotes++;
-			for(char letter: word.toCharArray())
 			{
-				if(letter >= 65 && letter <= 90)
-					caps++;
-				if((letter >= 65 && letter <= 90) || (letter >= 97 && letter <= 122))
+				numofemotes++;
+			}
+			else
+			{
+				for(char letter: word.toCharArray())
 				{
-					letters++;
+					if(letter >= 65 && letter <= 90)
+						caps++;
+					if((letter >= 65 && letter <= 90) || (letter >= 97 && letter <= 122))
+					{
+						letters++;
+					}
+					else
+					{
+						symbols++;
+					}
+					charecters++;
 				}
-				else
-				{
-					symbols++;
-				}
-				charecters++;
 			}
 		}
 		int capsMax = Integer.parseInt(bot.chatSettings.getSetting("MaxCaps"));
@@ -135,7 +140,7 @@ public class ModerateChat
 		if(( capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double)letters)*100) > capsPercent))
 			return ErrorType.Caps;
 
-		
+
 		int emotesMax = Integer.parseInt(bot.chatSettings.getSetting("MaxEmotes"));
 		int emotesMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumEmotes"));
 		int emotesPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofEmotes"));
@@ -144,19 +149,19 @@ public class ModerateChat
 			return ErrorType.Emotes;
 		if(( emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double)message.length)*100) > emotesPercent))
 			return ErrorType.Emotes;
-		
+
 		if(letters > Integer.parseInt(bot.chatSettings.getSetting("MaxMessageLength")))
 			return ErrorType.Length;
-		
+
 		int symbolsMax = Integer.parseInt(bot.chatSettings.getSetting("MaxSymbols"));
 		int symbolsMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumSymbols"));
 		int symbolsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofSymbols"));
-		
+
 		if(symbolsMax != -1 && symbols > symbolsMax)
 			return ErrorType.Sybols;
 		if(( symbolsMin != -1 && symbols > symbolsMin) && (symbolsPercent != -1 && (((double) symbols / (double)charecters)*100) > symbolsPercent))
 			return ErrorType.Sybols;
-		
+
 		return ErrorType.None;
 	}
 

@@ -52,7 +52,7 @@ import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
-	public static final String VERSION = "Beta 1.2.7";
+	public static final String VERSION = "Beta 1.2.9";
 
 	private static HashMap<String, Command> commands = new HashMap<String, Command>();
 
@@ -347,7 +347,12 @@ public class TurkeyBot extends PircBot
 				setName(botName);
 				connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
 				connected = true;
-			}catch(Exception e){connected = false; ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());return;}
+			}catch(Exception e)
+			{
+				connected = false;
+				ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());
+				return;
+			}
 			ConsoleTab.output(Level.Info, "Connected!");
 		}
 		else
