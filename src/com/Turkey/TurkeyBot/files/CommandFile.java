@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.commands.Command;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
@@ -19,11 +20,11 @@ public class CommandFile
 	private Gson gson;
 	private JsonObject mainFile;
 
-	public CommandFile(Command c) throws IOException
+	public CommandFile(Command c, TurkeyBot b) throws IOException
 	{
 		command = c;
 		gson = new Gson();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + "commands" + File.separator + command.getName() +".json");
+		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getChannel(false) + File.separator + "commands" + File.separator + command.getName() +".json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();

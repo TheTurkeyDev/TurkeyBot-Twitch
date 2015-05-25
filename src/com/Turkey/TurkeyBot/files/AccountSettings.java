@@ -15,7 +15,7 @@ public class AccountSettings extends BotFile
 
 	public AccountSettings(TurkeyBot b) throws IOException
 	{
-		super(b, "C:" + File.separator + "TurkeyBot" + File.separator + "properties" + File.separator + propName);
+		super(b, "C:" + File.separator + "TurkeyBot" + File.separator + b.getChannel(false) + File.separator + "properties" + File.separator + propName);
 		loadSettings();
 	}
 

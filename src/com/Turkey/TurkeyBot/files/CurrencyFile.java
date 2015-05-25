@@ -11,7 +11,7 @@ public class CurrencyFile extends BotFile
 
 	public CurrencyFile(TurkeyBot bot) throws IOException
 	{
-		super(bot,"C:" + File.separator + "TurkeyBot" + File.separator + "properties" + File.separator + propName);
+		super(bot,"C:" + File.separator + "TurkeyBot" + File.separator + bot.getChannel(false) + File.separator + "properties" + File.separator + propName);
 	}
 
 	/**

@@ -92,13 +92,18 @@ public class TurkeyBot extends PircBot
 	{
 		//this.setVerbose(true);
 		json = new JsonParser();
-		loadFiles();
-		currencyName = settings.getSetting("CurrencyName");
-		loadCommands();
 		setMessageDelay(1550);
-		chatmoderation = new ModerateChat(this);
+		preloadFiles();
 	}
 
+	private void preloadFiles()
+	{
+		try
+		{
+			accountSettingsFile = new AccountSettings(this);
+		}  catch (IOException e){e.printStackTrace();}
+	}
+		
 	/**
 	 * Loads the files needed for the bot
 	 */
@@ -110,8 +115,7 @@ public class TurkeyBot extends PircBot
 			settings = new SettingsFile(this);
 			chatSettings = new ChatSettings(this);
 			spamResponseFile = new ResponseSettings(this);
-			accountSettingsFile = new AccountSettings(this);
-			announceFile = new AnnouncementFile();
+			announceFile = new AnnouncementFile(this);
 		} catch (IOException e){e.printStackTrace();}
 	}
 
@@ -429,6 +433,10 @@ public class TurkeyBot extends PircBot
 		else
 			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
 		this.sendMessage(stream, "/mods");
+		loadFiles();
+		currencyName = settings.getSetting("CurrencyName");
+		loadCommands();
+		chatmoderation = new ModerateChat(this);
 		loadViewers();
 	}
 
