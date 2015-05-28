@@ -8,7 +8,6 @@ import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.files.CommandFile;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
-import com.Turkey.TurkeyBot.gui.Gui;
 
 public class Command
 {
@@ -29,7 +28,7 @@ public class Command
 		responses.add(r);
 		try
 		{
-			file = new CommandFile(this, Gui.getBot());
+			file = new CommandFile(this, TurkeyBot.bot);
 		} catch (IOException e)
 		{
 			ConsoleTab.output(Level.Error, "Could not load " + name + "'s command file!");

@@ -36,15 +36,12 @@ public class Gui extends JFrame implements ActionListener
 	private JMenu menu;
 	private JMenuItem item;
 
-	private static TurkeyBot bot;
-
 	/**
 	 * Initiates the Gui side of the bot.
 	 * @param b The instance of the bot.
 	 */
 	public Gui(TurkeyBot b)
 	{
-		bot = b;
 		console = new ConsoleTab();
 		viewers = new Viewers();
 		listcommands = new CommandsTab();
@@ -164,14 +161,14 @@ public class Gui extends JFrame implements ActionListener
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) 
 			{
-				if(!bot.settings.getSettingAsBoolean("SilentJoinLeave") && !bot.getChannel(false).equalsIgnoreCase(""))
-					bot.sendMessage("GoodBye!!!");
+				
+				if(!TurkeyBot.bot.getChannel(false).equalsIgnoreCase("") && !TurkeyBot.bot.settings.getSettingAsBoolean("SilentJoinLeave"))
+					TurkeyBot.bot.sendMessage("GoodBye!!!");
 				System.exit(0);
 				Followers.run = false;
 			}	
 		});
 
-		b.connectToTwitch();
 		//ConsoleTab.output(Level.Alert, "Type /connect to connect to twitch!");
 		this.revalidate();
 	}
@@ -214,15 +211,6 @@ public class Gui extends JFrame implements ActionListener
 			this.repaint();
 		}
 
-	}
-
-	/**
-	 * Gets the instance of the bot
-	 * @return
-	 */
-	public static TurkeyBot getBot()
-	{
-		return bot;
 	}
 
 	/**

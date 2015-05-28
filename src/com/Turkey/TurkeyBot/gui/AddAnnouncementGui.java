@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class AddAnnouncementGui implements ActionListener
 {
 	private JFrame popup;
@@ -57,8 +59,8 @@ public class AddAnnouncementGui implements ActionListener
 				error("You have blank feilds");
 			else
 			{
-				Gui.getBot().announceFile.addAnnouncement(response.getText());
-				Gui.getBot().announceFile.reloadAnnouncements();
+				TurkeyBot.bot.announceFile.addAnnouncement(response.getText());
+				TurkeyBot.bot.announceFile.reloadAnnouncements();
 				Gui.reloadTab();
 				popup.dispose();
 			}

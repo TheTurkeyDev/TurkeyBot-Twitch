@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class ChatSettingsTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
@@ -58,7 +60,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setName("Block Links");
 				text.setLocation(150, 25);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("BlockLinks"));
+				text.setText(TurkeyBot.bot.chatSettings.getSetting("BlockLinks"));
 				components.add(text);
 				panel.add(text);
 				
@@ -72,7 +74,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setName("Max Message Length");
 				text.setLocation(150, 50);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("MaxMessageLength"));
+				text.setText(TurkeyBot.bot.chatSettings.getSetting("MaxMessageLength"));
 				components.add(text);
 				panel.add(text);
 				
@@ -85,8 +87,8 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text = new JTextArea();
 				text.setName("Word Black List");
 				text.setLocation(150, 75);
-				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("WordBlackList"));
+				text.setSize(300, 200);
+				text.setText(TurkeyBot.bot.chatSettings.getSetting("WordBlackList"));
 				components.add(text);
 				panel.add(text);
 			}
@@ -102,7 +104,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setName("Minimum " + s);
 				text.setLocation(150, 25);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("Minimum" + s));
+				text.setText(TurkeyBot.bot.chatSettings.getSetting("Minimum" + s));
 				components.add(text);
 				panel.add(text);
 				
@@ -116,7 +118,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setName("Max " + s);
 				text.setLocation(150, 50);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("Max" + s));
+				text.setText(TurkeyBot.bot.chatSettings.getSetting("Max" + s));
 				components.add(text);
 				panel.add(text);
 				
@@ -130,7 +132,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setName("Max percent of " + s);
 				text.setLocation(150, 75);
 				text.setSize(60, 15);
-				text.setText(Gui.getBot().chatSettings.getSetting("Maxpercentof" + s));
+				text.setText(TurkeyBot.bot.chatSettings.getSetting("Maxpercentof" + s));
 				components.add(text);
 				panel.add(text);
 			}
@@ -163,7 +165,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 		{
 			if(comp instanceof JTextArea)
 			{
-				Gui.getBot().chatSettings.setSetting(comp.getName().replace(" ", ""), ((JTextArea) comp).getText());
+				TurkeyBot.bot.chatSettings.setSetting(comp.getName().replace(" ", ""), ((JTextArea) comp).getText());
 			}
 		}
 	}

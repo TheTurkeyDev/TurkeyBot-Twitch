@@ -27,7 +27,7 @@ public class Viewers extends Tab
 
 	public void load()
 	{
-		List<String> viewers = Gui.getBot().getViewers();
+		List<String> viewers = TurkeyBot.bot.getViewers();
 		String[][] rows;
 
 		if(viewers == null || viewers.size() == 0)
@@ -47,7 +47,7 @@ public class Viewers extends Tab
 				for(int x = 0; x < columnNames.length; x++)
 				{
 					String viewer = viewers.get(y);
-					TurkeyBot bot =  Gui.getBot();
+					TurkeyBot bot =  TurkeyBot.bot;
 					if(x == 0)
 						rows[y][x] = viewer;
 					else if(x == 1)

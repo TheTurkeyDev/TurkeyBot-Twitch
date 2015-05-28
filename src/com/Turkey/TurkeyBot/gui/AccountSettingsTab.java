@@ -2,72 +2,100 @@ package com.Turkey.TurkeyBot.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 
-import com.Turkey.TurkeyBot.SecretStuff;
+import com.Turkey.TurkeyBot.TurkeyBot;
 
 public class AccountSettingsTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
-	List<JComponent> components = new ArrayList<JComponent>();
+	private JButton add;
+	private JButton edit;
 
-	JButton save;
-
-	JLabel namelabel;
-	JLabel oAuthlabel;
-	JTextArea nametext;
-	JPasswordField oAuthtext;
-
-	JLabel info;
+	private JLabel displaynamelabel;
+	private JLabel namelabel;
+	private JLabel oAuthlabel;
+	private JTextArea nametext;
+	private JTextArea displaynametext;
+	private JPasswordField oAuthtext;
+	private JLabel selectedAccount;
+	
+	private static JComboBox<?> accounts;
 
 	public AccountSettingsTab()
 	{
-		save = new JButton("Save");
-		save.setName("Save");
-		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
-		save.setSize(100, 25);
-		save.addActionListener(this);
-		super.add(save);
+		add = new JButton("Add");
+		add.setName("Add");
+		add.setLocation((super.getWidth()/2)- 50, 100);
+		add.setSize(100, 25);
+		add.addActionListener(this);
+		super.add(add);
+		
+		edit = new JButton("Edit");
+		edit.setName("Edit");
+		edit.setLocation((super.getWidth()/2) + 75, 150);
+		edit.setSize(100, 25);
+		edit.addActionListener(this);
+		super.add(edit);
 
+		displaynamelabel = new JLabel("Display Name (what you call the bot)");
+		displaynamelabel.setLocation((super.getWidth()/2) - 275, 20);
+		displaynamelabel.setSize(300, 25);
+		displaynamelabel.setVisible(true);
+		super.add(displaynamelabel);
+
+		displaynametext = new JTextArea("Display Name");
+		displaynametext.setName("DisplayName");
+		displaynametext.setLocation((super.getWidth()/2) - 50, 25);
+		displaynametext.setSize(200, 15);
+		displaynametext.setVisible(true);
+		displaynametext.setToolTipText("Display Name");
+		super.add(displaynametext);
+		
 		namelabel = new JLabel("AccountName");
-		namelabel.setLocation(0, 20);
+		namelabel.setLocation((super.getWidth()/2) - 150, 40);
 		namelabel.setSize(200, 25);
 		namelabel.setVisible(true);
 		super.add(namelabel);
-		components.add(namelabel);
 
-		nametext = new JTextArea();
+		nametext = new JTextArea("Account Username");
 		nametext.setName("AccountName");
-		nametext.setLocation(100, 25);
+		nametext.setLocation((super.getWidth()/2) - 50, 45);
 		nametext.setSize(200, 15);
 		nametext.setVisible(true);
-		nametext.setText(Gui.getBot().accountSettingsFile.getSetting("AccountName"));
+		nametext.setToolTipText("Account Username");
 		super.add(nametext);
-		components.add(nametext);
 
 		oAuthlabel = new JLabel("AccountOAuth");
-		oAuthlabel.setLocation(0, 40);
-		oAuthlabel.setSize(200, 25);
+		oAuthlabel.setLocation((super.getWidth()/2) - 150, 60);
+		oAuthlabel.setSize(100, 25);
 		oAuthlabel.setVisible(true);
 		super.add(oAuthlabel);
-		components.add(oAuthlabel);
 
 		oAuthtext = new JPasswordField();
 		oAuthtext.setName("AccountOAuth");
-		oAuthtext.setLocation(100, 45);
+		oAuthtext.setLocation((super.getWidth()/2) - 50, 65);
 		oAuthtext.setSize(200, 15);
 		oAuthtext.setVisible(true);
-		oAuthtext.setText(Gui.getBot().accountSettingsFile.getSetting("AccountOAuth"));
+		oAuthtext.setToolTipText("Account oAuth");
 		super.add(oAuthtext);
-		components.add(oAuthtext);
+		
+		accounts = new JComboBox<>(TurkeyBot.bot.accountSettingsFile.getAccounts().keySet().toArray());
+		accounts.setLocation((super.getWidth()/2) - 60 , 150);
+		accounts.setSize(120, 25);
+		super.add(accounts);
+		
+		selectedAccount = new JLabel("Selected Account:");
+		selectedAccount.setLocation((super.getWidth()/2) - 175, 150);
+		selectedAccount.setSize(200, 25);
+		selectedAccount.setVisible(true);
+		super.add(selectedAccount);
 	}
 
 	public void load()
@@ -80,27 +108,29 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		super.setVisible(false);
 	}
 
-	/**
-	 * Saves settings of the bot from this tab
-	 */
-	public void saveSettings()
+	public void addAccount()
 	{
-		Gui.getBot().accountSettingsFile.setSetting("AccountName", nametext.getText());
-		String pass = "";
-		char[] chars = oAuthtext.getPassword();
-		for(char c: chars)
-			pass+=c;
-		Gui.getBot().accountSettingsFile.setSetting("AccountOAuth", pass);
-		SecretStuff.oAuth = pass;
+		if(!this.nametext.getText().equalsIgnoreCase("") && !this.displaynametext.getText().equalsIgnoreCase("") && this.oAuthtext.getPassword().length != 0)
+		{
+			String oAuth = "";
+			for(char c: oAuthtext.getPassword())
+				oAuth+=c;
+			TurkeyBot.bot.accountSettingsFile.addAccount(displaynametext.getText(), nametext.getText(), oAuth);
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(e.getSource().equals(save))
+		if(e.getSource().equals(add))
 		{
-			saveSettings();
+			addAccount();
 		}
+	}
+	
+	public static String getCurrentAccount()
+	{
+		return TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem()).getKey();
 	}
 
 }

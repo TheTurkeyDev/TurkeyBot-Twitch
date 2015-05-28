@@ -78,7 +78,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 
 	public void load()
 	{
-		if(Gui.getBot().getChannel(false).equals(""))
+		if(TurkeyBot.bot.getChannel(false).equals(""))
 		{
 			joinButton.setText("Join");
 			streamToJoin.setEditable(true);
@@ -90,9 +90,9 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 		{
 			joinButton.setText("Leave");
 			streamToJoin.setEditable(false);
-			viewersList.append("Viewers: " +  Gui.getBot().getViewers().size() + " \n");
+			viewersList.append("Viewers: " +  TurkeyBot.bot.getViewers().size() + " \n");
 			viewersList.append("---------------------------------- \n");
-			for(String s: Gui.getBot().getViewers())
+			for(String s: TurkeyBot.bot.getViewers())
 			{
 				viewersList.append(s + " \n");
 			}
@@ -169,7 +169,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 			else if(e.getKeyCode() == 18)
 			{
 				String[] args = consoleEntry.getText().split(" ");
-				String fullName = Gui.getBot().getFullUserName(args[args.length-1]);
+				String fullName = TurkeyBot.bot.getFullUserName(args[args.length-1]);
 				if(fullName != "")
 				{
 					args[args.length-1] = fullName;
@@ -199,7 +199,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 	{
 		if(e.getSource().equals(joinButton))
 		{
-			TurkeyBot bot = Gui.getBot();
+			TurkeyBot bot = TurkeyBot.bot;
 			if(bot.getChannel(false).equals(""))
 			{
 				if(!streamToJoin.getText().equals(""))

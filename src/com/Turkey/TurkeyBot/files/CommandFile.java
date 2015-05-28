@@ -13,12 +13,9 @@ import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public class CommandFile
+public class CommandFile extends JsonFile
 {
 	private Command command;
-	private File file;
-	private Gson gson;
-	private JsonObject mainFile;
 
 	public CommandFile(Command c, TurkeyBot b) throws IOException
 	{

@@ -10,6 +10,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class SettingsTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
@@ -23,7 +25,7 @@ public class SettingsTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		Object[] settings = Gui.getBot().settings.getSettings().toArray();
+		Object[] settings = TurkeyBot.bot.settings.getSettings().toArray();
 		JLabel label;
 		JTextArea text;
 		JButton button;
@@ -59,7 +61,7 @@ public class SettingsTab extends Tab implements ActionListener
 			text.setLocation(x + 200, (row*25) + 25);
 			text.setSize(60, 15);
 			text.setVisible(true);
-			text.setText(Gui.getBot().settings.getSetting(settingsName));
+			text.setText(TurkeyBot.bot.settings.getSetting(settingsName));
 			super.add(text);
 			components.add(text);
 
@@ -67,12 +69,12 @@ public class SettingsTab extends Tab implements ActionListener
 			{
 				boolean running = false;
 
-				if(settingsName.equalsIgnoreCase("autocurrencydelay") && Gui.getBot().currencyTrack != null)
-					running = Gui.getBot().currencyTrack.isRunning();
-				if(settingsName.equalsIgnoreCase("trackfollowers") && Gui.getBot().followersFile != null)
-					running = Gui.getBot().followersFile.isRunning();
-				if(settingsName.equalsIgnoreCase("announcedelay") && Gui.getBot().announcer != null)
-					running = Gui.getBot().announcer.isRunning();
+				if(settingsName.equalsIgnoreCase("autocurrencydelay") && TurkeyBot.bot.currencyTrack != null)
+					running = TurkeyBot.bot.currencyTrack.isRunning();
+				if(settingsName.equalsIgnoreCase("trackfollowers") && TurkeyBot.bot.followersFile != null)
+					running = TurkeyBot.bot.followersFile.isRunning();
+				if(settingsName.equalsIgnoreCase("announcedelay") && TurkeyBot.bot.announcer != null)
+					running = TurkeyBot.bot.announcer.isRunning();
 
 				button = new JButton(running?"Stop":"Start");
 				button.setLocation(x+275, (row*25) + 20);
@@ -111,7 +113,7 @@ public class SettingsTab extends Tab implements ActionListener
 		{
 			if(comp instanceof JTextArea)
 			{
-				Gui.getBot().settings.setSetting(comp.getName(), ((JTextArea) comp).getText());
+				TurkeyBot.bot.settings.setSetting(comp.getName(), ((JTextArea) comp).getText());
 			}
 		}
 	}
@@ -127,39 +129,39 @@ public class SettingsTab extends Tab implements ActionListener
 		{
 			JButton b = (JButton) e.getSource();
 
-			if(b.getName().equalsIgnoreCase("autocurrencydelay") && Gui.getBot().currencyTrack != null)
+			if(b.getName().equalsIgnoreCase("autocurrencydelay") && TurkeyBot.bot.currencyTrack != null)
 			{
 				if(b.getText().equalsIgnoreCase("Stop"))
 				{
-					Gui.getBot().currencyTrack.stopThread();
+					TurkeyBot.bot.currencyTrack.stopThread();
 				}
 				else if(b.getText().equalsIgnoreCase("Start"))
 				{
-					Gui.getBot().currencyTrack.initCurrencyThread();
+					TurkeyBot.bot.currencyTrack.initCurrencyThread();
 				}
 				Gui.reloadTab();
 			}
-			if(b.getName().equalsIgnoreCase("trackfollowers") && Gui.getBot().followersFile != null)
+			if(b.getName().equalsIgnoreCase("trackfollowers") && TurkeyBot.bot.followersFile != null)
 			{
 				if(b.getText().equalsIgnoreCase("Stop"))
 				{
-					Gui.getBot().followersFile.stopFollowerTracker();
+					TurkeyBot.bot.followersFile.stopFollowerTracker();
 				}
 				else if(b.getText().equalsIgnoreCase("Start"))
 				{
-					Gui.getBot().followersFile.initFollowerTracker();
+					TurkeyBot.bot.followersFile.initFollowerTracker();
 				}
 				Gui.reloadTab();
 			}
-			if(b.getName().equalsIgnoreCase("announcedelay") && Gui.getBot().announcer != null)
+			if(b.getName().equalsIgnoreCase("announcedelay") && TurkeyBot.bot.announcer != null)
 			{
 				if(b.getText().equalsIgnoreCase("Stop"))
 				{
-					Gui.getBot().announcer.stop();
+					TurkeyBot.bot.announcer.stop();
 				}
 				else if(b.getText().equalsIgnoreCase("Start"))
 				{
-					Gui.getBot().announcer.initAutoAnnouncemer();
+					TurkeyBot.bot.announcer.initAutoAnnouncemer();
 				}
 				Gui.reloadTab();
 			}

@@ -1,7 +1,6 @@
 package com.Turkey.TurkeyBot.commands;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
-import com.Turkey.TurkeyBot.gui.Gui;
 
 public class DeleteCommand extends Command
 {
@@ -22,7 +21,7 @@ public class DeleteCommand extends Command
 		Command c = TurkeyBot.getCommandFromName(commandName);
 		if(c!=null)
 		{
-			Gui.getBot().removeCommand(c);
+			TurkeyBot.bot.removeCommand(c);
 		}
 		else
 		{

@@ -72,8 +72,13 @@ public class ModerateChat
 				bot.sendMessage(bot.spamResponseFile.getSetting("CapsMessage"));
 			if(error == ErrorType.Length)
 				bot.sendMessage(bot.spamResponseFile.getSetting("LengthMessage"));
-			if(error == ErrorType.BlockedWord)
+			if(error == ErrorType.BadWord)
 				bot.sendMessage(bot.spamResponseFile.getSetting("BlockedWordMessage"));
+			if(error == ErrorType.BlacklistWord)
+			{
+				bot.sendMessage("/timeout "+ sender + " 1");
+				return false;
+			}
 			if(error == ErrorType.Emotes)
 				bot.sendMessage(bot.spamResponseFile.getSetting("EmotesMessage"));
 			if(error == ErrorType.Sybols)
@@ -107,9 +112,9 @@ public class ModerateChat
 		for(String word: message)
 		{
 			if(word.contains("***"))
-			{
-				return ErrorType.BlockedWord;
-			}
+				return ErrorType.BadWord;
+			if(isBlackListed(word))
+				return ErrorType.BlacklistWord;
 			if(emotes.contains(word))
 			{
 				numofemotes++;
@@ -218,7 +223,8 @@ public class ModerateChat
 		Caps,
 		Link,
 		Length,
-		BlockedWord,
+		BadWord,
+		BlacklistWord,
 		Sybols,
 		Emotes,
 		None;

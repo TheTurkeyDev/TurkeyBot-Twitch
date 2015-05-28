@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class EditAnnouncementGui implements ActionListener
 {
 	private JFrame popup;
@@ -37,7 +39,7 @@ public class EditAnnouncementGui implements ActionListener
 		responseLabel.setSize(75, 25);
 		popup.add(responseLabel);
 
-		editResponse = new JTextField(Gui.getBot().announceFile.getAnnouncement(annoucementNum));
+		editResponse = new JTextField(TurkeyBot.bot.announceFile.getAnnouncement(annoucementNum));
 		editResponse.setLocation(100,90);
 		editResponse.setSize(300,25);
 		popup.add(editResponse);
@@ -58,10 +60,10 @@ public class EditAnnouncementGui implements ActionListener
 			JButton button = (JButton) e.getSource();
 			if(button.getName().equalsIgnoreCase(save.getName()))
 			{
-				Gui.getBot().announceFile.removeAnnouncement(annoucementNum);
+				TurkeyBot.bot.announceFile.removeAnnouncement(annoucementNum);
 				if(editResponse.getText() != "")
-					Gui.getBot().announceFile.addAnnouncement(editResponse.getText());
-				Gui.getBot().announceFile.reloadAnnouncements();
+					TurkeyBot.bot.announceFile.addAnnouncement(editResponse.getText());
+				TurkeyBot.bot.announceFile.reloadAnnouncements();
 				popup.dispose();
 			}
 		}

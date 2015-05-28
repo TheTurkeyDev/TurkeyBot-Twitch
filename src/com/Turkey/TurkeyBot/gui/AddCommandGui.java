@@ -94,10 +94,10 @@ public class AddCommandGui implements ActionListener
 			{
 				Command command = new Command(commandName.getText(), response.getText());
 				command.setPermissionLevel((String)permSelect.getSelectedItem());
-				Gui.getBot().addCommand(command);
-				if(Gui.getBot().settings.getSettingAsBoolean("outputchanges"))
+				TurkeyBot.bot.addCommand(command);
+				if(TurkeyBot.bot.settings.getSettingAsBoolean("outputchanges"))
 				{
-					Gui.getBot().sendMessage("Added Command " + "!" + commandName.getText());
+					TurkeyBot.bot.sendMessage("Added Command " + "!" + commandName.getText());
 				}
 				Gui.reloadTab();
 				popup.dispose();

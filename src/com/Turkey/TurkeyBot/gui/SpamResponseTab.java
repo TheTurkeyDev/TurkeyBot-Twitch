@@ -10,6 +10,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class SpamResponseTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
@@ -23,7 +25,7 @@ public class SpamResponseTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		Object[] settings = Gui.getBot().spamResponseFile.getSettings().toArray();
+		Object[] settings = TurkeyBot.bot.spamResponseFile.getSettings().toArray();
 		JLabel label;
 		JTextArea text;
 
@@ -58,7 +60,7 @@ public class SpamResponseTab extends Tab implements ActionListener
 			text.setLocation(x + 150, (row*25) + 25);
 			text.setSize(600, 15);
 			text.setVisible(true);
-			text.setText(Gui.getBot().spamResponseFile.getSetting(settingsName));
+			text.setText(TurkeyBot.bot.spamResponseFile.getSetting(settingsName));
 			super.add(text);
 			components.add(text);
 
@@ -89,7 +91,7 @@ public class SpamResponseTab extends Tab implements ActionListener
 		{
 			if(comp instanceof JTextArea)
 			{
-				Gui.getBot().spamResponseFile.setSetting(comp.getName(), ((JTextArea) comp).getText());
+				TurkeyBot.bot.spamResponseFile.setSetting(comp.getName(), ((JTextArea) comp).getText());
 			}
 		}
 	}

@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
+
 public class QuestionRaffleTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
@@ -103,7 +105,7 @@ public class QuestionRaffleTab extends Tab implements ActionListener
 		else if(e.getSource().equals(endEntry))
 		{
 			isRunning = false;
-			Gui.getBot().sendMessage("The question raffle has ended with no one guessing the answer! The answer was: " + answer);
+			TurkeyBot.bot.sendMessage("The question raffle has ended with no one guessing the answer! The answer was: " + answer);
 			Gui.reloadTab();
 		}
 	}

@@ -255,8 +255,8 @@ public class EditCommandGui implements ActionListener
 			{
 				command.setPermissionLevel((String)permSelect.getSelectedItem());
 				command.getFile().updateCommand();
-				if(Gui.getBot().settings.getSettingAsBoolean("outputchanges"))
-					Gui.getBot().sendMessage("Command !" + command.getName() + " was successfully edited");
+				if(TurkeyBot.bot.settings.getSettingAsBoolean("outputchanges"))
+					TurkeyBot.bot.sendMessage("Command !" + command.getName() + " was successfully edited");
 				popup.dispose();
 			}
 			else if(button.getName().contains("Edit"))

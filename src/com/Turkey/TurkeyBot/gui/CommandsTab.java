@@ -35,7 +35,7 @@ public class CommandsTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		Object[] temp = Gui.getBot().getCommands();
+		Object[] temp = TurkeyBot.bot.getCommands();
 		String[] commands = new String[temp.length];
 
 		for(int i = 0; i < temp.length; i++)
@@ -176,7 +176,7 @@ public class CommandsTab extends Tab implements ActionListener
 			}
 			else if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Delete"))
 			{
-				Gui.getBot().removeCommand(command);
+				TurkeyBot.bot.removeCommand(command);
 				unLoad();
 				load();
 			}

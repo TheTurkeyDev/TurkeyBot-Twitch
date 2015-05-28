@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.files.AnnouncementFile;
 
 public class AnnouncementTab extends Tab implements ActionListener
@@ -32,7 +33,7 @@ public class AnnouncementTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		AnnouncementFile file = Gui.getBot().announceFile;
+		AnnouncementFile file =TurkeyBot.bot.announceFile;
 		List<String> temp = file.getAnnouncements();
 
 		JLabel label;
@@ -137,7 +138,7 @@ public class AnnouncementTab extends Tab implements ActionListener
 		if(e.getSource() instanceof JButton)
 		{
 			JButton button = ((JButton)e.getSource());
-			AnnouncementFile file = Gui.getBot().announceFile;
+			AnnouncementFile file = TurkeyBot.bot.announceFile;
 			if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Edit"))
 			{
 				new EditAnnouncementGui(Integer.parseInt(button.getName().substring(5)));

@@ -1,7 +1,7 @@
 package com.Turkey.TurkeyBot.commands;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
-import com.Turkey.TurkeyBot.gui.Gui;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 
 public class ConsoleCommands
@@ -24,7 +24,7 @@ public class ConsoleCommands
 			{
 				if(args.length == 2)
 				{
-					Gui.getBot().connectToChannel(args[1].toLowerCase());
+					TurkeyBot.bot.connectToChannel(args[1].toLowerCase());
 				}
 				else 
 				{
@@ -33,7 +33,7 @@ public class ConsoleCommands
 			}
 			else if(command.equalsIgnoreCase("leave"))
 			{
-				Gui.getBot().disconnectFromChannel();
+				TurkeyBot.bot.disconnectFromChannel();
 			}
 			else if(command.equalsIgnoreCase("say"))
 			{
@@ -43,15 +43,7 @@ public class ConsoleCommands
 					String s = args[i];
 					msg+=s + " ";
 				}
-				Gui.getBot().sendMessage(msg);
-			}
-			else if(command.equalsIgnoreCase("connect"))
-			{
-				Gui.getBot().connectToTwitch();
-			}
-			else if(command.equalsIgnoreCase("disconnect"))
-			{
-				Gui.getBot().disconnectFromTwitch();
+				TurkeyBot.bot.sendMessage(msg);
 			}
 			else
 			{

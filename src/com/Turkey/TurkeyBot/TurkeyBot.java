@@ -38,6 +38,7 @@ import com.Turkey.TurkeyBot.files.CurrencyFile;
 import com.Turkey.TurkeyBot.files.Followers;
 import com.Turkey.TurkeyBot.files.ResponseSettings;
 import com.Turkey.TurkeyBot.files.SettingsFile;
+import com.Turkey.TurkeyBot.gui.AccountSettingsTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.Turkey.TurkeyBot.gui.Gui;
@@ -53,6 +54,8 @@ import com.google.gson.JsonParser;
 public class TurkeyBot extends PircBot
 {
 	public static final String VERSION = "Beta 1.2.9";
+	
+	public static TurkeyBot bot;
 
 	private static HashMap<String, Command> commands = new HashMap<String, Command>();
 
@@ -90,6 +93,7 @@ public class TurkeyBot extends PircBot
 	 */
 	public TurkeyBot() throws Exception
 	{
+		bot = this;
 		//this.setVerbose(true);
 		json = new JsonParser();
 		setMessageDelay(1550);
@@ -142,7 +146,7 @@ public class TurkeyBot extends PircBot
 		commands.put("!funwaybot".toLowerCase(), new FunWayBotCommand("Funwaybot"));
 		commands.put("!autoTurtle".toLowerCase(), new AutoTurtleCommand("autoTurtle"));
 
-		File filesfolder = new File("C:" + File.separator + "TurkeyBot" + File.separator + "commands");
+		File filesfolder = new File("C:" + File.separator + "TurkeyBot"+ File.separator + this.getChannel(false) + File.separator + "commands");
 		for(String s: filesfolder.list())
 		{
 			try{
@@ -162,6 +166,9 @@ public class TurkeyBot extends PircBot
 				if(obj.get("LoadFile").getAsBoolean())
 				{
 					Command c = new Command(name, obj.get("Responses").getAsJsonObject().get("0").getAsString());
+					c.setPermissionLevel(obj.get("PermLevel").getAsString());
+					if(!obj.get("State").getAsBoolean())
+						c.disable();
 					JsonObject responses = obj.get("Responses").getAsJsonObject();
 					for(int i = 1; i < obj.get("Number_Of_Responses").getAsInt(); i++)
 					{
@@ -341,13 +348,13 @@ public class TurkeyBot extends PircBot
 	/**
 	 * Connects the bot to the Twitch servers.
 	 */
-	public void connectToTwitch()
+	private boolean connectToTwitch()
 	{
 		ConsoleTab.output(Level.Info, "Connecting to twitch....");
-		if(!accountSettingsFile.getSetting("AccountName").replaceAll(" ", "").equals(""))
+		if(!AccountSettingsTab.getCurrentAccount().replaceAll(" ", "").equals(""))
 		{
 			try{
-				botName = accountSettingsFile.getSetting("AccountName");
+				botName = AccountSettingsTab.getCurrentAccount();
 				setName(botName);
 				connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
 				connected = true;
@@ -355,15 +362,17 @@ public class TurkeyBot extends PircBot
 			{
 				connected = false;
 				ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());
-				return;
+				return false;
 			}
 			ConsoleTab.output(Level.Info, "Connected!");
+			return true;
 		}
 		else
 		{
 			ConsoleTab.output(Level.Important, "No account entered for the bot to connect to!");
 			ConsoleTab.output(Level.Important, "Please enter this info into: Settings -> Acount Settings");
 			ConsoleTab.output(Level.Important, "Then connect the bot to twitch by entering /connect");
+			return false;
 		}
 		//connectToChannel("turkey2349");
 	}
@@ -377,7 +386,7 @@ public class TurkeyBot extends PircBot
 	/**
 	 * Disconnects the bot from the Twitch servers.
 	 */
-	public void disconnectFromTwitch()
+	private void disconnectFromTwitch()
 	{
 		this.quitServer();
 		this.dispose();
@@ -392,6 +401,8 @@ public class TurkeyBot extends PircBot
 	 */
 	public void connectToChannel(String channel)
 	{
+		if(!connectToTwitch())
+			return;
 		ConsoleTab.clearConsole();
 		if(!connected)
 		{
@@ -403,7 +414,7 @@ public class TurkeyBot extends PircBot
 		stream = "#"+channel.toLowerCase();
 		joinChannel(stream);
 		ConsoleTab.output(Level.Info, "Connected to " + stream.substring(1) + "'s channel!");
-
+		loadFiles();
 		try
 		{
 			followersFile = new Followers(this);
@@ -433,7 +444,6 @@ public class TurkeyBot extends PircBot
 		else
 			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
 		this.sendMessage(stream, "/mods");
-		loadFiles();
 		currencyName = settings.getSetting("CurrencyName");
 		loadCommands();
 		chatmoderation = new ModerateChat(this);
@@ -460,6 +470,7 @@ public class TurkeyBot extends PircBot
 		stream = "";
 		mods = new String[0];
 		this.viewers.clear();
+		this.disconnectFromTwitch();
 	}
 
 	/**

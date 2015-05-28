@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.util.KeyWordRaffle;
 
 public class KeyWordRaffleTab extends Tab implements ActionListener
@@ -95,7 +96,7 @@ public class KeyWordRaffleTab extends Tab implements ActionListener
 
 		if(currentRaffle != null && currentRaffle.getEntries().size() > 0)
 			for(String name: currentRaffle.getEntries())
-				entered.append(Gui.getBot().capitalizeName(name) + " \n");
+				entered.append(TurkeyBot.bot.capitalizeName(name) + " \n");
 
 		super.setVisible(true);
 	}
@@ -117,7 +118,7 @@ public class KeyWordRaffleTab extends Tab implements ActionListener
 				winnerName.setText("");
 				currentRaffle = new KeyWordRaffle(keywordField.getText());
 				currentRaffle.setRunning(true);
-				Gui.getBot().sendMessage("A Raffle has started! To enter simply type: " + currentRaffle.getKeyWord());
+				TurkeyBot.bot.sendMessage("A Raffle has started! To enter simply type: " + currentRaffle.getKeyWord());
 				Gui.reloadTab();
 			}
 			else
@@ -128,7 +129,7 @@ public class KeyWordRaffleTab extends Tab implements ActionListener
 		else if(e.getSource().equals(endEntry))
 		{
 			currentRaffle.setRunning(false);
-			Gui.getBot().sendMessage("The Raffle has ended with " + currentRaffle.getEntries().size() + " entries!");
+			TurkeyBot.bot.sendMessage("The Raffle has ended with " + currentRaffle.getEntries().size() + " entries!");
 			Gui.reloadTab();
 		}
 		else if(e.getSource().equals(pickWinner))
@@ -139,7 +140,7 @@ public class KeyWordRaffleTab extends Tab implements ActionListener
 				{
 					String winner = currentRaffle.getRandomEntry();
 					winnerName.setText(winner);
-					Gui.getBot().sendMessage(Gui.getBot().capitalizeName(winner) + " has won the raffle! Congrats!");
+					TurkeyBot.bot.sendMessage(TurkeyBot.bot.capitalizeName(winner) + " has won the raffle! Congrats!");
 				}
 				else
 					error("No has entered the raffle!");

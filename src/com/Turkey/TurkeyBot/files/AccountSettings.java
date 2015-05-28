@@ -1,54 +1,97 @@
 package com.Turkey.TurkeyBot.files;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.Set;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import com.Turkey.TurkeyBot.SecretStuff;
 import com.Turkey.TurkeyBot.TurkeyBot;
+import com.Turkey.TurkeyBot.gui.ConsoleTab;
+import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
+import com.Turkey.TurkeyBot.util.CustomEntry;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-public class AccountSettings extends BotFile
+public class AccountSettings extends JsonFile
 {
-	private static String propName = "AccountSettings.properties";
+	private Map<String, Entry<String, String>> accounts;
 
 	public AccountSettings(TurkeyBot b) throws IOException
 	{
-		super(b, "C:" + File.separator + "TurkeyBot" + File.separator + b.getChannel(false) + File.separator + "properties" + File.separator + propName);
-		loadSettings();
-	}
-
-	/**
-	 * Loads the default settings of the properties file.
-	 * @throws IOException
-	 */
-	public void loadSettings() throws IOException
-	{
-		Properties defaultproperties = new Properties();
-		InputStream iiStream = SettingsFile.class.getResourceAsStream("/properties/AccountSettingsDefault.properties");
-		defaultproperties.load(iiStream);
-
-		for(Object o : defaultproperties.keySet())
+		accounts = new HashMap<String, Entry<String, String>>();
+		gson = new Gson();
+		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + "AccountSettings.json");
+		if(!file.exists())
 		{
-			String key = (String) o;
-			if(!properties.containsKey(key))
-			{
-				properties.setProperty(key, defaultproperties.getProperty(key));
-			}
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			mainFile = new JsonObject();
+
+			this.updateFile();
 		}
-		if(properties.get("AccountOAuth") != null)
-			SecretStuff.oAuth = (String) properties.get("AccountOAuth");
-		
-		save();
+		loadfile();
+	}	
+
+	private void loadfile() throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+		String result = "";
+		String line = "";
+		while((line = reader.readLine()) != null)
+		{
+			result += line;
+		}
+		reader.close();
+		JsonElement obj = TurkeyBot.json.parse(result);
+		if(obj == null)
+			return;
+		for(Entry<String, JsonElement> elements : obj.getAsJsonObject().entrySet())
+		{
+			String userName = elements.getValue().getAsJsonObject().get("AccountUserName").getAsString();
+			String oAuth = elements.getValue().getAsJsonObject().get("AccountoAuth").getAsString();
+			Entry<String, String> entry = new CustomEntry<String, String>(userName, oAuth);
+			accounts.put(elements.getKey(), entry);
+		}
 	}
 
-	/**
-	 * Gets all of the keys of the file.
-	 * @return
-	 */
-	public Set<Object> getSettings()
+	private void updateFile()
 	{
-		return properties.keySet();
+		try{
+			FileOutputStream outputStream = new FileOutputStream(file);
+			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+			writer.append(mainFile.toString());
+			writer.close();
+			outputStream.close();
+		}catch(IOException ex){ConsoleTab.output(Level.Error, "Could not write to json file for the account settings");}
+	}
+
+	public void addAccount(String display, String userName, String oAuth)
+	{
+		Entry<String, String> entry = new CustomEntry<String, String>(userName, oAuth);
+		accounts.put(display, entry);
+
+		JsonObject accountInfo = new JsonObject();
+		accountInfo.addProperty("AccountUserName", userName);
+		accountInfo.addProperty("AccountoAuth", oAuth);
+		this.mainFile.add(display, accountInfo);
+
+		this.updateFile();
+	}
+
+	public Map<String, Entry<String, String>> getAccounts()
+	{
+		return this.accounts;
+	}
+	
+	public Entry<String, String> getAccountFromDisplayName(String name)
+	{
+		return accounts.get(name);
 	}
 }
