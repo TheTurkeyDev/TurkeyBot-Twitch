@@ -16,6 +16,7 @@ import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.Turkey.TurkeyBot.util.CustomEntry;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -52,7 +53,8 @@ public class AccountSettings extends JsonFile
 		JsonElement obj = TurkeyBot.json.parse(result);
 		if(obj == null)
 			return;
-		for(Entry<String, JsonElement> elements : obj.getAsJsonObject().entrySet())
+		mainFile = obj.getAsJsonObject();
+		for(Entry<String, JsonElement> elements : mainFile.entrySet())
 		{
 			String userName = elements.getValue().getAsJsonObject().get("AccountUserName").getAsString();
 			String oAuth = elements.getValue().getAsJsonObject().get("AccountoAuth").getAsString();
@@ -66,7 +68,9 @@ public class AccountSettings extends JsonFile
 		try{
 			FileOutputStream outputStream = new FileOutputStream(file);
 			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-			writer.append(mainFile.toString());
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String json = gson.toJson(mainFile);
+			writer.append(json);
 			writer.close();
 			outputStream.close();
 		}catch(IOException ex){ConsoleTab.output(Level.Error, "Could not write to json file for the account settings");}

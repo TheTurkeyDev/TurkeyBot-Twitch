@@ -2,6 +2,7 @@ package com.Turkey.TurkeyBot.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -9,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 
+import com.Turkey.TurkeyBot.SecretStuff;
 import com.Turkey.TurkeyBot.TurkeyBot;
 
 public class AccountSettingsTab extends Tab implements ActionListener
@@ -25,7 +27,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 	private JTextArea displaynametext;
 	private JPasswordField oAuthtext;
 	private JLabel selectedAccount;
-	
+
 	private static JComboBox<?> accounts;
 
 	public AccountSettingsTab()
@@ -36,7 +38,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		add.setSize(100, 25);
 		add.addActionListener(this);
 		super.add(add);
-		
+
 		edit = new JButton("Edit");
 		edit.setName("Edit");
 		edit.setLocation((super.getWidth()/2) + 75, 150);
@@ -57,7 +59,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		displaynametext.setVisible(true);
 		displaynametext.setToolTipText("Display Name");
 		super.add(displaynametext);
-		
+
 		namelabel = new JLabel("AccountName");
 		namelabel.setLocation((super.getWidth()/2) - 150, 40);
 		namelabel.setSize(200, 25);
@@ -85,26 +87,42 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		oAuthtext.setVisible(true);
 		oAuthtext.setToolTipText("Account oAuth");
 		super.add(oAuthtext);
-		
+
 		accounts = new JComboBox<>(TurkeyBot.bot.accountSettingsFile.getAccounts().keySet().toArray());
 		accounts.setLocation((super.getWidth()/2) - 60 , 150);
 		accounts.setSize(120, 25);
 		super.add(accounts);
-		
+
 		selectedAccount = new JLabel("Selected Account:");
 		selectedAccount.setLocation((super.getWidth()/2) - 175, 150);
 		selectedAccount.setSize(200, 25);
 		selectedAccount.setVisible(true);
 		super.add(selectedAccount);
+		
+		Entry<String, String> entry = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
+		if(entry != null)
+			SecretStuff.oAuth = entry.getValue();
+		else
+			SecretStuff.oAuth = "";
 	}
 
 	public void load()
 	{
+		super.remove(accounts);
+		accounts = new JComboBox<>(TurkeyBot.bot.accountSettingsFile.getAccounts().keySet().toArray());
+		accounts.setLocation((super.getWidth()/2) - 60 , 150);
+		accounts.setSize(120, 25);
+		super.add(accounts);
 		super.setVisible(true);
 	}
 
 	public void unLoad()
 	{
+		Entry<String, String> entry = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
+		if(entry != null)
+			SecretStuff.oAuth = entry.getValue();
+		else
+			SecretStuff.oAuth = "";
 		super.setVisible(false);
 	}
 
@@ -125,12 +143,16 @@ public class AccountSettingsTab extends Tab implements ActionListener
 		if(e.getSource().equals(add))
 		{
 			addAccount();
+			Gui.reloadTab();
 		}
 	}
-	
+
 	public static String getCurrentAccount()
 	{
-		return TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem()).getKey();
+		Entry<String, String> entry = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
+		if(entry != null)
+			return entry.getKey();
+		return "";
 	}
 
 }

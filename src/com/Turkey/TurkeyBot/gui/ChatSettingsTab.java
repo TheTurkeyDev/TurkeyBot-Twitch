@@ -29,6 +29,8 @@ public class ChatSettingsTab extends Tab implements ActionListener
 
 	public void load()
 	{
+		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
+			return;
 		JLabel label;
 		JTextArea text;
 
@@ -145,6 +147,8 @@ public class ChatSettingsTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
+		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
+			return;
 		for(JComponent comp: components)
 		{
 			comp.setVisible(false);

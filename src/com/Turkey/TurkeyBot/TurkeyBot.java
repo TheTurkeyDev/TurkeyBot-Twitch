@@ -371,7 +371,6 @@ public class TurkeyBot extends PircBot
 		{
 			ConsoleTab.output(Level.Important, "No account entered for the bot to connect to!");
 			ConsoleTab.output(Level.Important, "Please enter this info into: Settings -> Acount Settings");
-			ConsoleTab.output(Level.Important, "Then connect the bot to twitch by entering /connect");
 			return false;
 		}
 		//connectToChannel("turkey2349");

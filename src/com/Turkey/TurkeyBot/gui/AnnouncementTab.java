@@ -33,6 +33,8 @@ public class AnnouncementTab extends Tab implements ActionListener
 
 	public void load()
 	{
+		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
+			return;
 		AnnouncementFile file =TurkeyBot.bot.announceFile;
 		List<String> temp = file.getAnnouncements();
 
@@ -123,6 +125,8 @@ public class AnnouncementTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
+		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
+			return;
 		for(JComponent comp: components)
 		{
 			comp.setVisible(false);
