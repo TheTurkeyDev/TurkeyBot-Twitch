@@ -145,6 +145,10 @@ public class AccountSettingsTab extends Tab implements ActionListener
 			addAccount();
 			Gui.reloadTab();
 		}
+		else if(e.getSource().equals(edit))
+		{
+			new EditAccountGui((String) accounts.getSelectedItem());
+		}
 	}
 
 	public static String getCurrentAccount()

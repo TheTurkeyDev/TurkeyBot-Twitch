@@ -20,7 +20,7 @@ public class Followers extends BotFile implements Runnable
 
 	public Followers(TurkeyBot b) throws IOException
 	{
-		super(b,  "C:" + File.separator + "TurkeyBot" + File.separator + File.separator + b.getChannel(false) + "follower tracking" + File.separator + "Followers_"+b.getChannel(false)+".properties");
+		super(b,  "C:" + File.separator + "TurkeyBot" + File.separator + b.getChannel(false) + "follower tracking" + File.separator + "Followers_"+b.getChannel(false)+".properties");
 		json = TurkeyBot.json;
 	}
 

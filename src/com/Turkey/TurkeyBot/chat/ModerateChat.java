@@ -27,7 +27,10 @@ public class ModerateChat
 	{
 		bot = b;
 
-		blackList = bot.chatSettings.getSetting("WordBlackList").split(",");
+		if(!bot.chatSettings.getSetting("WordBlackList").equalsIgnoreCase(""))
+			blackList = bot.chatSettings.getSetting("WordBlackList").split(",");
+		else
+			blackList = new String[0];
 		try{
 			URL url = new URL("https://api.twitch.tv/kraken/chat/turkey2349/emoticons");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -60,6 +63,7 @@ public class ModerateChat
 	public boolean isValidChat(String m, String sender)
 	{
 		message = m.split(" ");
+
 		if(bot.isMod(sender) || bot.checkForImmunity(sender) || !Moderate)
 		{
 			return true;
@@ -75,10 +79,7 @@ public class ModerateChat
 			if(error == ErrorType.BadWord)
 				bot.sendMessage(bot.spamResponseFile.getSetting("BlockedWordMessage"));
 			if(error == ErrorType.BlacklistWord)
-			{
-				bot.sendMessage("/timeout "+ sender + " 1");
-				return false;
-			}
+                bot.sendMessage("");
 			if(error == ErrorType.Emotes)
 				bot.sendMessage(bot.spamResponseFile.getSetting("EmotesMessage"));
 			if(error == ErrorType.Sybols)
@@ -129,7 +130,7 @@ public class ModerateChat
 					{
 						letters++;
 					}
-					else
+					else if(!(letter >= 48 && letter <= 57))
 					{
 						symbols++;
 					}
@@ -176,7 +177,6 @@ public class ModerateChat
 	 */
 	public ErrorType passesLinkCheck()
 	{
-		//TODO: Need a better way to check for valid links. Also needs to check for links within words.
 		if(!Boolean.parseBoolean(bot.chatSettings.getSetting("BlockLinks")))
 		{
 			return ErrorType.None;
@@ -185,13 +185,22 @@ public class ModerateChat
 		{
 			if(word.contains("."))
 			{
-				int index = word.indexOf(".");
-				if(index > 0 && index < word.length()-1)
+				String wordFixed = word;
+				if(word.contains("http://"))
+					wordFixed = word.substring(word.indexOf("http://"));
+				else if(word.contains("https://"))
+					wordFixed = word.substring(word.indexOf("https://"));
+				if(word.contains("www."))
+					wordFixed = word.substring(word.indexOf("www."));
+				
+				
+				int index = wordFixed.indexOf(".");
+				if(index > 0 && index < wordFixed.length()-1)
 				{
 					UrlValidator validator = new UrlValidator();
-					if(!word.contains("http://") && !word.contains("https://"))
-						word="http://"+word;
-					if(validator.isValid(word))
+					if(!wordFixed.contains("http://") && !wordFixed.contains("https://"))
+						wordFixed="http://"+wordFixed;
+					if(validator.isValid(wordFixed))
 						return ErrorType.Link;
 				}
 			}

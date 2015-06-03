@@ -1,9 +1,13 @@
 package com.Turkey.TurkeyBot;
 
+import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.Gui;
@@ -31,7 +35,7 @@ public class Start
 		String result = "";
 		try
 		{
-			URL url = new URL("http://theprogrammingturkey.uphero.com/API/versionCheck.php?application=TurkeyBot");
+			URL url = new URL("http://theprogrammingturkey.com/API/versionCheck.php?application=TurkeyBot");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 
@@ -50,7 +54,30 @@ public class Start
 
 		if(!result.equalsIgnoreCase(TurkeyBot.VERSION))
 		{
-			ConsoleTab.output(Level.Important, "Your version of TurkeyBot is currently out of date!");
+			JFrame popup = new JFrame();
+			Dimension size = new Dimension(350, 150);
+			popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			popup.setSize(size);
+			popup.setPreferredSize(size);
+			popup.setLayout(null);
+			popup.setTitle("Out of Date!!!");
+			popup.setVisible(true);
+			popup.setLocationRelativeTo(null);
+			
+			JLabel accountNameLabel = new JLabel("Your version of TurkeyBot is currently out of date!");
+			accountNameLabel.setLocation(25,10);
+			accountNameLabel.setSize(400, 25);
+			popup.add(accountNameLabel);
+			
+			accountNameLabel = new JLabel("Go to http://theprogrammingturkey.com/TurkeyBot.php");
+			accountNameLabel.setLocation(10,40);
+			accountNameLabel.setSize(400, 25);
+			popup.add(accountNameLabel);
+			
+			accountNameLabel = new JLabel("To get the latest version!");
+			accountNameLabel.setLocation(100,75);
+			accountNameLabel.setSize(400, 25);
+			popup.add(accountNameLabel);
 		}
 	}
 }

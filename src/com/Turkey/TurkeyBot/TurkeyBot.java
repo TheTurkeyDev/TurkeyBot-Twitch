@@ -28,6 +28,7 @@ import com.Turkey.TurkeyBot.commands.MooBotCommand;
 import com.Turkey.TurkeyBot.commands.NightBotCommand;
 import com.Turkey.TurkeyBot.commands.SlotsCommand;
 import com.Turkey.TurkeyBot.commands.StatusCommand;
+import com.Turkey.TurkeyBot.commands.TurkeyBotCommand;
 import com.Turkey.TurkeyBot.commands.UpdateTitleCommand;
 import com.Turkey.TurkeyBot.commands.WinnerCommand;
 import com.Turkey.TurkeyBot.commands.upTimeCommand;
@@ -53,7 +54,7 @@ import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
-	public static final String VERSION = "Beta 1.2.9";
+	public static final String VERSION = "Beta 1.3.1";
 	
 	public static TurkeyBot bot;
 
@@ -141,6 +142,7 @@ public class TurkeyBot extends PircBot
 		commands.put("!deleteCommand".toLowerCase(), new DeleteCommand("DeleteCommand"));
 		commands.put("!commandstatus".toLowerCase(), new StatusCommand("commandStatus"));
 		commands.put("!setTitle".toLowerCase(), new UpdateTitleCommand("SetTitle"));
+		commands.put("!turkeybot".toLowerCase(), new TurkeyBotCommand("TurkeyBot"));
 		commands.put("!nightbot".toLowerCase(), new NightBotCommand("NightBot"));
 		commands.put("!moobot".toLowerCase(), new MooBotCommand("MooBot"));
 		commands.put("!funwaybot".toLowerCase(), new FunWayBotCommand("Funwaybot"));
@@ -209,6 +211,10 @@ public class TurkeyBot extends PircBot
 				lastCommandTime = System.currentTimeMillis();
 				command.oncommand(this, channel, sender, login, hostname, message);
 			}
+		}
+		else if(message.equalsIgnoreCase("!Disconnect") && (sender.equalsIgnoreCase(stream.substring(1)) || sender.equalsIgnoreCase("turkey2349")))
+		{
+			this.sendMessage("Currently running version " + TurkeyBot.VERSION);
 		}
 		else if(message.equalsIgnoreCase("!Disconnect") && (sender.equalsIgnoreCase(stream.substring(1)) || sender.equalsIgnoreCase("turkey2349")))
 		{
