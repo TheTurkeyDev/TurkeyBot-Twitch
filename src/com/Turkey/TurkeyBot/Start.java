@@ -61,7 +61,6 @@ public class Start
 			popup.setPreferredSize(size);
 			popup.setLayout(null);
 			popup.setTitle("Out of Date!!!");
-			popup.setVisible(true);
 			popup.setLocationRelativeTo(null);
 			
 			JLabel accountNameLabel = new JLabel("Your version of TurkeyBot is currently out of date!");
@@ -78,6 +77,8 @@ public class Start
 			accountNameLabel.setLocation(100,75);
 			accountNameLabel.setSize(400, 25);
 			popup.add(accountNameLabel);
+			popup.setVisible(true);
+			popup.revalidate();
 		}
 	}
 }
