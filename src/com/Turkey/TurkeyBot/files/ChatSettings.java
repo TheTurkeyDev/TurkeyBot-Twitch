@@ -14,7 +14,7 @@ public class ChatSettings extends BotFile
 	
 	public ChatSettings(TurkeyBot b) throws IOException
 	{
-		super(b, "C:" + File.separator + "TurkeyBot" + File.separator + b.getChannel(false) + File.separator + "properties" + File.separator + propName);
+		super(b, "C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
 		loadSettings();
 	}
 	

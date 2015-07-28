@@ -21,7 +21,7 @@ public class CommandFile extends JsonFile
 	{
 		command = c;
 		gson = new Gson();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getChannel(false) + File.separator + "commands" + File.separator + command.getName() +".json");
+		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "commands" + File.separator + command.getName() +".json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();

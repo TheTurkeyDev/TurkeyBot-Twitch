@@ -27,7 +27,7 @@ public class Gui extends JFrame implements ActionListener
 	private SettingsTab settingsTab;
 	private ChatSettingsTab chatSettingsTab;
 	private SpamResponseTab spamResponseTab;
-	private AccountSettingsTab accountSettingsTab;
+	private AccountsTab accountSettingsTab;
 	private AnnouncementTab announcementTab;
 	private KeyWordRaffleTab keywordRaffleTab;
 	private QuestionRaffleTab questionRaffleTab;
@@ -48,7 +48,7 @@ public class Gui extends JFrame implements ActionListener
 		settingsTab = new SettingsTab();
 		chatSettingsTab = new ChatSettingsTab();
 		spamResponseTab = new SpamResponseTab();
-		accountSettingsTab = new AccountSettingsTab();
+		accountSettingsTab = new AccountsTab();
 		announcementTab = new AnnouncementTab();
 		keywordRaffleTab = new KeyWordRaffleTab();
 		questionRaffleTab = new QuestionRaffleTab();

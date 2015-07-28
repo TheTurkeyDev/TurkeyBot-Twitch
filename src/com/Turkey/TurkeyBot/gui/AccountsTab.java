@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 import com.Turkey.TurkeyBot.SecretStuff;
 import com.Turkey.TurkeyBot.TurkeyBot;
 
-public class AccountSettingsTab extends Tab implements ActionListener
+public class AccountsTab extends Tab implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -30,7 +30,7 @@ public class AccountSettingsTab extends Tab implements ActionListener
 
 	private static JComboBox<?> accounts;
 
-	public AccountSettingsTab()
+	public AccountsTab()
 	{
 		add = new JButton("Add");
 		add.setName("Add");

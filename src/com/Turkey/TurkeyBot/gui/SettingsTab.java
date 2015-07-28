@@ -25,8 +25,7 @@ public class SettingsTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
-			return;
+		if (TurkeyBot.bot.getProfile() == null) return;
 		Object[] settings = TurkeyBot.bot.settings.getSettings().toArray();
 		JLabel label;
 		JTextArea text;

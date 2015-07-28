@@ -15,7 +15,6 @@ import javax.swing.JTextField;
 import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.commands.ConsoleCommands;
 
-
 public class ConsoleTab extends Tab implements KeyListener, ActionListener
 {
 	private static final long serialVersionUID = 1L;
@@ -38,7 +37,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 		super.add(streamToJoinLabel);
 
 		streamToJoin = new JTextField();
-		streamToJoin.setLocation(50,25);
+		streamToJoin.setLocation(50, 25);
 		streamToJoin.setSize(300, 25);
 		streamToJoin.setBackground(Color.black);
 		streamToJoin.setForeground(Color.white);
@@ -46,30 +45,30 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 
 		joinButton = new JButton("Join");
 		joinButton.setLocation(375, 25);
-		joinButton.setSize(75,25);
+		joinButton.setSize(75, 25);
 		joinButton.addActionListener(this);
 		super.add(joinButton);
 
 		// console tab
 		consoleWindow = new TextArea();
 		consoleWindow.setLocation(10, 75);
-		consoleWindow.setSize(600,425);
+		consoleWindow.setSize(600, 425);
 		consoleWindow.setEditable(false);
 		consoleWindow.setBackground(Color.black);
 		consoleWindow.setForeground(Color.white);
 		super.add(consoleWindow);
 
 		consoleEntry = new JTextField();
-		consoleEntry.setLocation(10,500);
+		consoleEntry.setLocation(10, 500);
 		consoleEntry.setSize(600, 25);
 		consoleEntry.setBackground(Color.black);
 		consoleEntry.setForeground(Color.white);
 		consoleEntry.addKeyListener(this);
 		super.add(consoleEntry);
-		
+
 		viewersList = new TextArea();
 		viewersList.setLocation(625, 25);
-		viewersList.setSize(160,500);
+		viewersList.setSize(160, 500);
 		viewersList.setEditable(false);
 		viewersList.setBackground(Color.black);
 		viewersList.setForeground(Color.white);
@@ -90,16 +89,17 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 		{
 			joinButton.setText("Leave");
 			streamToJoin.setEditable(false);
-			viewersList.append("Viewers: " +  TurkeyBot.bot.getViewers().size() + " \n");
+			viewersList.append("Viewers: " + TurkeyBot.bot.getViewers().size() + " \n");
 			viewersList.append("---------------------------------- \n");
-			for(String s: TurkeyBot.bot.getViewers())
+			for(String s : TurkeyBot.bot.getViewers())
 			{
 				viewersList.append(s + " \n");
 			}
 		}
-		
+
 		super.setVisible(true);
 	}
+
 	public void unLoad()
 	{
 		viewersList.setText("");
@@ -108,8 +108,11 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 
 	/**
 	 * Outputs the given message to the console.
-	 * @param level The level of the message. Added onto the beginning of the message in the console window.
-	 * @param message The message to be added to the console window.
+	 * 
+	 * @param level
+	 *            The level of the message. Added onto the beginning of the message in the console window.
+	 * @param message
+	 *            The message to be added to the console window.
 	 */
 	public static void output(Level level, String message)
 	{
@@ -127,7 +130,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 	{
 		if(e.getSource() == consoleEntry)
 		{
-			//output("" + e.getKeyCode());
+			// output("" + e.getKeyCode());
 			boolean cancel = true;
 			if(e.getKeyChar() == KeyEvent.VK_ENTER)
 			{
@@ -147,7 +150,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 					timesUp--;
 				if(pastEntries.size() > 0)
 				{
-					consoleEntry.setText(pastEntries.get(pastEntries.size() - timesUp ));
+					consoleEntry.setText(pastEntries.get(pastEntries.size() - timesUp));
 				}
 				cancel = false;
 			}
@@ -158,7 +161,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 					timesUp++;
 				if(pastEntries.size() > 0 && timesUp > 0)
 				{
-					consoleEntry.setText(pastEntries.get(pastEntries.size() - timesUp ));
+					consoleEntry.setText(pastEntries.get(pastEntries.size() - timesUp));
 				}
 				else if(timesUp == 0)
 				{
@@ -169,12 +172,12 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 			else if(e.getKeyCode() == 18)
 			{
 				String[] args = consoleEntry.getText().split(" ");
-				String fullName = TurkeyBot.bot.getFullUserName(args[args.length-1]);
+				String fullName = TurkeyBot.bot.getFullUserName(args[args.length - 1]);
 				if(fullName != "")
 				{
-					args[args.length-1] = fullName;
+					args[args.length - 1] = fullName;
 					String msg = "";
-					for(String s: args)
+					for(String s : args)
 					{
 						msg += s + " ";
 					}
@@ -191,8 +194,15 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 
 	}
 
-	@Override public void keyReleased(KeyEvent e){}@Override public void keyTyped(KeyEvent e){}
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+	}
 
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -215,7 +225,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 			}
 		}
 	}
-	
+
 	/**
 	 * Clears the console window.
 	 */
@@ -226,18 +236,12 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 
 	public enum Level
 	{
-		None(""),
-		Chat("Chat"),
-		Info("Info"),
-		Important("IMPORTANT"),
-		Alert("Alert"),
-		Warning("Warning"),
-		DeBug("DeBug"),
-		Error("ERROR");
+		None(""), Chat("Chat"), Info("Info"), Important("IMPORTANT"), Alert("Alert"), Warning("Warning"), DeBug("DeBug"), Error("ERROR");
 
 		private String level;
 
-		private Level(String level) {
+		private Level(String level)
+		{
 			this.level = level;
 		}
 

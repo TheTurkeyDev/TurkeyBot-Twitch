@@ -15,9 +15,14 @@ public class AutoAnnouncement implements Runnable
 	public AutoAnnouncement(TurkeyBot bot)
 	{
 		this.bot = bot;
-		try{
+		try
+		{
 			delay = Integer.parseInt(bot.settings.getSetting("AnnounceDelay"));
-		}catch(NumberFormatException e){ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");return;}
+		} catch(NumberFormatException e)
+		{
+			ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");
+			return;
+		}
 		initAutoAnnouncemer();
 	}
 
@@ -43,28 +48,35 @@ public class AutoAnnouncement implements Runnable
 			{
 				synchronized(this)
 				{
-					this.wait(delay*1000);
+					this.wait(delay * 1000);
 				}
-			} catch (InterruptedException e)
+			} catch(InterruptedException e)
 			{
 				e.printStackTrace();
 				this.stop();
 			}
 			makeAnnouncement();
-			try{
+			try
+			{
 				delay = Integer.parseInt(bot.settings.getSetting("AnnounceDelay"));
-			}catch(NumberFormatException e){ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");return;}
+			} catch(NumberFormatException e)
+			{
+				ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");
+				return;
+			}
 		}
 		try
 		{
 			thread.interrupt();
 			thread.join();
-		} catch (InterruptedException e){}
+		} catch(InterruptedException e)
+		{
+		}
 	}
 
 	private void makeAnnouncement()
 	{
-		String msg =  bot.announceFile.getRandomAnnouncement();
+		String msg = bot.announceFile.getRandomAnnouncement();
 		if(msg != "")
 			bot.sendMessage(msg);
 	}

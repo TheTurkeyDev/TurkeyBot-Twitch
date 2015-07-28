@@ -56,71 +56,71 @@ public class CommandsTab extends Tab implements ActionListener
 		{
 			String commandName = commands[i];
 
-			if((row*25)+20 > (commandspanel.getHeight()-100))
+			if((row * 25) + 20 > (commandspanel.getHeight() - 100))
 			{
-				x+=1;
+				x += 1;
 				row = 0;
 			}
 
 			label = new JLabel(commandName);
-			gbc.gridx = x*4;
+			gbc.gridx = x * 4;
 			gbc.gridy = row;
 			label.setSize(200, 25);
 			label.setVisible(true);
-			commandspanel.add(label,gbc);
+			commandspanel.add(label, gbc);
 			components.add(label);
 
 			Command command = TurkeyBot.getCommandFromName(commandName);
-			
+
 			editbutton = new JButton();
 			editbutton.setName("Edit " + commandName);
-			gbc.gridx = (x*4)+1;
+			gbc.gridx = (x * 4) + 1;
 			gbc.gridy = row;
 			editbutton.setSize(60, 25);
 			editbutton.setVisible(true);
 			editbutton.setText("Edit");
 			editbutton.addActionListener(this);
-			commandspanel.add(editbutton,gbc);
+			commandspanel.add(editbutton, gbc);
 			components.add(editbutton);
-			
+
 			if(command.canEdit())
 			{
 				deletebutton = new JButton();
 				deletebutton.setName("Delete " + commandName);
-				gbc.gridx = (x*4)+3;
+				gbc.gridx = (x * 4) + 3;
 				gbc.gridy = row;
 				deletebutton.setSize(70, 25);
 				deletebutton.setVisible(true);
 				deletebutton.setText("Delete");
 				deletebutton.addActionListener(this);
-				commandspanel.add(deletebutton,gbc);
+				commandspanel.add(deletebutton, gbc);
 				components.add(deletebutton);
 			}
-			
+
 			if(!command.isEnabled())
 			{
 				enablebutton = new JButton();
 				enablebutton.setName("Enable " + commandName);
-				gbc.gridx = (x*4)+2;
+				gbc.gridx = (x * 4) + 2;
 				gbc.gridy = row;
 				enablebutton.setSize(80, 25);
 				enablebutton.setVisible(true);
 				enablebutton.setText("Enable");
 				enablebutton.addActionListener(this);
-				commandspanel.add(enablebutton,gbc);
+				commandspanel.add(enablebutton, gbc);
 				components.add(enablebutton);
 			}
 			else
 			{
 				disablebutton = new JButton();
 				disablebutton.setName("Disable " + commandName);
-				gbc.gridx = (x*4)+2;
+				gbc.gridx = (x * 4) + 2;
 				gbc.gridy = row;
 				disablebutton.setSize(80, 25);
 				disablebutton.setVisible(true);
 				disablebutton.setText("Disable");
 				disablebutton.addActionListener(this);
-				commandspanel.add(disablebutton,gbc);
+				commandspanel.add(disablebutton, gbc);
 				components.add(disablebutton);
 			}
 
@@ -136,7 +136,7 @@ public class CommandsTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
-		for(JComponent comp: components)
+		for(JComponent comp : components)
 		{
 			comp.setVisible(false);
 			scroller.remove(comp);
@@ -151,11 +151,17 @@ public class CommandsTab extends Tab implements ActionListener
 	{
 		if(e.getSource() instanceof JButton)
 		{
-			JButton button = ((JButton)e.getSource());
+			JButton button = ((JButton) e.getSource());
 			Command command;
-			try{
+			try
+			{
 				command = TurkeyBot.getCommandFromName(button.getName().substring(button.getName().indexOf(" ") + 1));
-			}catch(Exception ex){ConsoleTab.output(Level.Error, "Failed to get the correct command that goes with that edit button!"); return;};
+			} catch(Exception ex)
+			{
+				ConsoleTab.output(Level.Error, "Failed to get the correct command that goes with that edit button!");
+				return;
+			}
+			;
 			if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Edit"))
 			{
 				new EditCommandGui(command);

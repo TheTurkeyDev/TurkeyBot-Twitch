@@ -31,7 +31,8 @@ public class ModerateChat
 			blackList = bot.chatSettings.getSetting("WordBlackList").split(",");
 		else
 			blackList = new String[0];
-		try{
+		try
+		{
 			URL url = new URL("https://api.twitch.tv/kraken/chat/turkey2349/emoticons");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
@@ -47,17 +48,23 @@ public class ModerateChat
 			int index = result.indexOf("regex");
 			while(index > -1)
 			{
-				result=result.substring(index+8);
-				emotes.add(result.substring(0,result.indexOf("\"")));
+				result = result.substring(index + 8);
+				emotes.add(result.substring(0, result.indexOf("\"")));
 				index = result.indexOf("regex");
 			}
-		}catch(Exception e){};
+		} catch(Exception e)
+		{
+		}
+		;
 	}
 
 	/**
 	 * Returns if the given message is valid to be said in chat or if the chat message should be filtered
-	 * @param message The chat message to parse through.
-	 * @param sender the username that sent the message
+	 * 
+	 * @param message
+	 *            The chat message to parse through.
+	 * @param sender
+	 *            the username that sent the message
 	 * @return if the message is ok or false if it should be filtered
 	 */
 	public boolean isValidChat(String m, String sender)
@@ -79,18 +86,18 @@ public class ModerateChat
 			if(error == ErrorType.BadWord)
 				bot.sendMessage(bot.spamResponseFile.getSetting("BlockedWordMessage"));
 			if(error == ErrorType.BlacklistWord)
-                bot.sendMessage("");
+				bot.sendMessage("");
 			if(error == ErrorType.Emotes)
 				bot.sendMessage(bot.spamResponseFile.getSetting("EmotesMessage"));
 			if(error == ErrorType.Sybols)
 				bot.sendMessage(bot.spamResponseFile.getSetting("SymbolsMessage"));
-			bot.sendMessage("/timeout "+ sender + " 1");
+			bot.sendMessage("/timeout " + sender + " 1");
 			return false;
 		}
 		if((error = passesLinkCheck()) != ErrorType.None)
 		{
 			bot.sendMessage(bot.spamResponseFile.getSetting("LinkMessage"));
-			bot.sendMessage("/timeout "+ sender + " 1");
+			bot.sendMessage("/timeout " + sender + " 1");
 			return false;
 		}
 
@@ -98,19 +105,19 @@ public class ModerateChat
 	}
 
 	/**
-	 * Parses through the words of the message and checks for any flags in the chat message.
-	 * Checks for Caps, length, Blacklisted words/ Astrixs, Emotes and Symbols.
+	 * Parses through the words of the message and checks for any flags in the chat message. Checks for Caps, length, Blacklisted words/ Astrixs, Emotes and Symbols.
+	 * 
 	 * @return The Error Type of the chat message. ErrorType.None if no flag is raised.
 	 */
 	public ErrorType passesWordCheck()
 	{
-		//TODO: Fix emotes check as not all emotes are checked for.
+		// TODO: Fix emotes check as not all emotes are checked for.
 		int caps = 0;
 		int letters = 0;
 		int symbols = 0;
 		int charecters = 0;
 		int numofemotes = 0;
-		for(String word: message)
+		for(String word : message)
 		{
 			if(word.contains("***"))
 				return ErrorType.BadWord;
@@ -122,7 +129,7 @@ public class ModerateChat
 			}
 			else
 			{
-				for(char letter: word.toCharArray())
+				for(char letter : word.toCharArray())
 				{
 					if(letter >= 65 && letter <= 90)
 						caps++;
@@ -143,9 +150,8 @@ public class ModerateChat
 		int capsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofCaps"));
 		if(capsMax != -1 && caps > capsMax)
 			return ErrorType.Caps;
-		if(( capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double)letters)*100) > capsPercent))
+		if((capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double) letters) * 100) > capsPercent))
 			return ErrorType.Caps;
-
 
 		int emotesMax = Integer.parseInt(bot.chatSettings.getSetting("MaxEmotes"));
 		int emotesMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumEmotes"));
@@ -153,7 +159,7 @@ public class ModerateChat
 
 		if(emotesMax != -1 && numofemotes > emotesMax)
 			return ErrorType.Emotes;
-		if(( emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double)message.length)*100) > emotesPercent))
+		if((emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double) message.length) * 100) > emotesPercent))
 			return ErrorType.Emotes;
 
 		if(letters > Integer.parseInt(bot.chatSettings.getSetting("MaxMessageLength")))
@@ -165,7 +171,7 @@ public class ModerateChat
 
 		if(symbolsMax != -1 && symbols > symbolsMax)
 			return ErrorType.Sybols;
-		if(( symbolsMin != -1 && symbols > symbolsMin) && (symbolsPercent != -1 && (((double) symbols / (double)charecters)*100) > symbolsPercent))
+		if((symbolsMin != -1 && symbols > symbolsMin) && (symbolsPercent != -1 && (((double) symbols / (double) charecters) * 100) > symbolsPercent))
 			return ErrorType.Sybols;
 
 		return ErrorType.None;
@@ -173,6 +179,7 @@ public class ModerateChat
 
 	/**
 	 * Checks for possible links in the chat message.
+	 * 
 	 * @return ErrorType.Link if a link is used or ErrorType.None is chat message has no links.
 	 */
 	public ErrorType passesLinkCheck()
@@ -181,7 +188,7 @@ public class ModerateChat
 		{
 			return ErrorType.None;
 		}
-		for(String word: message)
+		for(String word : message)
 		{
 			if(word.contains("."))
 			{
@@ -192,14 +199,13 @@ public class ModerateChat
 					wordFixed = word.substring(word.indexOf("https://"));
 				if(word.contains("www."))
 					wordFixed = word.substring(word.indexOf("www."));
-				
-				
+
 				int index = wordFixed.indexOf(".");
-				if(index > 0 && index < wordFixed.length()-1)
+				if(index > 0 && index < wordFixed.length() - 1)
 				{
 					UrlValidator validator = new UrlValidator();
 					if(!wordFixed.contains("http://") && !wordFixed.contains("https://"))
-						wordFixed="http://"+wordFixed;
+						wordFixed = "http://" + wordFixed;
 					if(validator.isValid(wordFixed))
 						return ErrorType.Link;
 				}
@@ -210,12 +216,14 @@ public class ModerateChat
 
 	/**
 	 * Checks if the given word is on the black list.
-	 * @param tocheck The word to check against the black list.
+	 * 
+	 * @param tocheck
+	 *            The word to check against the black list.
 	 * @return If the word is black listed or not.
 	 */
 	public boolean isBlackListed(String tocheck)
 	{
-		for(String blackword: blackList)
+		for(String blackword : blackList)
 		{
 			if(blackword.equalsIgnoreCase(tocheck))
 				return true;
@@ -229,13 +237,6 @@ public class ModerateChat
 	 */
 	public enum ErrorType
 	{
-		Caps,
-		Link,
-		Length,
-		BadWord,
-		BlacklistWord,
-		Sybols,
-		Emotes,
-		None;
+		Caps, Link, Length, BadWord, BlacklistWord, Sybols, Emotes, None;
 	}
 }

@@ -10,21 +10,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
-import com.Turkey.TurkeyBot.gui.Gui;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
+import com.Turkey.TurkeyBot.gui.ProfilesGui;
 
 public class Start
 {
 	public static void main(String[] args)
 	{
-		try
-		{
-			new Gui(new TurkeyBot());
-			checkVersion();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		new ProfilesGui();
+		checkVersion();
 	}
 
 	/**
@@ -46,7 +40,7 @@ public class Start
 				result += line;
 			}
 			reader.close();
-		} catch (Exception e)
+		} catch(Exception e)
 		{
 			ConsoleTab.output(Level.Error, "Could not connect to the server to check for the current version of TurkeyBot");
 			return;
@@ -62,19 +56,19 @@ public class Start
 			popup.setLayout(null);
 			popup.setTitle("Out of Date!!!");
 			popup.setLocationRelativeTo(null);
-			
+
 			JLabel accountNameLabel = new JLabel("Your version of TurkeyBot is currently out of date!");
-			accountNameLabel.setLocation(25,10);
+			accountNameLabel.setLocation(25, 10);
 			accountNameLabel.setSize(400, 25);
 			popup.add(accountNameLabel);
-			
+
 			accountNameLabel = new JLabel("Go to http://theprogrammingturkey.com/TurkeyBot.php");
-			accountNameLabel.setLocation(10,40);
+			accountNameLabel.setLocation(10, 40);
 			accountNameLabel.setSize(400, 25);
 			popup.add(accountNameLabel);
-			
+
 			accountNameLabel = new JLabel("To get the latest version!");
-			accountNameLabel.setLocation(100,75);
+			accountNameLabel.setLocation(100, 75);
 			accountNameLabel.setSize(400, 25);
 			popup.add(accountNameLabel);
 			popup.setVisible(true);

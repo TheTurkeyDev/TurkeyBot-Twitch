@@ -20,44 +20,44 @@ public class ChatSettingsTab extends Tab implements ActionListener
 	private List<JComponent> components = new ArrayList<JComponent>();
 
 	private JButton save;
-	private String[] groups = {"Caps", "Emotes", "Symbols", "other"};
+	private String[] groups = { "Caps", "Emotes", "Symbols", "other" };
 	private JPanel panel;
+
 	public ChatSettingsTab()
 	{
-		
+
 	}
 
 	public void load()
 	{
-		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
-			return;
+		if (TurkeyBot.bot.getProfile() == null) return;
 		JLabel label;
 		JTextArea text;
 
 		save = new JButton("Save");
 		save.setName("Save");
-		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
+		save.setLocation((super.getWidth() / 2) - 50, super.getHeight() - 100);
 		save.setSize(100, 25);
 		save.addActionListener(this);
 		super.add(save);
-		
-		for(int i = 0; i < groups.length; i++)
+
+		for (int i = 0; i < groups.length; i++)
 		{
 			String s = groups[i];
-			
+
 			panel = new JPanel();
 			panel.setLayout(null);
-			panel.setLocation(10, (i*100) + 10);
+			panel.setLocation(10, (i * 100) + 10);
 			panel.setSize(400, 100);
-			
-			if(s.equalsIgnoreCase("other"))
+
+			if (s.equalsIgnoreCase("other"))
 			{
 				label = new JLabel("Block Links");
 				label.setLocation(0, 25);
 				label.setSize(150, 25);
 				components.add(label);
 				panel.add(label);
-				
+
 				text = new JTextArea();
 				text.setName("Block Links");
 				text.setLocation(150, 25);
@@ -65,13 +65,13 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setText(TurkeyBot.bot.chatSettings.getSetting("BlockLinks"));
 				components.add(text);
 				panel.add(text);
-				
+
 				label = new JLabel("Max Message Length");
 				label.setLocation(0, 50);
 				label.setSize(150, 25);
 				components.add(label);
 				panel.add(label);
-				
+
 				text = new JTextArea();
 				text.setName("Max Message Length");
 				text.setLocation(150, 50);
@@ -79,13 +79,13 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setText(TurkeyBot.bot.chatSettings.getSetting("MaxMessageLength"));
 				components.add(text);
 				panel.add(text);
-				
+
 				label = new JLabel("Word Black List");
 				label.setLocation(0, 75);
 				label.setSize(150, 25);
 				components.add(label);
 				panel.add(label);
-				
+
 				text = new JTextArea();
 				text.setName("Word Black List");
 				text.setLocation(150, 75);
@@ -101,7 +101,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				label.setSize(150, 25);
 				components.add(label);
 				panel.add(label);
-				
+
 				text = new JTextArea();
 				text.setName("Minimum " + s);
 				text.setLocation(150, 25);
@@ -109,7 +109,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setText(TurkeyBot.bot.chatSettings.getSetting("Minimum" + s));
 				components.add(text);
 				panel.add(text);
-				
+
 				label = new JLabel("Max " + s);
 				label.setLocation(0, 50);
 				label.setSize(150, 25);
@@ -123,7 +123,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 				text.setText(TurkeyBot.bot.chatSettings.getSetting("Max" + s));
 				components.add(text);
 				panel.add(text);
-				
+
 				label = new JLabel("Max percent of " + s);
 				label.setLocation(0, 75);
 				label.setSize(150, 25);
@@ -141,15 +141,14 @@ public class ChatSettingsTab extends Tab implements ActionListener
 			super.add(panel);
 			components.add(panel);
 		}
-		
+
 		super.setVisible(true);
 	}
 
 	public void unLoad()
 	{
-		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
-			return;
-		for(JComponent comp: components)
+		if (TurkeyBot.bot.getChannel(false).equalsIgnoreCase("")) return;
+		for (JComponent comp : components)
 		{
 			comp.setVisible(false);
 			super.remove(comp);
@@ -165,9 +164,9 @@ public class ChatSettingsTab extends Tab implements ActionListener
 	 */
 	public void saveSettings()
 	{
-		for(JComponent comp: components)
+		for (JComponent comp : components)
 		{
-			if(comp instanceof JTextArea)
+			if (comp instanceof JTextArea)
 			{
 				TurkeyBot.bot.chatSettings.setSetting(comp.getName().replace(" ", ""), ((JTextArea) comp).getText());
 			}
@@ -177,7 +176,7 @@ public class ChatSettingsTab extends Tab implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(e.getSource().equals(save))
+		if (e.getSource().equals(save))
 		{
 			saveSettings();
 		}
