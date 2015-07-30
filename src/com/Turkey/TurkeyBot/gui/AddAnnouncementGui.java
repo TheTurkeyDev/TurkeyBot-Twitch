@@ -59,8 +59,8 @@ public class AddAnnouncementGui implements ActionListener
 				error("You have blank feilds");
 			else
 			{
-				TurkeyBot.bot.announceFile.addAnnouncement(response.getText());
-				TurkeyBot.bot.announceFile.reloadAnnouncements();
+				TurkeyBot.bot.getProfile().announceFile.addAnnouncement(response.getText());
+				TurkeyBot.bot.getProfile().announceFile.reloadAnnouncements();
 				Gui.reloadTab();
 				popup.dispose();
 			}

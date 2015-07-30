@@ -33,8 +33,9 @@ public class AnnouncementTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		if (TurkeyBot.bot.getProfile() == null) return;
-		AnnouncementFile file = TurkeyBot.bot.announceFile;
+		if(TurkeyBot.bot.getProfile() == null)
+			return;
+		AnnouncementFile file = TurkeyBot.bot.getProfile().announceFile;
 		List<String> temp = file.getAnnouncements();
 
 		JLabel label;
@@ -44,11 +45,11 @@ public class AnnouncementTab extends Tab implements ActionListener
 		JButton deletebutton;
 		int x = 1;
 		int row = 0;
-		for (int i = 0; i < temp.size(); i++)
+		for(int i = 0; i < temp.size(); i++)
 		{
 			String announcement = temp.get(i);
 
-			if ((row * 25) + 20 > (commandspanel.getHeight() - 100))
+			if((row * 25) + 20 > (commandspanel.getHeight() - 100))
 			{
 				x += 1;
 				row = 0;
@@ -84,7 +85,7 @@ public class AnnouncementTab extends Tab implements ActionListener
 			commandspanel.add(deletebutton, gbc);
 			components.add(deletebutton);
 
-			if (!file.isEnabled(announcement))
+			if(!file.isEnabled(announcement))
 			{
 				enablebutton = new JButton();
 				enablebutton.setName("Enable " + i);
@@ -123,8 +124,9 @@ public class AnnouncementTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
-		if (TurkeyBot.bot.getChannel(false).equalsIgnoreCase("")) return;
-		for (JComponent comp : components)
+		if(TurkeyBot.bot.getProfile() == null)
+			return;
+		for(JComponent comp : components)
 		{
 			comp.setVisible(false);
 			scroller.remove(comp);
@@ -136,27 +138,27 @@ public class AnnouncementTab extends Tab implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getSource() instanceof JButton)
+		if(e.getSource() instanceof JButton)
 		{
 			JButton button = ((JButton) e.getSource());
-			AnnouncementFile file = TurkeyBot.bot.announceFile;
-			if (button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Edit"))
+			AnnouncementFile file = TurkeyBot.bot.getProfile().announceFile;
+			if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Edit"))
 			{
 				new EditAnnouncementGui(Integer.parseInt(button.getName().substring(5)));
 			}
-			else if (button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Enable"))
+			else if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Enable"))
 			{
 				file.enableAnnouncement(Integer.parseInt(button.getName().substring(7)));
 				unLoad();
 				load();
 			}
-			else if (button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Disable"))
+			else if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Disable"))
 			{
 				file.disableAnnouncement(Integer.parseInt(button.getName().substring(8)));
 				unLoad();
 				load();
 			}
-			else if (button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Delete"))
+			else if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Delete"))
 			{
 				file.removeAnnouncement(Integer.parseInt(button.getName().substring(7)));
 				unLoad();

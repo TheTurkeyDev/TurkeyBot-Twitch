@@ -24,7 +24,7 @@ public class AccountSettings extends JsonFile
 {
 	private Map<String, Entry<String, String>> accounts;
 
-	public AccountSettings(TurkeyBot b) throws IOException
+	public AccountSettings() throws IOException
 	{
 		accounts = new HashMap<String, Entry<String, String>>();
 		gson = new Gson();

@@ -17,7 +17,7 @@ public class BypassCommand extends Command
 		{
 			if(bot.isUser(args[1].toLowerCase()))
 			{
-				bot.giveImmunityTo(args[1].toLowerCase());
+				bot.getProfile().chatmoderation.giveImmunityTo(args[1].toLowerCase());
 				bot.sendMessage("The user " + args[1] + " now bypasses the filter next message.");
 			}
 			else

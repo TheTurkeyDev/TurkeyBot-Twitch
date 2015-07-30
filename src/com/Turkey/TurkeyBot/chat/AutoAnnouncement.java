@@ -9,15 +9,13 @@ public class AutoAnnouncement implements Runnable
 
 	public static boolean run = false;
 	private int delay = 0;
-	private TurkeyBot bot;
 	private Thread thread;
 
-	public AutoAnnouncement(TurkeyBot bot)
+	public AutoAnnouncement()
 	{
-		this.bot = bot;
 		try
 		{
-			delay = Integer.parseInt(bot.settings.getSetting("AnnounceDelay"));
+			delay = Integer.parseInt(TurkeyBot.bot.getProfile().settings.getSetting("AnnounceDelay"));
 		} catch(NumberFormatException e)
 		{
 			ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");
@@ -58,7 +56,7 @@ public class AutoAnnouncement implements Runnable
 			makeAnnouncement();
 			try
 			{
-				delay = Integer.parseInt(bot.settings.getSetting("AnnounceDelay"));
+				delay = Integer.parseInt(TurkeyBot.bot.getProfile().settings.getSetting("AnnounceDelay"));
 			} catch(NumberFormatException e)
 			{
 				ConsoleTab.output(Level.Error, "The Announcement time is not set as a integer!");
@@ -76,9 +74,9 @@ public class AutoAnnouncement implements Runnable
 
 	private void makeAnnouncement()
 	{
-		String msg = bot.announceFile.getRandomAnnouncement();
+		String msg = TurkeyBot.bot.getProfile().announceFile.getRandomAnnouncement();
 		if(msg != "")
-			bot.sendMessage(msg);
+			TurkeyBot.bot.sendMessage(msg);
 	}
 
 	public void stop()

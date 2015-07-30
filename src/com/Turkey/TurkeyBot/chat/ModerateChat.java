@@ -10,10 +10,11 @@ import java.util.List;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
+import com.Turkey.TurkeyBot.files.ChatSettings;
+import com.Turkey.TurkeyBot.files.ResponseSettings;
 
 public class ModerateChat
 {
-	private TurkeyBot bot;
 
 	private String[] message;
 
@@ -23,12 +24,13 @@ public class ModerateChat
 
 	public static boolean Moderate = true;
 
-	public ModerateChat(TurkeyBot b)
-	{
-		bot = b;
+	private List<String> bypass = new ArrayList<String>();
 
-		if(!bot.chatSettings.getSetting("WordBlackList").equalsIgnoreCase(""))
-			blackList = bot.chatSettings.getSetting("WordBlackList").split(",");
+	public ModerateChat()
+	{
+
+		if(!TurkeyBot.bot.getProfile().chatSettings.getSetting("WordBlackList").equalsIgnoreCase(""))
+			blackList = TurkeyBot.bot.getProfile().chatSettings.getSetting("WordBlackList").split(",");
 		else
 			blackList = new String[0];
 		try
@@ -71,33 +73,34 @@ public class ModerateChat
 	{
 		message = m.split(" ");
 
-		if(bot.isMod(sender) || bot.checkForImmunity(sender) || !Moderate)
+		if(TurkeyBot.bot.isMod(sender) || this.checkForImmunity(sender) || !Moderate)
 		{
 			return true;
 		}
 
 		ErrorType error;
+		ResponseSettings response = TurkeyBot.bot.getProfile().spamResponseFile;
 		if((error = passesWordCheck()) != ErrorType.None)
 		{
 			if(error == ErrorType.Caps)
-				bot.sendMessage(bot.spamResponseFile.getSetting("CapsMessage"));
+				TurkeyBot.bot.sendMessage(response.getSetting("CapsMessage"));
 			if(error == ErrorType.Length)
-				bot.sendMessage(bot.spamResponseFile.getSetting("LengthMessage"));
+				TurkeyBot.bot.sendMessage(response.getSetting("LengthMessage"));
 			if(error == ErrorType.BadWord)
-				bot.sendMessage(bot.spamResponseFile.getSetting("BlockedWordMessage"));
+				TurkeyBot.bot.sendMessage(response.getSetting("BlockedWordMessage"));
 			if(error == ErrorType.BlacklistWord)
-				bot.sendMessage("");
+				TurkeyBot.bot.sendMessage("");
 			if(error == ErrorType.Emotes)
-				bot.sendMessage(bot.spamResponseFile.getSetting("EmotesMessage"));
+				TurkeyBot.bot.sendMessage(response.getSetting("EmotesMessage"));
 			if(error == ErrorType.Sybols)
-				bot.sendMessage(bot.spamResponseFile.getSetting("SymbolsMessage"));
-			bot.sendMessage("/timeout " + sender + " 1");
+				TurkeyBot.bot.sendMessage(response.getSetting("SymbolsMessage"));
+			TurkeyBot.bot.sendMessage("/timeout " + sender + " 1");
 			return false;
 		}
 		if((error = passesLinkCheck()) != ErrorType.None)
 		{
-			bot.sendMessage(bot.spamResponseFile.getSetting("LinkMessage"));
-			bot.sendMessage("/timeout " + sender + " 1");
+			TurkeyBot.bot.sendMessage(response.getSetting("LinkMessage"));
+			TurkeyBot.bot.sendMessage("/timeout " + sender + " 1");
 			return false;
 		}
 
@@ -145,29 +148,30 @@ public class ModerateChat
 				}
 			}
 		}
-		int capsMax = Integer.parseInt(bot.chatSettings.getSetting("MaxCaps"));
-		int capsMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumCaps"));
-		int capsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofCaps"));
+		ChatSettings chat = TurkeyBot.bot.getProfile().chatSettings;
+		int capsMax = Integer.parseInt(chat.getSetting("MaxCaps"));
+		int capsMin = Integer.parseInt(chat.getSetting("MinimumCaps"));
+		int capsPercent = Integer.parseInt(chat.getSetting("MaxpercentofCaps"));
 		if(capsMax != -1 && caps > capsMax)
 			return ErrorType.Caps;
 		if((capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double) letters) * 100) > capsPercent))
 			return ErrorType.Caps;
 
-		int emotesMax = Integer.parseInt(bot.chatSettings.getSetting("MaxEmotes"));
-		int emotesMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumEmotes"));
-		int emotesPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofEmotes"));
+		int emotesMax = Integer.parseInt(chat.getSetting("MaxEmotes"));
+		int emotesMin = Integer.parseInt(chat.getSetting("MinimumEmotes"));
+		int emotesPercent = Integer.parseInt(chat.getSetting("MaxpercentofEmotes"));
 
 		if(emotesMax != -1 && numofemotes > emotesMax)
 			return ErrorType.Emotes;
 		if((emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double) message.length) * 100) > emotesPercent))
 			return ErrorType.Emotes;
 
-		if(letters > Integer.parseInt(bot.chatSettings.getSetting("MaxMessageLength")))
+		if(letters > Integer.parseInt(chat.getSetting("MaxMessageLength")))
 			return ErrorType.Length;
 
-		int symbolsMax = Integer.parseInt(bot.chatSettings.getSetting("MaxSymbols"));
-		int symbolsMin = Integer.parseInt(bot.chatSettings.getSetting("MinimumSymbols"));
-		int symbolsPercent = Integer.parseInt(bot.chatSettings.getSetting("MaxpercentofSymbols"));
+		int symbolsMax = Integer.parseInt(chat.getSetting("MaxSymbols"));
+		int symbolsMin = Integer.parseInt(chat.getSetting("MinimumSymbols"));
+		int symbolsPercent = Integer.parseInt(chat.getSetting("MaxpercentofSymbols"));
 
 		if(symbolsMax != -1 && symbols > symbolsMax)
 			return ErrorType.Sybols;
@@ -184,7 +188,7 @@ public class ModerateChat
 	 */
 	public ErrorType passesLinkCheck()
 	{
-		if(!Boolean.parseBoolean(bot.chatSettings.getSetting("BlockLinks")))
+		if(!Boolean.parseBoolean(TurkeyBot.bot.getProfile().chatSettings.getSetting("BlockLinks")))
 		{
 			return ErrorType.None;
 		}
@@ -238,5 +242,32 @@ public class ModerateChat
 	public enum ErrorType
 	{
 		Caps, Link, Length, BadWord, BlacklistWord, Sybols, Emotes, None;
+	}
+
+	/**
+	 * Adds the specified user name to a list for people who will bypass the chat modertion check.
+	 * 
+	 * @param name
+	 *            The username to add to the list.
+	 */
+	public void giveImmunityTo(String name)
+	{
+		bypass.add(name);
+	}
+
+	/**
+	 * Checks to see if the given user name is able to bypass the chat filter. Auto removes the username from the list if the name is on the list.
+	 * 
+	 * @param name
+	 *            The username to check to see if they bypass the filter.
+	 * @return If the given username can bypass the chat filter.
+	 */
+	public boolean checkForImmunity(String name)
+	{
+		if(bypass.contains(name))
+			bypass.remove(name);
+		else
+			return false;
+		return true;
 	}
 }

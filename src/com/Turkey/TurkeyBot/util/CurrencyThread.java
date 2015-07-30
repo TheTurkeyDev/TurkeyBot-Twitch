@@ -8,15 +8,13 @@ public class CurrencyThread implements Runnable
 
 	private int delay;
 	private int amount;
-	private TurkeyBot bot;
 	private boolean run = false;
 	private Thread thread;
 
-	public CurrencyThread(int delay, int amount, TurkeyBot bot)
+	public CurrencyThread(int delay, int amount)
 	{
 		this.delay = delay;	
 		this.amount = amount;
-		this.bot = bot;
 	}
 	
 	public void initCurrencyThread()
@@ -56,9 +54,9 @@ public class CurrencyThread implements Runnable
 	
 	private void giveCurrency()
 	{
-		for(String viewer: bot.getViewers())
+		for(String viewer: TurkeyBot.bot.getViewers())
 		{
-			bot.currency.addCurrencyFor(viewer.toLowerCase(), amount);
+			TurkeyBot.bot.getProfile().currency.addCurrencyFor(viewer.toLowerCase(), amount);
 		}
 		Gui.reloadTab();
 	}

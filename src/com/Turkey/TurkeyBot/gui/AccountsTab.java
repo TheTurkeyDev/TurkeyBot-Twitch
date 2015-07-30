@@ -68,7 +68,7 @@ public class AccountsTab extends Tab implements ActionListener
 
 		nametext = new JTextArea("Account Username");
 		nametext.setName("AccountName");
-		nametext.setLocation((super.getWidth()/2) - 50, 45);
+		nametext.setLocation((super.getWidth() / 2) - 50, 45);
 		nametext.setSize(200, 15);
 		nametext.setVisible(true);
 		nametext.setToolTipText("Account Username");
@@ -88,7 +88,7 @@ public class AccountsTab extends Tab implements ActionListener
 		oAuthtext.setToolTipText("Account oAuth");
 		super.add(oAuthtext);
 
-		accounts = new JComboBox<>(TurkeyBot.bot.accountSettingsFile.getAccounts().keySet().toArray());
+		accounts = new JComboBox<>(TurkeyBot.bot.getProfile().accountSettingsFile.getAccounts().keySet().toArray());
 		accounts.setLocation((super.getWidth()/2) - 60 , 150);
 		accounts.setSize(120, 25);
 		super.add(accounts);
@@ -99,7 +99,7 @@ public class AccountsTab extends Tab implements ActionListener
 		selectedAccount.setVisible(true);
 		super.add(selectedAccount);
 		
-		Entry<String, String> entry = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
+		Entry<String, String> entry = TurkeyBot.bot.getProfile().accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
 		if(entry != null)
 			SecretStuff.oAuth = entry.getValue();
 		else
@@ -109,7 +109,7 @@ public class AccountsTab extends Tab implements ActionListener
 	public void load()
 	{
 		super.remove(accounts);
-		accounts = new JComboBox<>(TurkeyBot.bot.accountSettingsFile.getAccounts().keySet().toArray());
+		accounts = new JComboBox<>(TurkeyBot.bot.getProfile().accountSettingsFile.getAccounts().keySet().toArray());
 		accounts.setLocation((super.getWidth()/2) - 60 , 150);
 		accounts.setSize(120, 25);
 		super.add(accounts);
@@ -118,7 +118,7 @@ public class AccountsTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
-		Entry<String, String> entry = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
+		Entry<String, String> entry = TurkeyBot.bot.getProfile().accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
 		if(entry != null)
 			SecretStuff.oAuth = entry.getValue();
 		else
@@ -133,7 +133,7 @@ public class AccountsTab extends Tab implements ActionListener
 			String oAuth = "";
 			for(char c: oAuthtext.getPassword())
 				oAuth+=c;
-			TurkeyBot.bot.accountSettingsFile.addAccount(displaynametext.getText(), nametext.getText(), oAuth);
+			TurkeyBot.bot.getProfile().accountSettingsFile.addAccount(displaynametext.getText(), nametext.getText(), oAuth);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class AccountsTab extends Tab implements ActionListener
 
 	public static String getCurrentAccount()
 	{
-		Entry<String, String> entry = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
+		Entry<String, String> entry = TurkeyBot.bot.getProfile().accountSettingsFile.getAccountFromDisplayName((String) accounts.getSelectedItem());
 		if(entry != null)
 			return entry.getKey();
 		return "";

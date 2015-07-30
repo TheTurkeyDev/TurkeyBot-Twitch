@@ -54,7 +54,7 @@ public class Viewers extends Tab
 						rows[y][x] = bot.getPermLevel(viewer);
 					else if(x == 2)
 					{
-						String response = bot.followersFile.getSetting(viewer);
+						String response = bot.getProfile().followersFile.getSetting(viewer);
 						response= response!=null ? response.replaceAll("\"", ""): null;
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 						format.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -68,7 +68,7 @@ public class Viewers extends Tab
 					}
 					else if(x == 3)
 					{
-						rows[y][x] = "" + bot.currency.getCurrencyFor(viewer) + " " + bot.getCurrencyName();
+						rows[y][x] = "" + bot.getProfile().currency.getCurrencyFor(viewer) + " " + bot.getProfile().getCurrencyName();
 					}
 				}
 			}

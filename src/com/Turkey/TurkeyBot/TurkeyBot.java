@@ -1,52 +1,21 @@
 package com.Turkey.TurkeyBot;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
 import com.Turkey.TurkeyBot.botProfile.Profile;
-import com.Turkey.TurkeyBot.chat.AutoAnnouncement;
 import com.Turkey.TurkeyBot.chat.ModerateChat;
-import com.Turkey.TurkeyBot.commands.AddCommand;
-import com.Turkey.TurkeyBot.commands.AddResponse;
-import com.Turkey.TurkeyBot.commands.AutoTurtleCommand;
-import com.Turkey.TurkeyBot.commands.BypassCommand;
-import com.Turkey.TurkeyBot.commands.Command;
-import com.Turkey.TurkeyBot.commands.CurrencyCommand;
-import com.Turkey.TurkeyBot.commands.DeleteCommand;
-import com.Turkey.TurkeyBot.commands.EditCommand;
-import com.Turkey.TurkeyBot.commands.EditPermission;
-import com.Turkey.TurkeyBot.commands.FunWayBotCommand;
-import com.Turkey.TurkeyBot.commands.MooBotCommand;
-import com.Turkey.TurkeyBot.commands.NightBotCommand;
-import com.Turkey.TurkeyBot.commands.SlotsCommand;
-import com.Turkey.TurkeyBot.commands.StatusCommand;
-import com.Turkey.TurkeyBot.commands.TurkeyBotCommand;
-import com.Turkey.TurkeyBot.commands.UpdateTitleCommand;
-import com.Turkey.TurkeyBot.commands.WinnerCommand;
-import com.Turkey.TurkeyBot.commands.upTimeCommand;
-import com.Turkey.TurkeyBot.files.AccountSettings;
-import com.Turkey.TurkeyBot.files.AnnouncementFile;
-import com.Turkey.TurkeyBot.files.ChatSettings;
-import com.Turkey.TurkeyBot.files.CurrencyFile;
+import com.Turkey.TurkeyBot.commands.CommandManager;
 import com.Turkey.TurkeyBot.files.Followers;
-import com.Turkey.TurkeyBot.files.ResponseSettings;
-import com.Turkey.TurkeyBot.files.SettingsFile;
 import com.Turkey.TurkeyBot.gui.AccountsTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.Turkey.TurkeyBot.gui.Gui;
 import com.Turkey.TurkeyBot.gui.KeyWordRaffleTab;
 import com.Turkey.TurkeyBot.gui.QuestionRaffleTab;
-import com.Turkey.TurkeyBot.util.CurrencyThread;
 import com.Turkey.TurkeyBot.util.HTTPConnect;
 import com.Turkey.TurkeyBot.util.KeyWordRaffle;
 import com.google.gson.JsonArray;
@@ -55,36 +24,16 @@ import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
-	public static final String VERSION = "Beta 1.3.1";
+	public static final String VERSION = "Beta 2.0.0";
 
 	public static TurkeyBot bot;
 	private Profile profile;
 
-	private static HashMap<String, Command> commands = new HashMap<String, Command>();
-
 	private static String botName = "";
 	private String stream = "";
-	private String currencyName;
-
-	private String lastCommand = "";
-	private long lastCommandTime = 0;
-
-	public CurrencyFile currency;
-	public SettingsFile settings;
-	public ChatSettings chatSettings;
-	public ResponseSettings spamResponseFile;
-	public AccountSettings accountSettingsFile;
-	public Followers followersFile;
-	public CurrencyThread currencyTrack;
-	public AnnouncementFile announceFile;
-
-	private ModerateChat chatmoderation;
-	public AutoAnnouncement announcer;
 
 	private String[] mods;
 	private ArrayList<String> viewers;
-
-	private List<String> bypass = new ArrayList<String>();
 
 	public static JsonParser json;
 
@@ -102,8 +51,8 @@ public class TurkeyBot extends PircBot
 		// this.setVerbose(true);
 		json = new JsonParser();
 		setMessageDelay(1550);
-		loadProfileFiles();
-		loadProfileInfo();
+		profile.loadProfile();
+		CommandManager.loadCommands();
 	}
 
 	public Profile getProfile()
@@ -112,146 +61,19 @@ public class TurkeyBot extends PircBot
 	}
 
 	/**
-	 * Loads the files needed for the bot
-	 */
-	private void loadProfileFiles()
-	{
-		try
-		{
-			accountSettingsFile = new AccountSettings(this);
-			currency = new CurrencyFile(this);
-			settings = new SettingsFile(this);
-			chatSettings = new ChatSettings(this);
-			spamResponseFile = new ResponseSettings(this);
-			announceFile = new AnnouncementFile(this);
-		} catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Loads the other information realated to the profile
-	 */
-	private void loadProfileInfo()
-	{
-		chatmoderation = new ModerateChat(this);
-
-		currencyName = settings.getSetting("CurrencyName");
-		if(!settings.getSetting("AutoCurrencyDelay").equalsIgnoreCase("-1"))
-		{
-			try
-			{
-				currencyTrack = new CurrencyThread(Integer.parseInt(settings.getSetting("AutoCurrencyDelay")), Integer.parseInt(settings.getSetting("AutoCurrencyAmount")), this);
-				currencyTrack.initCurrencyThread();
-			} catch(NumberFormatException e)
-			{
-				disconnectFromChannel();
-				ConsoleTab.output(Level.Error, "Your Auto Currency Settings are invalid!");
-				return;
-			}
-		}
-
-		if(!settings.getSetting("AnnounceDelay").equals("-1"))
-		{
-			announcer = new AutoAnnouncement(this);
-		}
-
-		loadCommands();
-	}
-
-	/**
-	 * Loads the commands for TurkeyBot
-	 */
-	private void loadCommands()
-	{
-		commands.put("!slots".toLowerCase(), new SlotsCommand("Slots"));
-		commands.put(("!" + currencyName.replaceAll(" ", "")).toLowerCase(), new CurrencyCommand("Currency"));
-		commands.put("!upTime".toLowerCase(), new upTimeCommand("Uptime"));
-		// commands.put("!Math".toLowerCase(), new MathCommand("Math"));
-		commands.put("!Winner".toLowerCase(), new WinnerCommand("Winner"));
-		commands.put("!bypass".toLowerCase(), new BypassCommand("Bypass"));
-		commands.put("!addCommand".toLowerCase(), new AddCommand("AddCommand"));
-		commands.put("!editCommand".toLowerCase(), new EditCommand("EditCommand"));
-		commands.put("!addResponse".toLowerCase(), new AddResponse("AddResponse"));
-		commands.put("!editPermission".toLowerCase(), new EditPermission("EditPermission"));
-		commands.put("!deleteCommand".toLowerCase(), new DeleteCommand("DeleteCommand"));
-		commands.put("!commandstatus".toLowerCase(), new StatusCommand("commandStatus"));
-		commands.put("!setTitle".toLowerCase(), new UpdateTitleCommand("SetTitle"));
-		commands.put("!turkeybot".toLowerCase(), new TurkeyBotCommand("TurkeyBot"));
-		commands.put("!nightbot".toLowerCase(), new NightBotCommand("NightBot"));
-		commands.put("!moobot".toLowerCase(), new MooBotCommand("MooBot"));
-		commands.put("!funwaybot".toLowerCase(), new FunWayBotCommand("Funwaybot"));
-		commands.put("!autoTurtle".toLowerCase(), new AutoTurtleCommand("autoTurtle"));
-
-		File filesfolder = new File("C:" + File.separator + "TurkeyBot" + File.separator + this.profile.getProfileName() + File.separator + "commands");
-		for(String s : filesfolder.list())
-		{
-			try
-			{
-				File f = new File(filesfolder.getAbsolutePath() + File.separator + s);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
-				String result = "";
-				String line = "";
-				while((line = reader.readLine()) != null)
-				{
-					result += line;
-				}
-				reader.close();
-
-				String name = f.getName().substring(0, f.getName().indexOf("."));
-				JsonObject obj = json.parse(result).getAsJsonObject();
-
-				if(obj.get("LoadFile").getAsBoolean())
-				{
-					Command c = new Command(name, obj.get("Responses").getAsJsonObject().get("0").getAsString());
-					c.setPermissionLevel(obj.get("PermLevel").getAsString());
-					if(!obj.get("State").getAsBoolean())
-						c.disable();
-					JsonObject responses = obj.get("Responses").getAsJsonObject();
-					for(int i = 1; i < obj.get("Number_Of_Responses").getAsInt(); i++)
-					{
-						c.addResponse(responses.get("" + i).getAsString());
-					}
-					this.addCommand(c);
-				}
-				else
-				{
-					Command c = getCommandFromName("!" + name);
-					if(c == null)
-						c = commands.get(("!" + currencyName.replaceAll(" ", "")).toLowerCase());
-					c.getFile().updateCommand();
-				}
-
-			} catch(IOException e)
-			{
-			}
-		}
-	}
-
-	/**
 	 * Called when a message is sent in a chat that the bot is in.
 	 */
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
 		ConsoleTab.output(Level.Chat, "[" + sender + "] " + message);
-		if(!chatmoderation.isValidChat(message, sender))
+		if(!profile.chatmoderation.isValidChat(message, sender))
 			return;
 		int index = message.indexOf(" ");
 		if(index < 1)
 			index = message.length();
 		String[] args = message.split(" ");
-		if(commands.containsKey(message.substring(0, index).toLowerCase()))
-		{
-			Command command = commands.get(message.substring(0, index).toLowerCase());
-			if(command.isEnabled() && hasPermission(sender, command.getPermissionLevel()) && (!lastCommand.equalsIgnoreCase(command.getName()) || (lastCommandTime == 0 || System.currentTimeMillis() - lastCommandTime > 3000)))
-			{
-				lastCommand = command.getName();
-				lastCommandTime = System.currentTimeMillis();
-				command.oncommand(this, channel, sender, login, hostname, message);
-			}
-		}
-		else if(message.equalsIgnoreCase("!Disconnect") && (sender.equalsIgnoreCase(stream.substring(1)) || sender.equalsIgnoreCase("turkey2349")))
+
+		if(message.equalsIgnoreCase("!Disconnect") && (sender.equalsIgnoreCase(stream.substring(1)) || sender.equalsIgnoreCase("turkey2349")))
 		{
 			this.sendMessage("Currently running version " + TurkeyBot.VERSION);
 		}
@@ -291,7 +113,7 @@ public class TurkeyBot extends PircBot
 		/*
 		 * else if(message.equalsIgnoreCase("!Commands") || message.equalsIgnoreCase("!Help")) { String toSend = "These are the available commands to use "; for(String command: commands.keySet()) { if(commands.get(command).canUseByDefault()) { toSend += command + " "; } } sendMessage(toSend); }
 		 */
-		else if((message.substring(0, index).equalsIgnoreCase("!Add" + currencyName) && sender.equalsIgnoreCase(stream.substring(1))) && this.hasPermission(sender, "Streamer"))
+		else if((message.substring(0, index).equalsIgnoreCase("!Add" + profile.getCurrencyName()) && sender.equalsIgnoreCase(stream.substring(1))) && this.hasPermission(sender, "Streamer"))
 		{
 			if(args.length != 2)
 			{
@@ -310,10 +132,14 @@ public class TurkeyBot extends PircBot
 				}
 				for(User user : getUsers(channel))
 				{
-					currency.addCurrencyFor(user.getNick(), ammount);
+					profile.currency.addCurrencyFor(user.getNick(), ammount);
 				}
-				sendMessage("Gave " + ammount + " " + currencyName + " to everyone!");
+				sendMessage("Gave " + ammount + " " + profile.getCurrencyName() + " to everyone!");
 			}
+		}
+		else
+		{
+			CommandManager.onMessage(channel, sender, login, hostname, message);
 		}
 
 		if(KeyWordRaffleTab.getCurrentRaffle() != null && KeyWordRaffleTab.getCurrentRaffle().isRunning())
@@ -334,34 +160,13 @@ public class TurkeyBot extends PircBot
 	}
 
 	/**
-	 * Used to listen for private messages. Currently used to listen for the mod list call back.
-	 */
-	public void onPrivateMessage(String sender, String login, String hostname, String message)
-	{
-		System.out.println("pm");
-		try
-		{
-			if(message.contains("The moderators"))
-			{
-				message = message.substring(message.indexOf(":") + 2);
-				message += ", " + stream.substring(stream.indexOf("#") + 1);
-				mods = message.split(", ");
-				ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
-			}
-		} catch(Exception e)
-		{
-			ConsoleTab.output(Level.Error, "An Error Has occured while getting the mods of this channel");
-		}
-		;
-	}
-
-	/**
 	 * Called when someone join the channel that the bot is in.
 	 */
 	public void onJoin(String channel, String sender, String login, String hostname)
 	{
 		if(!viewers.contains(sender))
 		{
+			loadViewers();
 			viewers.add(sender);
 			Gui.reloadTab();
 		}
@@ -388,7 +193,7 @@ public class TurkeyBot extends PircBot
 	public void sendMessage(String msg)
 	{
 		ConsoleTab.output(Level.Chat, "[" + botName + "] " + msg);
-		if(stream != "" || !this.settings.getSettingAsBoolean("isSilent"))
+		if(stream != "" || !profile.settings.getSettingAsBoolean("isSilent"))
 			this.sendMessage(stream, msg);
 	}
 
@@ -400,18 +205,21 @@ public class TurkeyBot extends PircBot
 		ConsoleTab.output(Level.Info, "Connecting to twitch....");
 		if(!AccountsTab.getCurrentAccount().replaceAll(" ", "").equals(""))
 		{
+			botName = AccountsTab.getCurrentAccount();
+			setName(botName);
 			try
 			{
-				botName = AccountsTab.getCurrentAccount();
-				setName(botName);
 				connect("irc.twitch.tv", 6667, SecretStuff.oAuth);
-				connected = true;
 			} catch(Exception e)
 			{
-				connected = false;
-				ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());
-				return false;
+				if(!e.getMessage().equalsIgnoreCase("The PircBot is already connected to an IRC server.  Disconnect first."))
+				{
+					connected = false;
+					ConsoleTab.output(Level.Error, "Could not connect to Twitch! \n" + e.getMessage());
+					return false;
+				}
 			}
+			connected = true;
 			ConsoleTab.output(Level.Info, "Connected!");
 			return true;
 		}
@@ -422,23 +230,6 @@ public class TurkeyBot extends PircBot
 			return false;
 		}
 		// connectToChannel("turkey2349");
-	}
-
-	public void onDisconnect()
-	{
-		disconnectFromTwitch();
-		ConsoleTab.output(Level.Important, "This may be due to incorrect account information! Please check to make sure these are correct!");
-	}
-
-	/**
-	 * Disconnects the bot from the Twitch servers.
-	 */
-	private void disconnectFromTwitch()
-	{
-		this.quitServer();
-		this.dispose();
-		connected = false;
-		ConsoleTab.output(Level.Alert, "Disconnected from Twitch!");
 	}
 
 	/**
@@ -459,9 +250,9 @@ public class TurkeyBot extends PircBot
 		ConsoleTab.output(Level.Info, "Connected to " + stream.substring(1) + "'s channel!");
 		try
 		{
-			followersFile = new Followers(this);
-			if(settings.getSettingAsBoolean("TrackFollowers"))
-				followersFile.initFollowerTracker();
+			profile.followersFile = new Followers();
+			if(profile.settings.getSettingAsBoolean("TrackFollowers"))
+				profile.followersFile.initFollowerTracker();
 		} catch(IOException e)
 		{
 			ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
@@ -472,7 +263,7 @@ public class TurkeyBot extends PircBot
 			return;
 		}
 
-		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
+		if(!profile.settings.getSettingAsBoolean("SilentJoinLeave"))
 		{
 			if(!botName.equalsIgnoreCase("TurkeyChatBot"))
 				this.sendMessage("Hello I am TurkeyBot! errrr I mean, I am " + botName.substring(0, 1).toUpperCase() + botName.substring(1) + "!");
@@ -490,22 +281,21 @@ public class TurkeyBot extends PircBot
 	 */
 	public void disconnectFromChannel()
 	{
-		if(!settings.getSettingAsBoolean("SilentJoinLeave"))
+		if(!profile.settings.getSettingAsBoolean("SilentJoinLeave"))
 			this.sendMessage("GoodBye!");
 		else
 			ConsoleTab.output(Level.Alert, "Disconnected to the channel silently!");
 		this.partChannel(stream);
 		ConsoleTab.output(Level.Alert, "Disconnected from " + stream.substring(1) + "'schannel!");
-		if(followersFile != null)
-			followersFile.stopFollowerTracker();
-		if(currencyTrack != null)
-			currencyTrack.stopThread();
-		if(announcer != null)
-			announcer.stop();
+		if(profile.followersFile != null)
+			profile.followersFile.stopFollowerTracker();
+		if(profile.currencyTrack != null)
+			profile.currencyTrack.stopThread();
+		if(profile.announcer != null)
+			profile.announcer.stop();
 		stream = "";
 		mods = new String[0];
 		this.viewers.clear();
-		this.disconnectFromTwitch();
 	}
 
 	/**
@@ -555,8 +345,12 @@ public class TurkeyBot extends PircBot
 		JsonArray admins = obj.get("admins").getAsJsonArray();
 		JsonArray globalMod = obj.get("global_mods").getAsJsonArray();
 		JsonArray watchers = obj.get("viewers").getAsJsonArray();
+		this.mods = new String[mods.size()];
 		for(int i = 0; i < mods.size(); i++)
+		{
 			viewers.add(mods.get(i).getAsString());
+			this.mods[i] = mods.get(i).getAsString();
+		}
 		for(int i = 0; i < staff.size(); i++)
 			viewers.add(staff.get(i).getAsString());
 		for(int i = 0; i < admins.size(); i++)
@@ -631,33 +425,6 @@ public class TurkeyBot extends PircBot
 	}
 
 	/**
-	 * Adds the specified user name to a list for people who will bypass the chat modertion check.
-	 * 
-	 * @param name
-	 *            The username to add to the list.
-	 */
-	public void giveImmunityTo(String name)
-	{
-		bypass.add(name);
-	}
-
-	/**
-	 * Checks to see if the given user name is able to bypass the chat filter. Auto removes the username from the list if the name is on the list.
-	 * 
-	 * @param name
-	 *            The username to check to see if they bypass the filter.
-	 * @return If the given username can bypass the chat filter.
-	 */
-	public boolean checkForImmunity(String name)
-	{
-		if(bypass.contains(name))
-			bypass.remove(name);
-		else
-			return false;
-		return true;
-	}
-
-	/**
 	 * Returns if the given user name has the given permission or greater.
 	 * 
 	 * @param user
@@ -698,16 +465,6 @@ public class TurkeyBot extends PircBot
 	}
 
 	/**
-	 * Gets the current list of all of the commands.
-	 * 
-	 * @return
-	 */
-	public Object[] getCommands()
-	{
-		return commands.keySet().toArray();
-	}
-
-	/**
 	 * Returns whether or not the bot has connected to Twitch servers.
 	 * 
 	 * @return If the the bot has connected to Twitch servers.
@@ -715,56 +472,6 @@ public class TurkeyBot extends PircBot
 	public boolean didConnect()
 	{
 		return connected;
-	}
-
-	/**
-	 * Gets the the command class for the given command name.
-	 * 
-	 * @param name
-	 *            The name of a command to be returned.
-	 * @return The command for the given name. Null if not found.
-	 */
-	public static Command getCommandFromName(String name)
-	{
-		return commands.get(name.toLowerCase());
-	}
-
-	/**
-	 * Adds a command to the command list and auto generates its properties file.
-	 * 
-	 * @param command
-	 *            The command to be added to the bot.
-	 */
-	public void addCommand(Command command)
-	{
-		commands.put("!" + command.getName().toLowerCase(), command);
-		command.getFile().updateCommand();
-	}
-
-	/**
-	 * Removes a command and its file from the bot.
-	 * 
-	 * @param command
-	 *            The command to be removed from the bot.
-	 */
-	public void removeCommand(Command command)
-	{
-		commands.remove(("!" + command.getName()).toLowerCase());
-		command.getFile().removeCommand();
-		if(settings.getSettingAsBoolean("outputchanges"))
-		{
-			sendMessage("Removed command " + command.getName());
-		}
-	}
-
-	/**
-	 * Returns the name of the currency that is currently entered for the bot.
-	 * 
-	 * @return The name of the currency.
-	 */
-	public String getCurrencyName()
-	{
-		return currencyName;
 	}
 
 	/**

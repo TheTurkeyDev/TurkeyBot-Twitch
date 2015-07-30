@@ -36,7 +36,7 @@ public class CommandFile extends JsonFile
 	public void updateCommand()
 	{
 		mainFile = new JsonObject();
-		mainFile.add("State", gson.toJsonTree(command.isEnabled()));
+		mainFile.add("Enabled", gson.toJsonTree(command.isEnabled()));
 		mainFile.add("PermLevel", gson.toJsonTree(command.getPermissionLevel()));
 		mainFile.add("LoadFile", gson.toJsonTree(command.canEdit()));
 		mainFile.add("Number_Of_Responses", gson.toJsonTree(command.getNumberOfResponses()));
@@ -72,7 +72,7 @@ public class CommandFile extends JsonFile
 	 */
 	public void disableCommand()
 	{
-		mainFile.addProperty("State", "Disabled");
+		mainFile.addProperty("Enabled", false);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class CommandFile extends JsonFile
 	 */
 	public void enableCommand()
 	{
-		mainFile.addProperty("State", "Enabled");
+		mainFile.addProperty("Enabled", true);
 	}
 
 	/**

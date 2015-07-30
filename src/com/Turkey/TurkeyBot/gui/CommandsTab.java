@@ -14,8 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.commands.Command;
+import com.Turkey.TurkeyBot.commands.CommandManager;
 import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 
 public class CommandsTab extends Tab implements ActionListener
@@ -35,7 +35,7 @@ public class CommandsTab extends Tab implements ActionListener
 
 	public void load()
 	{
-		Object[] temp = TurkeyBot.bot.getCommands();
+		Object[] temp = CommandManager.getCommands();
 		String[] commands = new String[temp.length];
 
 		for(int i = 0; i < temp.length; i++)
@@ -70,7 +70,7 @@ public class CommandsTab extends Tab implements ActionListener
 			commandspanel.add(label, gbc);
 			components.add(label);
 
-			Command command = TurkeyBot.getCommandFromName(commandName);
+			Command command = CommandManager.getCommandFromName(commandName);
 
 			editbutton = new JButton();
 			editbutton.setName("Edit " + commandName);
@@ -155,7 +155,7 @@ public class CommandsTab extends Tab implements ActionListener
 			Command command;
 			try
 			{
-				command = TurkeyBot.getCommandFromName(button.getName().substring(button.getName().indexOf(" ") + 1));
+				command = CommandManager.getCommandFromName(button.getName().substring(button.getName().indexOf(" ") + 1));
 			} catch(Exception ex)
 			{
 				ConsoleTab.output(Level.Error, "Failed to get the correct command that goes with that edit button!");
@@ -182,7 +182,7 @@ public class CommandsTab extends Tab implements ActionListener
 			}
 			else if(button.getName().substring(0, button.getName().indexOf(" ")).equalsIgnoreCase("Delete"))
 			{
-				TurkeyBot.bot.removeCommand(command);
+				CommandManager.removeCommand(command);
 				unLoad();
 				load();
 			}

@@ -19,24 +19,26 @@ public class SettingsTab extends Tab implements ActionListener
 	private List<JComponent> components = new ArrayList<JComponent>();
 
 	private JButton save;
+
 	public SettingsTab()
 	{
 	}
 
 	public void load()
 	{
-		if (TurkeyBot.bot.getProfile() == null) return;
-		Object[] settings = TurkeyBot.bot.settings.getSettings().toArray();
+		if(TurkeyBot.bot.getProfile() == null)
+			return;
+		Object[] settings = TurkeyBot.bot.getProfile().settings.getSettings().toArray();
 		JLabel label;
 		JTextArea text;
 		JButton button;
 
 		save = new JButton("Save");
 		save.setName("Save");
-		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
+		save.setLocation((super.getWidth() / 2) - 50, super.getHeight() - 100);
 		save.setSize(100, 25);
 		save.addActionListener(this);
-		super.add(save);	
+		super.add(save);
 
 		int x = 10;
 		int row = 0;
@@ -44,14 +46,14 @@ public class SettingsTab extends Tab implements ActionListener
 		{
 			String settingsName = (String) settings[i];
 
-			if((row*25)+20 > super.getHeight())
+			if((row * 25) + 20 > super.getHeight())
 			{
-				x+=1000;
+				x += 1000;
 				row = 0;
 			}
 
 			label = new JLabel(settingsName);
-			label.setLocation(x, (row*25) + 20);
+			label.setLocation(x, (row * 25) + 20);
 			label.setSize(200, 25);
 			label.setVisible(true);
 			super.add(label);
@@ -59,10 +61,10 @@ public class SettingsTab extends Tab implements ActionListener
 
 			text = new JTextArea();
 			text.setName(settingsName);
-			text.setLocation(x + 200, (row*25) + 25);
+			text.setLocation(x + 200, (row * 25) + 25);
 			text.setSize(60, 15);
 			text.setVisible(true);
-			text.setText(TurkeyBot.bot.settings.getSetting(settingsName));
+			text.setText(TurkeyBot.bot.getProfile().settings.getSetting(settingsName));
 			super.add(text);
 			components.add(text);
 
@@ -70,15 +72,15 @@ public class SettingsTab extends Tab implements ActionListener
 			{
 				boolean running = false;
 
-				if(settingsName.equalsIgnoreCase("autocurrencydelay") && TurkeyBot.bot.currencyTrack != null)
-					running = TurkeyBot.bot.currencyTrack.isRunning();
-				if(settingsName.equalsIgnoreCase("trackfollowers") && TurkeyBot.bot.followersFile != null)
-					running = TurkeyBot.bot.followersFile.isRunning();
-				if(settingsName.equalsIgnoreCase("announcedelay") && TurkeyBot.bot.announcer != null)
-					running = TurkeyBot.bot.announcer.isRunning();
+				if(settingsName.equalsIgnoreCase("autocurrencydelay") && TurkeyBot.bot.getProfile().currencyTrack != null)
+					running = TurkeyBot.bot.getProfile().currencyTrack.isRunning();
+				if(settingsName.equalsIgnoreCase("trackfollowers") && TurkeyBot.bot.getProfile().followersFile != null)
+					running = TurkeyBot.bot.getProfile().followersFile.isRunning();
+				if(settingsName.equalsIgnoreCase("announcedelay") && TurkeyBot.bot.getProfile().announcer != null)
+					running = TurkeyBot.bot.getProfile().announcer.isRunning();
 
-				button = new JButton(running?"Stop":"Start");
-				button.setLocation(x+275, (row*25) + 20);
+				button = new JButton(running ? "Stop" : "Start");
+				button.setLocation(x + 275, (row * 25) + 20);
 				button.setName(settingsName);
 				button.setSize(75, 25);
 				button.setVisible(true);
@@ -86,7 +88,7 @@ public class SettingsTab extends Tab implements ActionListener
 				super.add(button);
 				components.add(button);
 			}
-			
+
 			row++;
 		}
 		super.setVisible(true);
@@ -94,9 +96,9 @@ public class SettingsTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
-		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
+		if(TurkeyBot.bot.getProfile() == null)
 			return;
-		for(JComponent comp: components)
+		for(JComponent comp : components)
 		{
 			comp.setVisible(false);
 			super.remove(comp);
@@ -112,11 +114,11 @@ public class SettingsTab extends Tab implements ActionListener
 	 */
 	public void saveSettings()
 	{
-		for(JComponent comp: components)
+		for(JComponent comp : components)
 		{
 			if(comp instanceof JTextArea)
 			{
-				TurkeyBot.bot.settings.setSetting(comp.getName(), ((JTextArea) comp).getText());
+				TurkeyBot.bot.getProfile().settings.setSetting(comp.getName(), ((JTextArea) comp).getText());
 			}
 		}
 	}
@@ -132,39 +134,39 @@ public class SettingsTab extends Tab implements ActionListener
 		{
 			JButton b = (JButton) e.getSource();
 
-			if(b.getName().equalsIgnoreCase("autocurrencydelay") && TurkeyBot.bot.currencyTrack != null)
+			if(b.getName().equalsIgnoreCase("autocurrencydelay") && TurkeyBot.bot.getProfile().currencyTrack != null)
 			{
 				if(b.getText().equalsIgnoreCase("Stop"))
 				{
-					TurkeyBot.bot.currencyTrack.stopThread();
+					TurkeyBot.bot.getProfile().currencyTrack.stopThread();
 				}
 				else if(b.getText().equalsIgnoreCase("Start"))
 				{
-					TurkeyBot.bot.currencyTrack.initCurrencyThread();
+					TurkeyBot.bot.getProfile().currencyTrack.initCurrencyThread();
 				}
 				Gui.reloadTab();
 			}
-			if(b.getName().equalsIgnoreCase("trackfollowers") && TurkeyBot.bot.followersFile != null)
+			if(b.getName().equalsIgnoreCase("trackfollowers") && TurkeyBot.bot.getProfile().followersFile != null)
 			{
 				if(b.getText().equalsIgnoreCase("Stop"))
 				{
-					TurkeyBot.bot.followersFile.stopFollowerTracker();
+					TurkeyBot.bot.getProfile().followersFile.stopFollowerTracker();
 				}
 				else if(b.getText().equalsIgnoreCase("Start"))
 				{
-					TurkeyBot.bot.followersFile.initFollowerTracker();
+					TurkeyBot.bot.getProfile().followersFile.initFollowerTracker();
 				}
 				Gui.reloadTab();
 			}
-			if(b.getName().equalsIgnoreCase("announcedelay") && TurkeyBot.bot.announcer != null)
+			if(b.getName().equalsIgnoreCase("announcedelay") && TurkeyBot.bot.getProfile().announcer != null)
 			{
 				if(b.getText().equalsIgnoreCase("Stop"))
 				{
-					TurkeyBot.bot.announcer.stop();
+					TurkeyBot.bot.getProfile().announcer.stop();
 				}
 				else if(b.getText().equalsIgnoreCase("Start"))
 				{
-					TurkeyBot.bot.announcer.initAutoAnnouncemer();
+					TurkeyBot.bot.getProfile().announcer.initAutoAnnouncemer();
 				}
 				Gui.reloadTab();
 			}

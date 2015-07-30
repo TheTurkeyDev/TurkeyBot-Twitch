@@ -8,11 +8,13 @@ public class ConsoleCommands
 {
 	/**
 	 * Called when someone enters a line in the console.
-	 * @param args The arguments of the message
+	 * 
+	 * @param args
+	 *            The arguments of the message
 	 */
 	public static void onCommand(String[] args)
 	{
-		if(args[0].substring(0,1).equalsIgnoreCase("/"))
+		if(args[0].substring(0, 1).equalsIgnoreCase("/"))
 		{
 			String command = args[0].substring(1);
 
@@ -26,7 +28,7 @@ public class ConsoleCommands
 				{
 					TurkeyBot.bot.connectToChannel(args[1].toLowerCase());
 				}
-				else 
+				else
 				{
 					ConsoleTab.output(Level.Alert, "Your number of arguments is incorrect! try /Join (Channel)");
 				}
@@ -41,9 +43,9 @@ public class ConsoleCommands
 				for(int i = 1; i < args.length; i++)
 				{
 					String s = args[i];
-					msg+=s + " ";
+					msg += s + " ";
 				}
-				TurkeyBot.bot.sendMessage(msg);
+				TurkeyBot.bot.sendMessage(msg.trim());
 			}
 			else
 			{

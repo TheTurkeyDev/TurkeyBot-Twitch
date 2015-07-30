@@ -9,9 +9,9 @@ public class CurrencyFile extends BotFile
 {
 	private static String propName = "currency.properties";
 
-	public CurrencyFile(TurkeyBot bot) throws IOException
+	public CurrencyFile() throws IOException
 	{
-		super(bot,"C:" + File.separator + "TurkeyBot" + File.separator + bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
+		super("C:" + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
 	}
 
 	/**

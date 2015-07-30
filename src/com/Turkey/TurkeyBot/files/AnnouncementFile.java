@@ -28,10 +28,10 @@ public class AnnouncementFile
 	private JsonObject obj;
 	private Random r;
 
-	public AnnouncementFile(TurkeyBot b) throws IOException
+	public AnnouncementFile() throws IOException
 	{
 		r = new Random();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "properties" + File.separator + "Announcements.json");
+		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + "Announcements.json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();

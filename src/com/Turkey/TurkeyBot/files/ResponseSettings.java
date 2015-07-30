@@ -13,9 +13,9 @@ public class ResponseSettings extends BotFile
 	
 	private static String propName = "SpamResponse.properties";
 	
-	public ResponseSettings(TurkeyBot b) throws IOException
+	public ResponseSettings() throws IOException
 	{
-		super(b,"C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
+		super("C:" + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
 		loadSettings();
 	}
 	

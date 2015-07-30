@@ -18,7 +18,7 @@ public class AddResponse extends Command
 		String commandName  = contents[1];
 		if(!commandName.substring(0,1).equalsIgnoreCase("!"))
 			commandName = "!"+commandName;
-		Command c = TurkeyBot.getCommandFromName(commandName);
+		Command c = CommandManager.getCommandFromName(commandName);
 		String response = message.substring(message.toLowerCase().indexOf(commandName.substring(1).toLowerCase()) + commandName.length());
 		if(c!=null)
 		{

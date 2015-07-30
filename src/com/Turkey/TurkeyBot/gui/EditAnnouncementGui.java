@@ -39,7 +39,7 @@ public class EditAnnouncementGui implements ActionListener
 		responseLabel.setSize(75, 25);
 		popup.add(responseLabel);
 
-		editResponse = new JTextField(TurkeyBot.bot.announceFile.getAnnouncement(annoucementNum));
+		editResponse = new JTextField(TurkeyBot.bot.getProfile().announceFile.getAnnouncement(annoucementNum));
 		editResponse.setLocation(100,90);
 		editResponse.setSize(300,25);
 		popup.add(editResponse);
@@ -60,10 +60,10 @@ public class EditAnnouncementGui implements ActionListener
 			JButton button = (JButton) e.getSource();
 			if(button.getName().equalsIgnoreCase(save.getName()))
 			{
-				TurkeyBot.bot.announceFile.removeAnnouncement(annoucementNum);
+				TurkeyBot.bot.getProfile().announceFile.removeAnnouncement(annoucementNum);
 				if(editResponse.getText() != "")
-					TurkeyBot.bot.announceFile.addAnnouncement(editResponse.getText());
-				TurkeyBot.bot.announceFile.reloadAnnouncements();
+					TurkeyBot.bot.getProfile().announceFile.addAnnouncement(editResponse.getText());
+				TurkeyBot.bot.getProfile().announceFile.reloadAnnouncements();
 				popup.dispose();
 			}
 		}

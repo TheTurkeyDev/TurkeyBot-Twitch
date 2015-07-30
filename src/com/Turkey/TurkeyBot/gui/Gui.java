@@ -162,7 +162,7 @@ public class Gui extends JFrame implements ActionListener
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) 
 			{
 				
-				if(!TurkeyBot.bot.getChannel(false).equalsIgnoreCase("") && !TurkeyBot.bot.settings.getSettingAsBoolean("SilentJoinLeave"))
+				if(!TurkeyBot.bot.getChannel(false).equalsIgnoreCase("") && !TurkeyBot.bot.getProfile().settings.getSettingAsBoolean("SilentJoinLeave"))
 					TurkeyBot.bot.sendMessage("GoodBye!!!");
 				System.exit(0);
 				Followers.run = false;

@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
 import com.Turkey.TurkeyBot.commands.Command;
+import com.Turkey.TurkeyBot.commands.CommandManager;
 
 public class AddCommandGui implements ActionListener
 {
@@ -94,8 +95,8 @@ public class AddCommandGui implements ActionListener
 			{
 				Command command = new Command(commandName.getText(), response.getText());
 				command.setPermissionLevel((String)permSelect.getSelectedItem());
-				TurkeyBot.bot.addCommand(command);
-				if(TurkeyBot.bot.settings.getSettingAsBoolean("outputchanges"))
+				CommandManager.addCommand(command);
+				if(TurkeyBot.bot.getProfile().settings.getSettingAsBoolean("outputchanges"))
 				{
 					TurkeyBot.bot.sendMessage("Added Command " + "!" + commandName.getText());
 				}

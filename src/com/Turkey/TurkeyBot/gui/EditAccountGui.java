@@ -34,7 +34,7 @@ public class EditAccountGui implements ActionListener
 	public EditAccountGui(String name)
 	{
 		accountName = name;
-		account = TurkeyBot.bot.accountSettingsFile.getAccountFromDisplayName(accountName);
+		account = TurkeyBot.bot.getProfile().accountSettingsFile.getAccountFromDisplayName(accountName);
 		popup = new JFrame();
 		Dimension size = new Dimension(400, 300);
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -100,7 +100,7 @@ public class EditAccountGui implements ActionListener
 				String oAuth = "";
 				for(char c: oAuthField.getPassword())
 					oAuth+=c;
-				TurkeyBot.bot.accountSettingsFile.addAccount(this.accountName, this.usernameField.getText(), oAuth);
+				TurkeyBot.bot.getProfile().accountSettingsFile.addAccount(this.accountName, this.usernameField.getText(), oAuth);
 			}
 			popup.dispose();
 			Gui.reloadTab();

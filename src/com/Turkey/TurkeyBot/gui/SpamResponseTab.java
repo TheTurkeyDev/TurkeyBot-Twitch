@@ -19,23 +19,25 @@ public class SpamResponseTab extends Tab implements ActionListener
 	List<JComponent> components = new ArrayList<JComponent>();
 
 	JButton save;
+
 	public SpamResponseTab()
 	{
 	}
 
 	public void load()
 	{
-		if (TurkeyBot.bot.getProfile() == null) return;
-		Object[] settings = TurkeyBot.bot.spamResponseFile.getSettings().toArray();
+		if(TurkeyBot.bot.getProfile() == null)
+			return;
+		Object[] settings = TurkeyBot.bot.getProfile().spamResponseFile.getSettings().toArray();
 		JLabel label;
 		JTextArea text;
 
 		save = new JButton("Save");
 		save.setName("Save");
-		save.setLocation((super.getWidth()/2)- 50, super.getHeight() - 100);
+		save.setLocation((super.getWidth() / 2) - 50, super.getHeight() - 100);
 		save.setSize(100, 25);
 		save.addActionListener(this);
-		super.add(save);	
+		super.add(save);
 
 		int x = 10;
 		int row = 0;
@@ -43,14 +45,14 @@ public class SpamResponseTab extends Tab implements ActionListener
 		{
 			String settingsName = (String) settings[i];
 
-			if((row*25)+20 > super.getHeight())
+			if((row * 25) + 20 > super.getHeight())
 			{
-				x+=1000;
+				x += 1000;
 				row = 0;
 			}
 
 			label = new JLabel(settingsName);
-			label.setLocation(x, (row*25) + 20);
+			label.setLocation(x, (row * 25) + 20);
 			label.setSize(200, 25);
 			label.setVisible(true);
 			super.add(label);
@@ -58,10 +60,10 @@ public class SpamResponseTab extends Tab implements ActionListener
 
 			text = new JTextArea();
 			text.setName(settingsName);
-			text.setLocation(x + 150, (row*25) + 25);
+			text.setLocation(x + 150, (row * 25) + 25);
 			text.setSize(600, 15);
 			text.setVisible(true);
-			text.setText(TurkeyBot.bot.spamResponseFile.getSetting(settingsName));
+			text.setText(TurkeyBot.bot.getProfile().spamResponseFile.getSetting(settingsName));
 			super.add(text);
 			components.add(text);
 
@@ -72,9 +74,9 @@ public class SpamResponseTab extends Tab implements ActionListener
 
 	public void unLoad()
 	{
-		if(TurkeyBot.bot.getChannel(false).equalsIgnoreCase(""))
+		if(TurkeyBot.bot.getProfile() == null)
 			return;
-		for(JComponent comp: components)
+		for(JComponent comp : components)
 		{
 			comp.setVisible(false);
 			super.remove(comp);
@@ -90,11 +92,11 @@ public class SpamResponseTab extends Tab implements ActionListener
 	 */
 	public void saveSettings()
 	{
-		for(JComponent comp: components)
+		for(JComponent comp : components)
 		{
 			if(comp instanceof JTextArea)
 			{
-				TurkeyBot.bot.spamResponseFile.setSetting(comp.getName(), ((JTextArea) comp).getText());
+				TurkeyBot.bot.getProfile().spamResponseFile.setSetting(comp.getName(), ((JTextArea) comp).getText());
 			}
 		}
 	}

@@ -20,7 +20,7 @@ public class StatusCommand extends Command
 		if(contents.length == 2)
 		{
 			ConsoleTab.output(Level.DeBug, "here");
-			if((command=TurkeyBot.getCommandFromName(contents[1])) != null)
+			if((command = CommandManager.getCommandFromName(contents[1])) != null)
 			{
 				ConsoleTab.output(Level.DeBug, "2");
 				String name = command.getName();

@@ -21,16 +21,18 @@ public class ProfileManager
 			try
 			{
 				file.createNewFile();
-				File deafult = new File("C:" + File.separator + "TurkeyBot" + File.separator + "Default");
-				deafult.createNewFile();
 			} catch(IOException e)
 			{
 			}
 		}
 
+		File deafult = new File("C:" + File.separator + "TurkeyBot" + File.separator + "Default");
+		if(!deafult.exists())
+			deafult.mkdirs();
+
 		for(File f : file.listFiles())
 		{
-			if(f.isDirectory())
+			if(f.isDirectory() && !f.getName().equalsIgnoreCase("Follower Tracking"))
 			{
 				Profile prof = new Profile(f.getName());
 				profiles.add(prof);
@@ -57,5 +59,15 @@ public class ProfileManager
 			if(p.getProfileName().equalsIgnoreCase(name))
 				return p;
 		return null;
+	}
+
+	public void addProfile(String name)
+	{
+		Profile prof = new Profile(name);
+		profiles.add(prof);
+		
+		File profFile = new File("C:" + File.separator + "TurkeyBot" + File.separator + name);
+		if(!profFile.exists())
+			profFile.mkdirs();
 	}
 }

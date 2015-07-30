@@ -12,8 +12,8 @@ public class CurrencyCommand extends Command
 
 	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
 	{
-		int currency = bot.currency.getCurrencyFor(sender);
-		bot.sendMessage("" + bot.capitalizeName(sender) + " You have " + currency + " " + bot.getCurrencyName());
+		int currency = bot.getProfile().currency.getCurrencyFor(sender);
+		bot.sendMessage("" + bot.capitalizeName(sender) + " You have " + currency + " " + bot.getProfile().getCurrencyName());
 	}
 	
 	public boolean canEdit()

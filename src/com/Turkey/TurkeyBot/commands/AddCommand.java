@@ -20,7 +20,7 @@ public class AddCommand extends Command
 			commandName = commandName.substring(1);
 		String response = message.substring(message.toLowerCase().indexOf(commandName.toLowerCase()) + commandName.length());
 		Command c = new Command(commandName, response);
-		bot.addCommand(c);
+		CommandManager.addCommand(c);
 		bot.sendMessage(bot.capitalizeName(sender) + ": The command !" + c.getName() + " has been created!");
 	}
 	

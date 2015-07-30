@@ -16,9 +16,9 @@ public class SlotsCommand extends Command
 
 	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
 	{
-		if(bot.currency.getCurrencyFor(sender) > 0)
+		if(bot.getProfile().currency.getCurrencyFor(sender) > 0)
 		{
-			bot.currency.addCurrencyFor(sender, -1);
+			bot.getProfile().currency.addCurrencyFor(sender, -1);
 			trys++;
 			Random r = new Random();
 
@@ -28,7 +28,7 @@ public class SlotsCommand extends Command
 
 			if(slotOne == slotTwo && slotOne == slotThree)
 			{
-				bot.sendMessage(bot.capitalizeName(sender) + " Your slots result is-------------- " + emotes[slotOne] + " " + emotes[slotTwo] + " " + emotes[slotThree] + " and you have won " + trys + " " + bot.getCurrencyName() + "!!!");
+				bot.sendMessage(bot.capitalizeName(sender) + " Your slots result is-------------- " + emotes[slotOne] + " " + emotes[slotTwo] + " " + emotes[slotThree] + " and you have won " + trys + " " + bot.getProfile().getCurrencyName() + "!!!");
 				trys = 0;
 			}
 			else

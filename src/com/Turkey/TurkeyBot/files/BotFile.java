@@ -7,19 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.Turkey.TurkeyBot.TurkeyBot;
-
 
 public class BotFile
 {
-	protected TurkeyBot bot;
 	protected InputStream iStream;
 	protected File file;
 	protected Properties properties;
 	
-	public BotFile(TurkeyBot b, String path) throws IOException
+	public BotFile(String path) throws IOException
 	{
-		bot = b;
 		properties = new Properties();
 		file = new File(path);
 		if(!file.exists())
