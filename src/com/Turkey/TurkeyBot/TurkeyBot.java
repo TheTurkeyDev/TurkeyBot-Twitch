@@ -50,7 +50,7 @@ public class TurkeyBot extends PircBot
 		bot = this;
 		// this.setVerbose(true);
 		json = new JsonParser();
-		setMessageDelay(1550);
+		setMessageDelay(500);
 		profile.loadProfile();
 		CommandManager.loadCommands();
 	}
@@ -272,7 +272,7 @@ public class TurkeyBot extends PircBot
 		}
 		else
 			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
-		this.sendMessage(stream, "/mods");
+		//this.sendRawLine("CAP REQ :twitch.tv/commands");
 		loadViewers();
 	}
 
