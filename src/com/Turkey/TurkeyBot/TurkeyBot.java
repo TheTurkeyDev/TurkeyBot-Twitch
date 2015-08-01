@@ -166,7 +166,6 @@ public class TurkeyBot extends PircBot
 	{
 		if(!viewers.contains(sender))
 		{
-			loadViewers();
 			viewers.add(sender);
 			Gui.reloadTab();
 		}
@@ -272,8 +271,11 @@ public class TurkeyBot extends PircBot
 		}
 		else
 			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
-		//this.sendRawLine("CAP REQ :twitch.tv/commands");
+		this.sendRawLine("CAP REQ :twitch.tv/commands");
+		this.sendRawLine("CAP REQ :twitch.tv/membership");
+		this.sendMessage(stream, "/mods");
 		loadViewers();
+		this.viewers.add(botName);
 	}
 
 	/**
@@ -345,12 +347,8 @@ public class TurkeyBot extends PircBot
 		JsonArray admins = obj.get("admins").getAsJsonArray();
 		JsonArray globalMod = obj.get("global_mods").getAsJsonArray();
 		JsonArray watchers = obj.get("viewers").getAsJsonArray();
-		this.mods = new String[mods.size()];
 		for(int i = 0; i < mods.size(); i++)
-		{
 			viewers.add(mods.get(i).getAsString());
-			this.mods[i] = mods.get(i).getAsString();
-		}
 		for(int i = 0; i < staff.size(); i++)
 			viewers.add(staff.get(i).getAsString());
 		for(int i = 0; i < admins.size(); i++)
@@ -359,6 +357,23 @@ public class TurkeyBot extends PircBot
 			viewers.add(globalMod.get(i).getAsString());
 		for(int i = 0; i < watchers.size(); i++)
 			viewers.add(watchers.get(i).getAsString());
+	}
+	
+	/**
+	 * Used to listen for private messages.
+	 * Currently used to listen for the mod list call back.
+	 */
+	public void onNotice(String sourceNick, String sourceLogin, String sourceHostname, String target, String notice)
+	{
+		try{
+			if(notice.contains("The moderators"))
+			{
+				notice = notice.substring(notice.indexOf(":") + 2);
+				notice += ", " + stream.substring(stream.indexOf("#") + 1);
+				mods = notice.split(", ");
+				ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
+			}
+		}catch(Exception e){ConsoleTab.output(Level.Error, "An Error Has occured while getting the mods of this channel");};
 	}
 
 	/**
