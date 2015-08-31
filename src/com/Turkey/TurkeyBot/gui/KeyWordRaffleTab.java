@@ -107,7 +107,6 @@ public class KeyWordRaffleTab extends Tab implements ActionListener
 		super.setVisible(false);
 	}
 
-
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{

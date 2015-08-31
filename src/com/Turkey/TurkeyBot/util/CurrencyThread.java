@@ -66,7 +66,7 @@ public class CurrencyThread implements Runnable
 	 */
 	public void stopThread()
 	{
-		run = false;
+		run = false;	
 	}
 	
 	public boolean isRunning()
