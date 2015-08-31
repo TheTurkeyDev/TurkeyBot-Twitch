@@ -16,7 +16,9 @@ public class CurrencyFile extends BotFile
 
 	/**
 	 * Gets the currency for the given username.
-	 * @param name to get the currency of.
+	 * 
+	 * @param username
+	 *            to get the currency of.
 	 * @return The amount of curreny the user has
 	 */
 	public int getCurrencyFor(String name)
@@ -31,8 +33,11 @@ public class CurrencyFile extends BotFile
 
 	/**
 	 * Adds a given amount of currency to the specified username.
-	 * @param name The name to add the given currency to.
-	 * @param ammount The amount of currency to be given the the user.
+	 * 
+	 * @param name
+	 *            The name to add the given currency to.
+	 * @param ammount
+	 *            The amount of currency to be given the the user.
 	 */
 	public void addCurrencyFor(String name, int ammount)
 	{
@@ -43,7 +48,7 @@ public class CurrencyFile extends BotFile
 		else
 		{
 			int current = Integer.parseInt(properties.getProperty(name));
-			properties.setProperty(name, "" + (current+ammount));
+			properties.setProperty(name, "" + (current + ammount));
 		}
 		save();
 	}

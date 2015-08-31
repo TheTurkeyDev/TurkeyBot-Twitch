@@ -10,14 +10,14 @@ import java.util.TimeZone;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
 
-public class upTimeCommand extends Command
+public class UptimeCommand extends Command
 {
-	public upTimeCommand(String n)
+	public UptimeCommand(String n)
 	{
 		super(n, "");
 	}
 
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
 		String result = "";
 		try
@@ -50,14 +50,17 @@ public class upTimeCommand extends Command
 
 			bot.sendMessage(bot.capitalizeName(bot.getChannel(false)) + " has been streaming for " + hours + " hours " + mins + " minutes and " + secs + " seconds!");
 
-		} catch (Exception e){e.printStackTrace();}
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;
 	}
-	
+
 	public String getPermissionLevel()
 	{
 		return "Mod";

@@ -12,7 +12,7 @@ public class StatusCommand extends Command
 		super(n, "");
 	}
 
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
 		ConsoleTab.output(Level.DeBug, "Status");
 		String[] contents = message.split(" ");
@@ -28,8 +28,7 @@ public class StatusCommand extends Command
 				boolean enabled = command.isEnabled();
 				boolean editable = command.canEdit();
 				int numOfResponses = command.getNumberOfResponses();
-				bot.sendMessage(bot.capitalizeName(sender) + ", The command's status is: Name: " + name + ", Permission Level: " + perm
-						+ ", Enabled: " + enabled + ", Editable: " + editable + ", Number of Responses: " + numOfResponses);
+				bot.sendMessage(bot.capitalizeName(sender) + ", The command's status is: Name: " + name + ", Permission Level: " + perm + ", Enabled: " + enabled + ", Editable: " + editable + ", Number of Responses: " + numOfResponses);
 			}
 			else
 			{
@@ -41,12 +40,12 @@ public class StatusCommand extends Command
 			bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !commandStatus <command>");
 		}
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;
 	}
-	
+
 	public String getPermissionLevel()
 	{
 		return "Mod";

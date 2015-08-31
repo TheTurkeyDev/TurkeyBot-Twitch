@@ -9,17 +9,15 @@ public class DeleteCommand extends Command
 	{
 		super(n, "");
 	}
-	
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
 		String[] contents = message.split(" ");
-		if(contents.length != 2)
-			bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !deleteCommand <command>");
-		String commandName  = contents[1];
-		if(!commandName.substring(0,1).equalsIgnoreCase("!"))
-			commandName = "!"+commandName;
+		if(contents.length != 2) bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !deleteCommand <command>");
+		String commandName = contents[1];
+		if(!commandName.substring(0, 1).equalsIgnoreCase("!")) commandName = "!" + commandName;
 		Command c = CommandManager.getCommandFromName(commandName);
-		if(c!=null)
+		if(c != null)
 		{
 			CommandManager.removeCommand(c);
 		}
@@ -28,12 +26,12 @@ public class DeleteCommand extends Command
 			bot.sendMessage(bot.capitalizeName(sender) + ": That is not a valid command!");
 		}
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;
 	}
-	
+
 	public String getPermissionLevel()
 	{
 		return "Mod";

@@ -12,12 +12,12 @@ import com.google.gson.JsonObject;
 
 public class CommandManager
 {
-	
+
 	private static HashMap<String, Command> commands = new HashMap<String, Command>();
-	
+
 	private static String lastCommand = "";
 	private static long lastCommandTime = 0;
-	
+
 	/**
 	 * Loads the commands for TurkeyBot
 	 */
@@ -26,7 +26,7 @@ public class CommandManager
 		commands.clear();
 		commands.put("!slots".toLowerCase(), new SlotsCommand("Slots"));
 		commands.put(("!" + TurkeyBot.bot.getProfile().getCurrencyName().replaceAll(" ", "")).toLowerCase(), new CurrencyCommand("Currency"));
-		commands.put("!upTime".toLowerCase(), new upTimeCommand("Uptime"));
+		commands.put("!upTime".toLowerCase(), new UptimeCommand("Uptime"));
 		commands.put("!Winner".toLowerCase(), new WinnerCommand("Winner"));
 		commands.put("!bypass".toLowerCase(), new BypassCommand("Bypass"));
 		commands.put("!addCommand".toLowerCase(), new AddCommand("AddCommand"));
@@ -64,8 +64,7 @@ public class CommandManager
 				{
 					Command c = new Command(name, obj.get("Responses").getAsJsonObject().get("0").getAsString());
 					c.setPermissionLevel(obj.get("PermLevel").getAsString());
-					if(!obj.get("Enabled").getAsBoolean())
-						c.disable();
+					if(!obj.get("Enabled").getAsBoolean()) c.disable();
 					JsonObject responses = obj.get("Responses").getAsJsonObject();
 					for(int i = 1; i < obj.get("Number_Of_Responses").getAsInt(); i++)
 					{
@@ -76,8 +75,7 @@ public class CommandManager
 				else
 				{
 					Command c = getCommandFromName("!" + name);
-					if(c == null)
-						c = commands.get(("!" + TurkeyBot.bot.getProfile().getCurrencyName().replaceAll(" ", "")).toLowerCase());
+					if(c == null) c = commands.get(("!" + TurkeyBot.bot.getProfile().getCurrencyName().replaceAll(" ", "")).toLowerCase());
 					c.getFile().updateCommand();
 				}
 
@@ -86,14 +84,13 @@ public class CommandManager
 			}
 		}
 	}
-	
+
 	public static void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
 		int index = message.indexOf(" ");
-		
-		if(index < 1)
-			index = message.length();
-		
+
+		if(index < 1) index = message.length();
+
 		if(commands.containsKey(message.substring(0, index).toLowerCase()))
 		{
 			Command command = commands.get(message.substring(0, index).toLowerCase());
@@ -105,8 +102,7 @@ public class CommandManager
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Gets the the command class for the given command name.
 	 * 
@@ -146,7 +142,7 @@ public class CommandManager
 			TurkeyBot.bot.sendMessage("Removed command " + command.getName());
 		}
 	}
-	
+
 	/**
 	 * Gets the current list of all of the commands.
 	 * 

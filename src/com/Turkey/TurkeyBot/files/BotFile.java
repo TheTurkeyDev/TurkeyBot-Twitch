@@ -7,13 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-
 public class BotFile
 {
 	protected InputStream iStream;
 	protected File file;
 	protected Properties properties;
-	
+
 	public BotFile(String path) throws IOException
 	{
 		properties = new Properties();
@@ -26,28 +25,33 @@ public class BotFile
 		iStream = new FileInputStream(file);
 		properties.load(iStream);
 	}
-	
+
 	/**
 	 * Outputs a given setting to the file.
-	 * @param key The key of the setting.
-	 * @param value The value of the key to be stored.
+	 * 
+	 * @param key
+	 *            The key of the setting.
+	 * @param value
+	 *            The value of the key to be stored.
 	 */
 	public void setSetting(String key, Object o)
 	{
 		properties.setProperty(key, o.toString());
 		save();
 	}
-	
+
 	/**
 	 * Gets a given value or setting based on the given key.
-	 * @param key The key of the setting to get the value of.
+	 * 
+	 * @param key
+	 *            The key of the setting to get the value of.
 	 * @return The value of the given key.
 	 */
 	public String getSetting(String key)
 	{
 		return properties.getProperty(key);
 	}
-	
+
 	/**
 	 * Saves the given file.
 	 */
@@ -55,7 +59,9 @@ public class BotFile
 	{
 		try
 		{
-			properties.store(new FileOutputStream(file),"");
-		} catch(Exception e){}
+			properties.store(new FileOutputStream(file), "");
+		} catch(Exception e)
+		{
+		}
 	}
 }

@@ -29,10 +29,8 @@ public class ModerateChat
 	public ModerateChat()
 	{
 
-		if(!TurkeyBot.bot.getProfile().chatSettings.getSetting("WordBlackList").equalsIgnoreCase(""))
-			blackList = TurkeyBot.bot.getProfile().chatSettings.getSetting("WordBlackList").split(",");
-		else
-			blackList = new String[0];
+		if(!TurkeyBot.bot.getProfile().chatSettings.getSetting("WordBlackList").equalsIgnoreCase("")) blackList = TurkeyBot.bot.getProfile().chatSettings.getSetting("WordBlackList").split(",");
+		else blackList = new String[0];
 		try
 		{
 			URL url = new URL("https://api.twitch.tv/kraken/chat/turkey2349/emoticons");
@@ -73,27 +71,18 @@ public class ModerateChat
 	{
 		message = m.split(" ");
 
-		if(TurkeyBot.bot.isMod(sender) || this.checkForImmunity(sender) || !Moderate)
-		{
-			return true;
-		}
+		if(TurkeyBot.bot.isMod(sender) || this.checkForImmunity(sender) || !Moderate){ return true; }
 
 		ErrorType error;
 		ResponseSettings response = TurkeyBot.bot.getProfile().spamResponseFile;
 		if((error = passesWordCheck()) != ErrorType.None)
 		{
-			if(error == ErrorType.Caps)
-				TurkeyBot.bot.sendMessage(response.getSetting("CapsMessage"));
-			if(error == ErrorType.Length)
-				TurkeyBot.bot.sendMessage(response.getSetting("LengthMessage"));
-			if(error == ErrorType.BadWord)
-				TurkeyBot.bot.sendMessage(response.getSetting("BlockedWordMessage"));
-			if(error == ErrorType.BlacklistWord)
-				TurkeyBot.bot.sendMessage("");
-			if(error == ErrorType.Emotes)
-				TurkeyBot.bot.sendMessage(response.getSetting("EmotesMessage"));
-			if(error == ErrorType.Sybols)
-				TurkeyBot.bot.sendMessage(response.getSetting("SymbolsMessage"));
+			if(error == ErrorType.Caps) TurkeyBot.bot.sendMessage(response.getSetting("CapsMessage"));
+			if(error == ErrorType.Length) TurkeyBot.bot.sendMessage(response.getSetting("LengthMessage"));
+			if(error == ErrorType.BadWord) TurkeyBot.bot.sendMessage(response.getSetting("BlockedWordMessage"));
+			if(error == ErrorType.BlacklistWord) TurkeyBot.bot.sendMessage("");
+			if(error == ErrorType.Emotes) TurkeyBot.bot.sendMessage(response.getSetting("EmotesMessage"));
+			if(error == ErrorType.Sybols) TurkeyBot.bot.sendMessage(response.getSetting("SymbolsMessage"));
 			TurkeyBot.bot.sendMessage("/timeout " + sender + " 1");
 			return false;
 		}
@@ -122,10 +111,8 @@ public class ModerateChat
 		int numofemotes = 0;
 		for(String word : message)
 		{
-			if(word.contains("***"))
-				return ErrorType.BadWord;
-			if(isBlackListed(word))
-				return ErrorType.BlacklistWord;
+			if(word.contains("***")) return ErrorType.BadWord;
+			if(isBlackListed(word)) return ErrorType.BlacklistWord;
 			if(emotes.contains(word))
 			{
 				numofemotes++;
@@ -134,8 +121,7 @@ public class ModerateChat
 			{
 				for(char letter : word.toCharArray())
 				{
-					if(letter >= 65 && letter <= 90)
-						caps++;
+					if(letter >= 65 && letter <= 90) caps++;
 					if((letter >= 65 && letter <= 90) || (letter >= 97 && letter <= 122))
 					{
 						letters++;
@@ -152,31 +138,24 @@ public class ModerateChat
 		int capsMax = Integer.parseInt(chat.getSetting("MaxCaps"));
 		int capsMin = Integer.parseInt(chat.getSetting("MinimumCaps"));
 		int capsPercent = Integer.parseInt(chat.getSetting("MaxpercentofCaps"));
-		if(capsMax != -1 && caps > capsMax)
-			return ErrorType.Caps;
-		if((capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double) letters) * 100) > capsPercent))
-			return ErrorType.Caps;
+		if(capsMax != -1 && caps > capsMax) return ErrorType.Caps;
+		if((capsMin != -1 && caps > capsMin) && (capsPercent != -1 && (((double) caps / (double) letters) * 100) > capsPercent)) return ErrorType.Caps;
 
 		int emotesMax = Integer.parseInt(chat.getSetting("MaxEmotes"));
 		int emotesMin = Integer.parseInt(chat.getSetting("MinimumEmotes"));
 		int emotesPercent = Integer.parseInt(chat.getSetting("MaxpercentofEmotes"));
 
-		if(emotesMax != -1 && numofemotes > emotesMax)
-			return ErrorType.Emotes;
-		if((emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double) message.length) * 100) > emotesPercent))
-			return ErrorType.Emotes;
+		if(emotesMax != -1 && numofemotes > emotesMax) return ErrorType.Emotes;
+		if((emotesMin != -1 && numofemotes > emotesMin) && (emotesPercent != -1 && (((double) numofemotes / (double) message.length) * 100) > emotesPercent)) return ErrorType.Emotes;
 
-		if(letters > Integer.parseInt(chat.getSetting("MaxMessageLength")))
-			return ErrorType.Length;
+		if(letters > Integer.parseInt(chat.getSetting("MaxMessageLength"))) return ErrorType.Length;
 
 		int symbolsMax = Integer.parseInt(chat.getSetting("MaxSymbols"));
 		int symbolsMin = Integer.parseInt(chat.getSetting("MinimumSymbols"));
 		int symbolsPercent = Integer.parseInt(chat.getSetting("MaxpercentofSymbols"));
 
-		if(symbolsMax != -1 && symbols > symbolsMax)
-			return ErrorType.Sybols;
-		if((symbolsMin != -1 && symbols > symbolsMin) && (symbolsPercent != -1 && (((double) symbols / (double) charecters) * 100) > symbolsPercent))
-			return ErrorType.Sybols;
+		if(symbolsMax != -1 && symbols > symbolsMax) return ErrorType.Sybols;
+		if((symbolsMin != -1 && symbols > symbolsMin) && (symbolsPercent != -1 && (((double) symbols / (double) charecters) * 100) > symbolsPercent)) return ErrorType.Sybols;
 
 		return ErrorType.None;
 	}
@@ -188,30 +167,22 @@ public class ModerateChat
 	 */
 	public ErrorType passesLinkCheck()
 	{
-		if(!Boolean.parseBoolean(TurkeyBot.bot.getProfile().chatSettings.getSetting("BlockLinks")))
-		{
-			return ErrorType.None;
-		}
+		if(!Boolean.parseBoolean(TurkeyBot.bot.getProfile().chatSettings.getSetting("BlockLinks"))){ return ErrorType.None; }
 		for(String word : message)
 		{
 			if(word.contains("."))
 			{
 				String wordFixed = word;
-				if(word.contains("http://"))
-					wordFixed = word.substring(word.indexOf("http://"));
-				else if(word.contains("https://"))
-					wordFixed = word.substring(word.indexOf("https://"));
-				if(word.contains("www."))
-					wordFixed = word.substring(word.indexOf("www."));
+				if(word.contains("http://")) wordFixed = word.substring(word.indexOf("http://"));
+				else if(word.contains("https://")) wordFixed = word.substring(word.indexOf("https://"));
+				if(word.contains("www.")) wordFixed = word.substring(word.indexOf("www."));
 
 				int index = wordFixed.indexOf(".");
 				if(index > 0 && index < wordFixed.length() - 1)
 				{
 					UrlValidator validator = new UrlValidator();
-					if(!wordFixed.contains("http://") && !wordFixed.contains("https://"))
-						wordFixed = "http://" + wordFixed;
-					if(validator.isValid(wordFixed))
-						return ErrorType.Link;
+					if(!wordFixed.contains("http://") && !wordFixed.contains("https://")) wordFixed = "http://" + wordFixed;
+					if(validator.isValid(wordFixed)) return ErrorType.Link;
 				}
 			}
 		}
@@ -229,15 +200,14 @@ public class ModerateChat
 	{
 		for(String blackword : blackList)
 		{
-			if(blackword.equalsIgnoreCase(tocheck))
-				return true;
+			if(blackword.equalsIgnoreCase(tocheck)) return true;
 		}
 		return false;
 	}
 
 	/**
 	 * Possible error Types on a given chat message
-	 *
+	 * 
 	 */
 	public enum ErrorType
 	{
@@ -264,10 +234,8 @@ public class ModerateChat
 	 */
 	public boolean checkForImmunity(String name)
 	{
-		if(bypass.contains(name))
-			bypass.remove(name);
-		else
-			return false;
+		if(bypass.contains(name)) bypass.remove(name);
+		else return false;
 		return true;
 	}
 }

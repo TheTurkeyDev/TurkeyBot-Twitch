@@ -27,8 +27,7 @@ public class ProfileManager
 		}
 
 		File deafult = new File("C:" + File.separator + "TurkeyBot" + File.separator + "Default");
-		if(!deafult.exists())
-			deafult.mkdirs();
+		if(!deafult.exists()) deafult.mkdirs();
 
 		for(File f : file.listFiles())
 		{
@@ -56,8 +55,7 @@ public class ProfileManager
 	public Profile getProfileFromName(String name)
 	{
 		for(Profile p : this.profiles)
-			if(p.getProfileName().equalsIgnoreCase(name))
-				return p;
+			if(p.getProfileName().equalsIgnoreCase(name)) return p;
 		return null;
 	}
 
@@ -65,9 +63,8 @@ public class ProfileManager
 	{
 		Profile prof = new Profile(name);
 		profiles.add(prof);
-		
+
 		File profFile = new File("C:" + File.separator + "TurkeyBot" + File.separator + name);
-		if(!profFile.exists())
-			profFile.mkdirs();
+		if(!profFile.exists()) profFile.mkdirs();
 	}
 }

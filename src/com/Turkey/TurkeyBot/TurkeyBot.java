@@ -30,6 +30,7 @@ public class TurkeyBot extends PircBot
 	private Profile profile;
 
 	private static String botName = "";
+
 	private String stream = "";
 
 	private String[] mods;
@@ -66,11 +67,9 @@ public class TurkeyBot extends PircBot
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{
 		ConsoleTab.output(Level.Chat, "[" + sender + "] " + message);
-		if(!profile.chatmoderation.isValidChat(message, sender))
-			return;
+		if(!profile.chatmoderation.isValidChat(message, sender)) return;
 		int index = message.indexOf(" ");
-		if(index < 1)
-			index = message.length();
+		if(index < 1) index = message.length();
 		String[] args = message.split(" ");
 
 		if(message.equalsIgnoreCase("!Disconnect") && (sender.equalsIgnoreCase(stream.substring(1)) || sender.equalsIgnoreCase("turkey2349")))
@@ -145,8 +144,7 @@ public class TurkeyBot extends PircBot
 		if(KeyWordRaffleTab.getCurrentRaffle() != null && KeyWordRaffleTab.getCurrentRaffle().isRunning())
 		{
 			KeyWordRaffle raffle = KeyWordRaffleTab.getCurrentRaffle();
-			if(raffle.getKeyWord().equalsIgnoreCase(message))
-				raffle.addEntry(sender.toLowerCase());
+			if(raffle.getKeyWord().equalsIgnoreCase(message)) raffle.addEntry(sender.toLowerCase());
 		}
 
 		if(QuestionRaffleTab.isRunning())
@@ -192,8 +190,7 @@ public class TurkeyBot extends PircBot
 	public void sendMessage(String msg)
 	{
 		ConsoleTab.output(Level.Chat, "[" + botName + "] " + msg);
-		if(stream != "" || !profile.settings.getSettingAsBoolean("isSilent"))
-			this.sendMessage(stream, msg);
+		if(stream != "" || !profile.settings.getSettingAsBoolean("isSilent")) this.sendMessage(stream, msg);
 	}
 
 	/**
@@ -239,19 +236,16 @@ public class TurkeyBot extends PircBot
 	 */
 	public void connectToChannel(String channel)
 	{
-		if(!connectToTwitch())
-			return;
+		if(!connectToTwitch()) return;
 		ConsoleTab.clearConsole();
-		if(stream != "")
-			disconnectFromChannel();
+		if(stream != "") disconnectFromChannel();
 		stream = "#" + channel.toLowerCase();
 		joinChannel(stream);
 		ConsoleTab.output(Level.Info, "Connected to " + stream.substring(1) + "'s channel!");
 		try
 		{
 			profile.followersFile = new Followers();
-			if(profile.settings.getSettingAsBoolean("TrackFollowers"))
-				profile.followersFile.initFollowerTracker();
+			if(profile.settings.getSettingAsBoolean("TrackFollowers")) profile.followersFile.initFollowerTracker();
 		} catch(IOException e)
 		{
 			ConsoleTab.output(Level.Error, "Unable to create the Followers File!");
@@ -264,13 +258,10 @@ public class TurkeyBot extends PircBot
 
 		if(!profile.settings.getSettingAsBoolean("SilentJoinLeave"))
 		{
-			if(!botName.equalsIgnoreCase("TurkeyChatBot"))
-				this.sendMessage("Hello I am TurkeyBot! errrr I mean, I am " + botName.substring(0, 1).toUpperCase() + botName.substring(1) + "!");
-			else
-				this.sendMessage("Hello I am TurkeyBot");
+			if(!botName.equalsIgnoreCase("TurkeyChatBot")) this.sendMessage("Hello I am TurkeyBot! errrr I mean, I am " + botName.substring(0, 1).toUpperCase() + botName.substring(1) + "!");
+			else this.sendMessage("Hello I am TurkeyBot");
 		}
-		else
-			ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
+		else ConsoleTab.output(Level.Alert, "Connected to the channel silently!");
 		this.sendRawLine("CAP REQ :twitch.tv/commands");
 		this.sendRawLine("CAP REQ :twitch.tv/membership");
 		this.sendMessage(stream, "/mods");
@@ -283,18 +274,13 @@ public class TurkeyBot extends PircBot
 	 */
 	public void disconnectFromChannel()
 	{
-		if(!profile.settings.getSettingAsBoolean("SilentJoinLeave"))
-			this.sendMessage("GoodBye!");
-		else
-			ConsoleTab.output(Level.Alert, "Disconnected to the channel silently!");
+		if(!profile.settings.getSettingAsBoolean("SilentJoinLeave")) this.sendMessage("GoodBye!");
+		else ConsoleTab.output(Level.Alert, "Disconnected to the channel silently!");
 		this.partChannel(stream);
 		ConsoleTab.output(Level.Alert, "Disconnected from " + stream.substring(1) + "'schannel!");
-		if(profile.followersFile != null)
-			profile.followersFile.stopFollowerTracker();
-		if(profile.currencyTrack != null)
-			profile.currencyTrack.stopThread();
-		if(profile.announcer != null)
-			profile.announcer.stop();
+		if(profile.followersFile != null) profile.followersFile.stopFollowerTracker();
+		if(profile.currencyTrack != null) profile.currencyTrack.stopThread();
+		if(profile.announcer != null) profile.announcer.stop();
 		stream = "";
 		mods = new String[0];
 		this.viewers.clear();
@@ -319,8 +305,7 @@ public class TurkeyBot extends PircBot
 	 */
 	public String getChannel(boolean includeSymbol)
 	{
-		if(includeSymbol || stream == "")
-			return stream;
+		if(includeSymbol || stream == "") return stream;
 		return stream.substring(1);
 	}
 
@@ -358,14 +343,14 @@ public class TurkeyBot extends PircBot
 		for(int i = 0; i < watchers.size(); i++)
 			viewers.add(watchers.get(i).getAsString());
 	}
-	
+
 	/**
-	 * Used to listen for private messages.
-	 * Currently used to listen for the mod list call back.
+	 * Used to listen for private messages. Currently used to listen for the mod list call back.
 	 */
 	public void onNotice(String sourceNick, String sourceLogin, String sourceHostname, String target, String notice)
 	{
-		try{
+		try
+		{
 			if(notice.contains("The moderators"))
 			{
 				notice = notice.substring(notice.indexOf(":") + 2);
@@ -373,7 +358,11 @@ public class TurkeyBot extends PircBot
 				mods = notice.split(", ");
 				ConsoleTab.output(Level.Info, "TurkeyBot has received the list of Mods for this channel!");
 			}
-		}catch(Exception e){ConsoleTab.output(Level.Error, "An Error Has occured while getting the mods of this channel");};
+		} catch(Exception e)
+		{
+			ConsoleTab.output(Level.Error, "An Error Has occured while getting the mods of this channel");
+		}
+		;
 	}
 
 	/**
@@ -387,8 +376,7 @@ public class TurkeyBot extends PircBot
 	{
 		for(User u : getUsers(stream))
 		{
-			if(u.getNick().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
-				return true;
+			if(u.getNick().toLowerCase().equalsIgnoreCase(name.toLowerCase())) return true;
 		}
 		return false;
 	}
@@ -412,12 +400,10 @@ public class TurkeyBot extends PircBot
 	 */
 	public boolean isMod(String un)
 	{
-		if(mods == null)
-			return false;
+		if(mods == null) return false;
 		for(String s : mods)
 		{
-			if(s.equalsIgnoreCase(un) || un.equalsIgnoreCase("turkey2349"))
-				return true;
+			if(s.equalsIgnoreCase(un) || un.equalsIgnoreCase("turkey2349")) return true;
 		}
 		return false;
 	}
@@ -431,12 +417,9 @@ public class TurkeyBot extends PircBot
 	 */
 	public String getPermLevel(String user)
 	{
-		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349"))
-			return "Streamer";
-		else if(isMod(user))
-			return "Mod";
-		else
-			return "User";
+		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349")) return "Streamer";
+		else if(isMod(user)) return "Mod";
+		else return "User";
 	}
 
 	/**
@@ -450,14 +433,10 @@ public class TurkeyBot extends PircBot
 	 */
 	public boolean hasPermission(String user, String perm)
 	{
-		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349") || user.equalsIgnoreCase("funwayguy"))
-			return true;
-		else if(isMod(user) && (perm.equalsIgnoreCase("Mod") || perm.equalsIgnoreCase("User")))
-			return true;
-		else if(!isMod(user) && perm.equalsIgnoreCase("User"))
-			return true;
-		else
-			return false;
+		if(user.equalsIgnoreCase(stream.substring(1)) || user.equalsIgnoreCase("turkey2349") || user.equalsIgnoreCase("funwayguy")) return true;
+		else if(isMod(user) && (perm.equalsIgnoreCase("Mod") || perm.equalsIgnoreCase("User"))) return true;
+		else if(!isMod(user) && perm.equalsIgnoreCase("User")) return true;
+		else return false;
 	}
 
 	/**
@@ -471,10 +450,7 @@ public class TurkeyBot extends PircBot
 	{
 		for(String user : getViewers())
 		{
-			if(user.startsWith(un))
-			{
-				return user;
-			}
+			if(user.startsWith(un)){ return user; }
 		}
 		return "";
 	}

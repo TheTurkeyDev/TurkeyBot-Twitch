@@ -38,7 +38,7 @@ public class AccountSettings extends JsonFile
 			this.updateFile();
 		}
 		loadfile();
-	}	
+	}
 
 	private void loadfile() throws IOException
 	{
@@ -51,8 +51,7 @@ public class AccountSettings extends JsonFile
 		}
 		reader.close();
 		JsonElement obj = TurkeyBot.json.parse(result);
-		if(obj == null)
-			return;
+		if(obj == null) return;
 		mainFile = obj.getAsJsonObject();
 		for(Entry<String, JsonElement> elements : mainFile.entrySet())
 		{
@@ -65,7 +64,8 @@ public class AccountSettings extends JsonFile
 
 	private void updateFile()
 	{
-		try{
+		try
+		{
 			FileOutputStream outputStream = new FileOutputStream(file);
 			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -73,7 +73,10 @@ public class AccountSettings extends JsonFile
 			writer.append(json);
 			writer.close();
 			outputStream.close();
-		}catch(IOException ex){ConsoleTab.output(Level.Error, "Could not write to json file for the account settings");}
+		} catch(IOException ex)
+		{
+			ConsoleTab.output(Level.Error, "Could not write to json file for the account settings");
+		}
 	}
 
 	public void addAccount(String display, String userName, String oAuth)
@@ -93,7 +96,7 @@ public class AccountSettings extends JsonFile
 	{
 		return this.accounts;
 	}
-	
+
 	public Entry<String, String> getAccountFromDisplayName(String name)
 	{
 		return accounts.get(name);

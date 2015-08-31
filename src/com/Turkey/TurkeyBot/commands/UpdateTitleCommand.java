@@ -20,10 +20,11 @@ public class UpdateTitleCommand extends Command
 		super(n, "");
 	}
 
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
-		try{
-			String url = "https://api.twitch.tv/kraken/channels/"+bot.getChannel(false).toLowerCase().substring(1)+"?oauth_token=" + SecretStuff.oAuth;
+		try
+		{
+			String url = "https://api.twitch.tv/kraken/channels/" + bot.getChannel(false).toLowerCase().substring(1) + "?oauth_token=" + SecretStuff.oAuth;
 			URL obj = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 			conn.setRequestProperty("Accept", "application/vnd.twitchtv.v2+json");
@@ -34,7 +35,7 @@ public class UpdateTitleCommand extends Command
 			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
 			out.write(data);
 			out.flush();
-			
+
 			String result = "";
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line = "";
@@ -44,14 +45,19 @@ public class UpdateTitleCommand extends Command
 			}
 			ConsoleTab.output(Level.Info, result);
 			reader.close();
-		}catch(IOException e){System.out.println(e.getMessage());   bot.sendMessage("An error has occured changing the title!");};
+		} catch(IOException e)
+		{
+			System.out.println(e.getMessage());
+			bot.sendMessage("An error has occured changing the title!");
+		}
+		;
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;
 	}
-	
+
 	public String getPermissionLevel()
 	{
 		return "Mod";

@@ -75,8 +75,7 @@ public class AutoAnnouncement implements Runnable
 	private void makeAnnouncement()
 	{
 		String msg = TurkeyBot.bot.getProfile().announceFile.getRandomAnnouncement();
-		if(msg != "")
-			TurkeyBot.bot.sendMessage(msg);
+		if(msg != "") TurkeyBot.bot.sendMessage(msg);
 	}
 
 	public void stop()

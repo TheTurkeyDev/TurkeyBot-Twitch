@@ -17,7 +17,7 @@ public class Command
 	protected boolean enabled = true;
 	protected String permLevel = "User";
 
-	private static String[] permList = {"User", "Mod", "Streamer"};
+	private static String[] permList = { "User", "Mod", "Streamer" };
 
 	private CommandFile file;
 
@@ -29,7 +29,7 @@ public class Command
 		try
 		{
 			file = new CommandFile(this, TurkeyBot.bot);
-		} catch (IOException e)
+		} catch(IOException e)
 		{
 			ConsoleTab.output(Level.Error, "Could not load " + name + "'s command file!");
 		}
@@ -37,18 +37,19 @@ public class Command
 		int higharg = 0;
 		while(index != -1)
 		{
-			try{
+			try
+			{
 				int argnum = Integer.parseInt(r.substring(index + 5, r.indexOf(" ", index)));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
-			}catch(NumberFormatException ex){ConsoleTab.output(Level.Error, r.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);}
-			catch(StringIndexOutOfBoundsException ex)
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
+			} catch(NumberFormatException ex)
+			{
+				ConsoleTab.output(Level.Error, r.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);
+			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(r.substring(index + 5));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
 			}
 			index = r.indexOf("%arg", index);
 		}
@@ -57,33 +58,44 @@ public class Command
 
 	/**
 	 * Called when a command is entered in the chat.
-	 * @param bot The TurkryBot instance.
-	 * @param channel The current channel the bot is in.
-	 * @param sender The user that sent the command.
-	 * @param login Not sure what this is.
-	 * @param hostname Twitch by default as we are on twitch servers if moderating a stream.
-	 * @param message The full message entered.
+	 * 
+	 * @param bot
+	 *            The TurkryBot instance.
+	 * @param channel
+	 *            The current channel the bot is in.
+	 * @param sender
+	 *            The user that sent the command.
+	 * @param login
+	 *            Not sure what this is.
+	 * @param hostname
+	 *            Twitch by default as we are on twitch servers if moderating a stream.
+	 * @param message
+	 *            The full message entered.
 	 */
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
-		if(responses.size() == 0)
-			return;
+		if(responses.size() == 0) return;
 		String[] arguments = message.split(" ");
 		String resposeEdited = this.getRandomResponse();
 		resposeEdited = resposeEdited.replaceAll("%Sender", bot.capitalizeName(sender));
 		for(int i = 1; i <= args; i++)
 		{
-			try{
-				resposeEdited = resposeEdited.replaceAll("%args"+i, arguments[i]);
-			}catch(ArrayIndexOutOfBoundsException ex){bot.sendMessage(bot.capitalizeName(sender) + " you have not entered all of the required arguments"); return;}
+			try
+			{
+				resposeEdited = resposeEdited.replaceAll("%args" + i, arguments[i]);
+			} catch(ArrayIndexOutOfBoundsException ex)
+			{
+				bot.sendMessage(bot.capitalizeName(sender) + " you have not entered all of the required arguments");
+				return;
+			}
 		}
 
 		bot.sendMessage(resposeEdited);
 	}
 
 	/**
-	 * Gets the permission level of the command.
-	 * User by default.
+	 * Gets the permission level of the command. User by default.
+	 * 
 	 * @return The permission level of the command.
 	 */
 	public String getPermissionLevel()
@@ -93,7 +105,9 @@ public class Command
 
 	/**
 	 * Sets the permission level of the command.
-	 * @param level The level to change the permission to.
+	 * 
+	 * @param level
+	 *            The level to change the permission to.
 	 */
 	public void setPermissionLevel(String lev)
 	{
@@ -106,20 +120,22 @@ public class Command
 
 	/**
 	 * Returns if the permission level is valid.
-	 * @param perm The permission level to test validity of.
+	 * 
+	 * @param perm
+	 *            The permission level to test validity of.
 	 * @return If the permission level is valid.
 	 */
 	public boolean isValidPerm(String p)
 	{
-		String perm = p.substring(0,1).toUpperCase() + p.substring(1).toLowerCase();
-		for(String realPerm: permList)
-			if(perm.equals(realPerm))
-				return true;
+		String perm = p.substring(0, 1).toUpperCase() + p.substring(1).toLowerCase();
+		for(String realPerm : permList)
+			if(perm.equals(realPerm)) return true;
 		return false;
 	}
 
 	/**
 	 * If the command can be edited.
+	 * 
 	 * @return If the command is editable.
 	 */
 	public boolean canEdit()
@@ -129,6 +145,7 @@ public class Command
 
 	/**
 	 * Returns the name of the command.
+	 * 
 	 * @return The command name.
 	 */
 	public String getName()
@@ -138,6 +155,7 @@ public class Command
 
 	/**
 	 * Gets a random response of the command if the command is entered.
+	 * 
 	 * @return The commands response.
 	 */
 	public String getRandomResponse()
@@ -147,6 +165,7 @@ public class Command
 
 	/**
 	 * Gets the first text response of the command.
+	 * 
 	 * @return The commands response.
 	 */
 	public String getFirstResponse()
@@ -156,15 +175,17 @@ public class Command
 
 	/**
 	 * Gets all of the responses for this command.
+	 * 
 	 * @return The responses of the command.
 	 */
 	public ArrayList<String> getResponses()
 	{
 		return responses;
 	}
-	
+
 	/**
 	 * Gets the number of responses for this command.
+	 * 
 	 * @return The number of responses.
 	 */
 	public int getNumberOfResponses()
@@ -174,7 +195,9 @@ public class Command
 
 	/**
 	 * Sets the text response of the command.
-	 * @param res The new response for the command.
+	 * 
+	 * @param res
+	 *            The new response for the command.
 	 */
 	public void addResponse(String res)
 	{
@@ -182,31 +205,32 @@ public class Command
 		int higharg = 0;
 		while(index != -1)
 		{
-			try{
+			try
+			{
 				int argnum = Integer.parseInt(res.substring(index + 5, res.indexOf(" ", index)));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
-			}catch(NumberFormatException ex){ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);}
-			catch(StringIndexOutOfBoundsException ex)
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
+			} catch(NumberFormatException ex)
+			{
+				ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);
+			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
 			}
 			index = res.indexOf("%arg", index);
 		}
 
-		if(higharg == args)		
-			responses.add(res);
-		else
-			ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
+		if(higharg == args) responses.add(res);
+		else ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
 	}
 
 	/**
 	 * Sets the text of the first response of the command.
-	 * @param res The new response for the command.
+	 * 
+	 * @param res
+	 *            The new response for the command.
 	 */
 	public void setFirstResponse(String res)
 	{
@@ -214,29 +238,32 @@ public class Command
 		int higharg = 0;
 		while(index != -1)
 		{
-			try{
+			try
+			{
 				int argnum = Integer.parseInt(res.substring(index + 5, res.indexOf(" ", index)));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
-			}catch(NumberFormatException ex){ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);}
-			catch(StringIndexOutOfBoundsException ex)
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
+			} catch(NumberFormatException ex)
+			{
+				ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);
+			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
 			}
 			index = res.indexOf("%arg", index);
 		}
 
-		args = higharg;		
+		args = higharg;
 		responses.set(0, res);
 	}
-	
+
 	/**
 	 * Sets the given response number's text response of the command.
-	 * @param res The new response to replace the old one.
+	 * 
+	 * @param res
+	 *            The new response to replace the old one.
 	 */
 	public void editResponse(int pos, String res)
 	{
@@ -244,31 +271,32 @@ public class Command
 		int higharg = 0;
 		while(index != -1)
 		{
-			try{
+			try
+			{
 				int argnum = Integer.parseInt(res.substring(index + 5, res.indexOf(" ", index)));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
-			}catch(NumberFormatException ex){ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);}
-			catch(StringIndexOutOfBoundsException ex)
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
+			} catch(NumberFormatException ex)
+			{
+				ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);
+			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5));
-				if(argnum > higharg)
-					higharg = argnum;
-				index+=5;
+				if(argnum > higharg) higharg = argnum;
+				index += 5;
 			}
 			index = res.indexOf("%arg", index);
 		}
 
-		if(higharg == args)		
-			responses.set(pos, res);
-		else
-			ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
+		if(higharg == args) responses.set(pos, res);
+		else ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
 	}
-	
+
 	/**
 	 * Removes the given response number for the command
-	 * @param number of the response to remove
+	 * 
+	 * @param number
+	 *            of the response to remove
 	 */
 	public void removeResponse(int num)
 	{
@@ -293,7 +321,8 @@ public class Command
 	}
 
 	/**
-	 * Returns if the command is enabled or not. 
+	 * Returns if the command is enabled or not.
+	 * 
 	 * @return If the command is enabled.
 	 */
 	public boolean isEnabled()
@@ -303,6 +332,7 @@ public class Command
 
 	/**
 	 * Gets the command file of the command containing all of the command data that is stored on a file.
+	 * 
 	 * @return The commands file.
 	 */
 	public CommandFile getFile()

@@ -54,9 +54,11 @@ public class AnnouncementFile
 		}
 		reader.close();
 
-		try{
+		try
+		{
 			obj = TurkeyBot.json.parse(result).getAsJsonObject();
-		}catch(IllegalStateException e){
+		} catch(IllegalStateException e)
+		{
 			obj = new JsonObject();
 			JsonArray tempArray = new JsonArray();
 			obj.add("Announcements", tempArray);
@@ -83,7 +85,7 @@ public class AnnouncementFile
 		{
 			loadAnnouncements();
 			Gui.reloadTab();
-		} catch (IOException e)
+		} catch(IOException e)
 		{
 			ConsoleTab.output(Level.Error, "Could not reload the Announcements File!");
 		}
@@ -143,7 +145,8 @@ public class AnnouncementFile
 	 */
 	public void saveJson()
 	{
-		try{
+		try
+		{
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String json = gson.toJson(obj);
 			FileOutputStream outputStream = new FileOutputStream(file);
@@ -151,13 +154,15 @@ public class AnnouncementFile
 			writer.append(json);
 			writer.close();
 			outputStream.close();
-		}catch(IOException ex){ConsoleTab.output(Level.Error, "Could not save the Announcements Json File!");}
+		} catch(IOException ex)
+		{
+			ConsoleTab.output(Level.Error, "Could not save the Announcements Json File!");
+		}
 	}
 
 	public String getRandomAnnouncement()
 	{
-		if(enabledannouncements.size() > 0)
-			return enabledannouncements.get(r.nextInt(enabledannouncements.size()));
+		if(enabledannouncements.size() > 0) return enabledannouncements.get(r.nextInt(enabledannouncements.size()));
 		return "";
 	}
 

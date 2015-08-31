@@ -21,7 +21,7 @@ public class CommandFile extends JsonFile
 	{
 		command = c;
 		gson = new Gson();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "commands" + File.separator + command.getName() +".json");
+		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "commands" + File.separator + command.getName() + ".json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();
@@ -49,14 +49,18 @@ public class CommandFile extends JsonFile
 		}
 
 		mainFile.add("Responses", responses);
-		try{
+		try
+		{
 			FileOutputStream outputStream = new FileOutputStream(file);
 			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 			writer.append(mainFile.toString());
 			writer.close();
 			outputStream.close();
-		}catch(IOException ex){ConsoleTab.output(Level.Error, "Could not write to json file for the command "  + command.getName());}
-	
+		} catch(IOException ex)
+		{
+			ConsoleTab.output(Level.Error, "Could not write to json file for the command " + command.getName());
+		}
+
 	}
 
 	/**
@@ -85,7 +89,9 @@ public class CommandFile extends JsonFile
 
 	/**
 	 * Sets the permission level for the command.
-	 * @param level to set the command to.
+	 * 
+	 * @param level
+	 *            to set the command to.
 	 */
 	public void setPermLevel(String level)
 	{
@@ -94,6 +100,7 @@ public class CommandFile extends JsonFile
 
 	/**
 	 * Gets the permission of the command.
+	 * 
 	 * @return The permission level of this command.
 	 */
 	public String getPermLevel()

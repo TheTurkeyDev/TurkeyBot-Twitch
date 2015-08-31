@@ -29,11 +29,11 @@ public class Followers extends BotFile implements Runnable
 	 */
 	public void initFollowerTracker()
 	{
-		if (super.properties.isEmpty()) loadFollowers();
+		if(super.properties.isEmpty()) loadFollowers();
 		else checkFollowers(false);
 
 		run = true;
-		if (thread == null || !thread.isAlive())
+		if(thread == null || !thread.isAlive())
 		{
 			thread = new Thread(this);
 			thread.start();
@@ -54,17 +54,17 @@ public class Followers extends BotFile implements Runnable
 	@Override
 	public void run()
 	{
-		while (run)
+		while(run)
 		{
 			checkFollowers(true);
 			// ConsoleTab.output(Level.DeBug, "Checked for new followers");
 			try
 			{
-				synchronized (this)
+				synchronized(this)
 				{
 					this.wait(10000);
 				}
-			} catch (InterruptedException e)
+			} catch(InterruptedException e)
 			{
 				e.printStackTrace();
 				this.stopFollowerTracker();
@@ -74,7 +74,7 @@ public class Followers extends BotFile implements Runnable
 		{
 			thread.interrupt();
 			thread.join();
-		} catch (InterruptedException e)
+		} catch(InterruptedException e)
 		{
 		}
 	}
@@ -89,31 +89,31 @@ public class Followers extends BotFile implements Runnable
 		int total = obj.get("_total").getAsInt();
 		int current = 0;
 		String nexturl = "https://api.twitch.tv/kraken/channels/" + TurkeyBot.bot.getChannel(false) + "/follows?limit=100";
-		while (current < total)
+		while(current < total)
 		{
 			boolean success = false;
 			int loops = 0;
-			while (!success)
+			while(!success)
 			{
 				try
 				{
 					obj = json.parse(HTTPConnect.GetResponsefrom(nexturl)).getAsJsonObject();
 					success = true;
-				} catch (IllegalStateException e)
+				} catch(IllegalStateException e)
 				{
 					loops++;
-					if (loops > 10) return;
+					if(loops > 10) return;
 				}
 			}
 			try
 			{
 				nexturl = obj.get("_links").getAsJsonObject().get("next").getAsString();
-			} catch (IndexOutOfBoundsException e)
+			} catch(IndexOutOfBoundsException e)
 			{
 				nexturl = obj.get("_links").getAsJsonObject().get("next").getAsString();
 			}
 			JsonArray list = obj.get("follows").getAsJsonArray();
-			for (int i = 0; i < list.size(); i++)
+			for(int i = 0; i < list.size(); i++)
 			{
 				String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
 				super.setSetting(temp.toLowerCase(), list.get(i).getAsJsonObject().get("created_at"));
@@ -133,18 +133,18 @@ public class Followers extends BotFile implements Runnable
 		{
 			obj = json.parse(HTTPConnect.GetResponsefrom("https://api.twitch.tv/kraken/channels/" + TurkeyBot.bot.getChannel(false) + "/follows?limit=2" + i)).getAsJsonObject();
 			i = i == 0 ? 1 : 0;
-		} catch (IllegalStateException ex)
+		} catch(IllegalStateException ex)
 		{
 			return;
 		}
 		JsonArray list = obj.get("follows").getAsJsonArray();
-		for (int i = 0; i < list.size(); i++)
+		for(int i = 0; i < list.size(); i++)
 		{
 
 			String temp = list.get(i).getAsJsonObject().get("user").getAsJsonObject().get("display_name").getAsString();
-			if (!super.properties.containsKey(temp.toLowerCase()))
+			if(!super.properties.containsKey(temp.toLowerCase()))
 			{
-				if (output)
+				if(output)
 				{
 					TurkeyBot.bot.sendMessage(temp + " Has just followed!!!");
 				}

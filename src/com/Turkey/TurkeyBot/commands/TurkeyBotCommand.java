@@ -9,11 +9,11 @@ public class TurkeyBotCommand extends Command
 		super(n, "");
 	}
 
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
 		bot.sendMessage("Yes, I am TurkeyBot.");
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;

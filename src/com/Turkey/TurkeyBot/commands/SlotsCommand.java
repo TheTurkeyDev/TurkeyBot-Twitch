@@ -11,10 +11,10 @@ public class SlotsCommand extends Command
 		super(n, "");
 	}
 
-	private String[] emotes = {"BibleThump", "BloodTrail", "FrankerZ", "MrDestructoid", "SSSsss", "PJSalt", "Kappa"};
+	private String[] emotes = { "BibleThump", "BloodTrail", "FrankerZ", "MrDestructoid", "SSSsss", "PJSalt", "Kappa" };
 	private int trys;
 
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
 		if(bot.getProfile().currency.getCurrencyFor(sender) > 0)
 		{
@@ -34,13 +34,12 @@ public class SlotsCommand extends Command
 			else
 			{
 				String correctGrammar = "tries";
-				if(trys<2)
-					correctGrammar = "try";
-				bot.sendMessage(bot.capitalizeName(sender) + " Your slots result is-------------- " + emotes[slotOne] + " " + emotes[slotTwo] + " " + emotes[slotThree] + " and you have lost! The slots have not been won in " + trys +" " +  correctGrammar + "!");
+				if(trys < 2) correctGrammar = "try";
+				bot.sendMessage(bot.capitalizeName(sender) + " Your slots result is-------------- " + emotes[slotOne] + " " + emotes[slotTwo] + " " + emotes[slotThree] + " and you have lost! The slots have not been won in " + trys + " " + correctGrammar + "!");
 			}
 		}
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;

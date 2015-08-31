@@ -9,18 +9,16 @@ public class EditCommand extends Command
 	{
 		super(n, "");
 	}
-	
-	public void oncommand(TurkeyBot bot,String channel, String sender, String login, String hostname, String message)
+
+	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
 		String[] contents = message.split(" ");
-		if(contents.length < 3)
-			bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !editCommand <command> <response>");
-		String commandName  = contents[1];
-		if(!commandName.substring(0,1).equalsIgnoreCase("!"))
-			commandName = "!"+commandName;
+		if(contents.length < 3) bot.sendMessage(bot.capitalizeName(sender) + ": That is not valid! Try !editCommand <command> <response>");
+		String commandName = contents[1];
+		if(!commandName.substring(0, 1).equalsIgnoreCase("!")) commandName = "!" + commandName;
 		Command c = CommandManager.getCommandFromName(commandName);
 		String response = message.substring(message.toLowerCase().indexOf(commandName.substring(1).toLowerCase()) + commandName.length());
-		if(c!=null)
+		if(c != null)
 		{
 			c.setFirstResponse(response);
 			c.getFile().updateCommand();
@@ -31,12 +29,12 @@ public class EditCommand extends Command
 			bot.sendMessage(bot.capitalizeName(sender) + ": That is not a valid command!");
 		}
 	}
-	
+
 	public boolean canEdit()
 	{
 		return false;
 	}
-	
+
 	public String getPermissionLevel()
 	{
 		return "Mod";

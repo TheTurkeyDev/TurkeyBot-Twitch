@@ -91,7 +91,7 @@ public class Profile
 			announcer = new AutoAnnouncement();
 		}
 	}
-	
+
 	public String getCurrencyName()
 	{
 		return this.currencyName;
