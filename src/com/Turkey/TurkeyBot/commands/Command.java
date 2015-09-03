@@ -76,13 +76,30 @@ public class Command
 	{
 		if(responses.size() == 0) return;
 		String[] arguments = message.split(" ");
-		String resposeEdited = this.getRandomResponse();
-		resposeEdited = resposeEdited.replaceAll("%Sender", bot.capitalizeName(sender));
+		String responseEdited = this.getRandomResponse();
+
+		if(this.args == 0 && arguments.length > 1)
+		{
+			try
+			{
+				int response = Integer.parseInt(arguments[1]);
+				responseEdited = this.getResponse(response);
+			} catch(NumberFormatException e)
+			{
+				if(TurkeyBot.bot.isUser(arguments[1]))
+				{
+					responseEdited = TurkeyBot.bot.capitalizeName(arguments[1]) + ": " + responseEdited;
+				}
+			}
+		}
+
+		responseEdited = responseEdited.replaceAll("%Sender", bot.capitalizeName(sender));
+
 		for(int i = 1; i <= args; i++)
 		{
 			try
 			{
-				resposeEdited = resposeEdited.replaceAll("%args" + i, arguments[i]);
+				responseEdited = responseEdited.replaceAll("%args" + i, arguments[i]);
 			} catch(ArrayIndexOutOfBoundsException ex)
 			{
 				bot.sendMessage(bot.capitalizeName(sender) + " you have not entered all of the required arguments");
@@ -90,7 +107,7 @@ public class Command
 			}
 		}
 
-		bot.sendMessage(resposeEdited);
+		bot.sendMessage(responseEdited);
 	}
 
 	/**
@@ -115,7 +132,6 @@ public class Command
 		{
 			permLevel = lev;
 		}
-
 	}
 
 	/**
@@ -151,6 +167,16 @@ public class Command
 	public String getName()
 	{
 		return name;
+	}
+
+	/**
+	 * Gets a the response for the given index.
+	 * 
+	 * @return The commands response.
+	 */
+	public String getResponse(int index)
+	{
+		return responses.get(index > this.responses.size() ? this.responses.size() - 1 : index);
 	}
 
 	/**
@@ -199,7 +225,7 @@ public class Command
 	 * @param res
 	 *            The new response for the command.
 	 */
-	public void addResponse(String res)
+	private void addResponse(String res, int resIndex)
 	{
 		int index = res.indexOf("%arg", 0);
 		int higharg = 0;
@@ -222,8 +248,15 @@ public class Command
 			index = res.indexOf("%arg", index);
 		}
 
-		if(higharg == args) responses.add(res);
+		if(resIndex == 0)
+			this.args = higharg;
+		if(higharg == args) responses.add(resIndex, res);
 		else ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
+	}
+	
+	public void addResponse(String res)
+	{
+		this.addResponse(res, this.responses.size());
 	}
 
 	/**
@@ -234,29 +267,7 @@ public class Command
 	 */
 	public void setFirstResponse(String res)
 	{
-		int index = res.indexOf("%arg", 0);
-		int higharg = 0;
-		while(index != -1)
-		{
-			try
-			{
-				int argnum = Integer.parseInt(res.substring(index + 5, res.indexOf(" ", index)));
-				if(argnum > higharg) higharg = argnum;
-				index += 5;
-			} catch(NumberFormatException ex)
-			{
-				ConsoleTab.output(Level.Error, res.substring(index + 4, index + 5) + " is not a valid argument integer in command " + name);
-			} catch(StringIndexOutOfBoundsException ex)
-			{
-				int argnum = Integer.parseInt(res.substring(index + 5));
-				if(argnum > higharg) higharg = argnum;
-				index += 5;
-			}
-			index = res.indexOf("%arg", index);
-		}
-
-		args = higharg;
-		responses.set(0, res);
+		this.addResponse(res, 0);
 	}
 
 	/**
