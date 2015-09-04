@@ -24,7 +24,7 @@ import com.google.gson.JsonParser;
 
 public class TurkeyBot extends PircBot
 {
-	public static final String VERSION = "Beta 2.0.0";
+	public static final String VERSION = "Beta 2.0.1";
 
 	public static TurkeyBot bot;
 	private Profile profile;
