@@ -15,7 +15,7 @@ public class ResponseSettings extends BotFile
 	
 	public ResponseSettings() throws IOException
 	{
-		super("C:" + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
+		super(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + propName);
 		loadSettings();
 	}
 	

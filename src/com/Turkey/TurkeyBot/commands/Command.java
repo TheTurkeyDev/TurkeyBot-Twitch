@@ -16,6 +16,8 @@ public class Command
 	private int args;
 	protected boolean enabled = true;
 	protected String permLevel = "User";
+	private int coolDown = 0;
+	private long lastTimeRan = -1;
 
 	private static String[] permList = { "User", "Mod", "Streamer" };
 
@@ -40,7 +42,8 @@ public class Command
 			try
 			{
 				int argnum = Integer.parseInt(r.substring(index + 5, r.indexOf(" ", index)));
-				if(argnum > higharg) higharg = argnum;
+				if(argnum > higharg)
+					higharg = argnum;
 				index += 5;
 			} catch(NumberFormatException ex)
 			{
@@ -48,7 +51,8 @@ public class Command
 			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(r.substring(index + 5));
-				if(argnum > higharg) higharg = argnum;
+				if(argnum > higharg)
+					higharg = argnum;
 				index += 5;
 			}
 			index = r.indexOf("%arg", index);
@@ -74,7 +78,8 @@ public class Command
 	 */
 	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
-		if(responses.size() == 0) return;
+		if(responses.size() == 0)
+			return;
 		String[] arguments = message.split(" ");
 		String responseEdited = this.getRandomResponse();
 
@@ -108,6 +113,16 @@ public class Command
 		}
 
 		bot.sendMessage(responseEdited);
+	}
+
+	public boolean runcommand()
+	{
+		if((System.currentTimeMillis() - lastTimeRan) > this.coolDown * 1000)
+		{
+			lastTimeRan = System.currentTimeMillis();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -145,7 +160,8 @@ public class Command
 	{
 		String perm = p.substring(0, 1).toUpperCase() + p.substring(1).toLowerCase();
 		for(String realPerm : permList)
-			if(perm.equals(realPerm)) return true;
+			if(perm.equals(realPerm))
+				return true;
 		return false;
 	}
 
@@ -234,7 +250,8 @@ public class Command
 			try
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5, res.indexOf(" ", index)));
-				if(argnum > higharg) higharg = argnum;
+				if(argnum > higharg)
+					higharg = argnum;
 				index += 5;
 			} catch(NumberFormatException ex)
 			{
@@ -242,7 +259,8 @@ public class Command
 			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5));
-				if(argnum > higharg) higharg = argnum;
+				if(argnum > higharg)
+					higharg = argnum;
 				index += 5;
 			}
 			index = res.indexOf("%arg", index);
@@ -250,10 +268,12 @@ public class Command
 
 		if(resIndex == 0)
 			this.args = higharg;
-		if(higharg == args) responses.add(resIndex, res);
-		else ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
+		if(higharg == args)
+			responses.add(resIndex, res);
+		else
+			ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
 	}
-	
+
 	public void addResponse(String res)
 	{
 		this.addResponse(res, this.responses.size());
@@ -285,7 +305,8 @@ public class Command
 			try
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5, res.indexOf(" ", index)));
-				if(argnum > higharg) higharg = argnum;
+				if(argnum > higharg)
+					higharg = argnum;
 				index += 5;
 			} catch(NumberFormatException ex)
 			{
@@ -293,14 +314,17 @@ public class Command
 			} catch(StringIndexOutOfBoundsException ex)
 			{
 				int argnum = Integer.parseInt(res.substring(index + 5));
-				if(argnum > higharg) higharg = argnum;
+				if(argnum > higharg)
+					higharg = argnum;
 				index += 5;
 			}
 			index = res.indexOf("%arg", index);
 		}
 
-		if(higharg == args) responses.set(pos, res);
-		else ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
+		if(higharg == args)
+			responses.set(pos, res);
+		else
+			ConsoleTab.output(Level.Error, "The response of: \"" + res + "\", for the command " + this.getName() + " does not have the correct amount of arguments as the original response");
 	}
 
 	/**
@@ -339,6 +363,16 @@ public class Command
 	public boolean isEnabled()
 	{
 		return enabled;
+	}
+
+	public int getCommandCooldown()
+	{
+		return this.coolDown;
+	}
+
+	public void setCommandCooldown(int cd)
+	{
+		this.coolDown = cd;
 	}
 
 	/**

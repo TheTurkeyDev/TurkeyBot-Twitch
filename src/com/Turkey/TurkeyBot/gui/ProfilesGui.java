@@ -28,7 +28,7 @@ public class ProfilesGui implements ActionListener
 
 	public ProfilesGui()
 	{
-		ProfileManager.instance.loadProfiles();
+		ProfileManager.getProfileManager().loadProfiles();
 
 		frame = new JFrame();
 		Dimension size = new Dimension(600, 400);
@@ -38,7 +38,7 @@ public class ProfilesGui implements ActionListener
 		frame.setLayout(null);
 		frame.setTitle("Profile Selection");
 		frame.setLocationRelativeTo(null);
-		
+
 		load = new JButton("Load Profile");
 		load.setName("Load");
 		load.setLocation((frame.getWidth() / 2) - 25, 150);
@@ -52,7 +52,7 @@ public class ProfilesGui implements ActionListener
 		add.setSize(100, 25);
 		add.addActionListener(this);
 		frame.add(add);
-		
+
 		nametext = new JTextArea("Profile Name");
 		nametext.setName("ProfileName");
 		nametext.setLocation((frame.getWidth() / 2) - 160, 100);
@@ -75,13 +75,13 @@ public class ProfilesGui implements ActionListener
 		frame.add(selectedAccount);
 
 		loadProfiles();
-		
+
 		frame.setVisible(true);
 	}
-	
+
 	public void loadProfiles()
 	{
-		profiles = new JComboBox<>(ProfileManager.instance.getProfileNames());
+		profiles = new JComboBox<>(ProfileManager.getProfileManager().getProfileNames());
 		profiles.setLocation((frame.getWidth() / 2) - 160, 150);
 		profiles.setSize(120, 25);
 		frame.add(profiles);
@@ -98,7 +98,7 @@ public class ProfilesGui implements ActionListener
 			{
 				try
 				{
-					new Gui(new TurkeyBot(ProfileManager.instance.getProfileFromName((String) profiles.getSelectedItem())));
+					new Gui(new TurkeyBot(ProfileManager.getProfileManager().getProfileFromName((String) profiles.getSelectedItem())));
 				} catch(Exception e1)
 				{
 					e1.printStackTrace();
@@ -109,7 +109,7 @@ public class ProfilesGui implements ActionListener
 			{
 				if(!nametext.getText().equalsIgnoreCase("Profile Name") && !nametext.getText().replaceAll(" ", "").equalsIgnoreCase(""))
 				{
-					ProfileManager.instance.addProfile(nametext.getText());
+					ProfileManager.getProfileManager().addProfile(nametext.getText());
 					frame.remove(profiles);
 					this.loadProfiles();
 				}

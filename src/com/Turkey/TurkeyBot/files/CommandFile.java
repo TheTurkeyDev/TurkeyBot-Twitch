@@ -21,7 +21,7 @@ public class CommandFile extends JsonFile
 	{
 		command = c;
 		gson = new Gson();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "commands" + File.separator + command.getName() + ".json");
+		file = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + b.getProfile().getProfileName() + File.separator + "commands" + File.separator + command.getName() + ".json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();
@@ -38,6 +38,7 @@ public class CommandFile extends JsonFile
 		mainFile = new JsonObject();
 		mainFile.add("Enabled", gson.toJsonTree(command.isEnabled()));
 		mainFile.add("PermLevel", gson.toJsonTree(command.getPermissionLevel()));
+		mainFile.add("CoolDown", gson.toJsonTree(command.getCommandCooldown()));
 		mainFile.add("LoadFile", gson.toJsonTree(command.canEdit()));
 		mainFile.add("Number_Of_Responses", gson.toJsonTree(command.getNumberOfResponses()));
 

@@ -7,13 +7,20 @@ import java.util.List;
 
 public class ProfileManager
 {
-	public static ProfileManager instance = new ProfileManager();
+	private static ProfileManager instance;
 
 	private List<Profile> profiles = new ArrayList<Profile>();
 
+	public static ProfileManager getProfileManager()
+	{
+		if(instance == null)
+			instance = new ProfileManager();
+		return instance;
+	}
+
 	public void loadProfiles()
 	{
-		File file = new File("C:" + File.separator + "TurkeyBot");
+		File file = new File(System.getProperty("user.home") + File.separator + "TurkeyBot");
 
 		if(!file.exists())
 		{
@@ -26,8 +33,9 @@ public class ProfileManager
 			}
 		}
 
-		File deafult = new File("C:" + File.separator + "TurkeyBot" + File.separator + "Default");
-		if(!deafult.exists()) deafult.mkdirs();
+		File deafult = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + "Default");
+		if(!deafult.exists())
+			deafult.mkdirs();
 
 		for(File f : file.listFiles())
 		{
@@ -55,7 +63,8 @@ public class ProfileManager
 	public Profile getProfileFromName(String name)
 	{
 		for(Profile p : this.profiles)
-			if(p.getProfileName().equalsIgnoreCase(name)) return p;
+			if(p.getProfileName().equalsIgnoreCase(name))
+				return p;
 		return null;
 	}
 
@@ -64,7 +73,8 @@ public class ProfileManager
 		Profile prof = new Profile(name);
 		profiles.add(prof);
 
-		File profFile = new File("C:" + File.separator + "TurkeyBot" + File.separator + name);
-		if(!profFile.exists()) profFile.mkdirs();
+		File profFile = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + name);
+		if(!profFile.exists())
+			profFile.mkdirs();
 	}
 }

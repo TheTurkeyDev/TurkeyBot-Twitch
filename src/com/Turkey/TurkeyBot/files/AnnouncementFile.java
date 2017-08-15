@@ -31,7 +31,7 @@ public class AnnouncementFile
 	public AnnouncementFile() throws IOException
 	{
 		r = new Random();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + "Announcements.json");
+		file = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "properties" + File.separator + "Announcements.json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();

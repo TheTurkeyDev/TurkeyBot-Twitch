@@ -9,8 +9,6 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import com.Turkey.TurkeyBot.gui.ConsoleTab;
-import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 import com.Turkey.TurkeyBot.gui.ProfilesGui;
 
 public class Start
@@ -42,7 +40,7 @@ public class Start
 			reader.close();
 		} catch(Exception e)
 		{
-			ConsoleTab.output(Level.Error, "Could not connect to the server to check for the current version of TurkeyBot");
+			System.out.println("Could not connect to the server to check for the current version of TurkeyBot");
 			return;
 		}
 

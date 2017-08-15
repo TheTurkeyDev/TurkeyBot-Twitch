@@ -1,8 +1,6 @@
 package com.Turkey.TurkeyBot.commands;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
-import com.Turkey.TurkeyBot.gui.ConsoleTab;
-import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
 
 public class StatusCommand extends Command
 {
@@ -14,25 +12,22 @@ public class StatusCommand extends Command
 
 	public void oncommand(TurkeyBot bot, String channel, String sender, String login, String hostname, String message)
 	{
-		ConsoleTab.output(Level.DeBug, "Status");
 		String[] contents = message.split(" ");
 		Command command;
 		if(contents.length == 2)
 		{
-			ConsoleTab.output(Level.DeBug, "here");
 			if((command = CommandManager.getCommandFromName(contents[1])) != null)
 			{
-				ConsoleTab.output(Level.DeBug, "2");
 				String name = command.getName();
 				String perm = command.getPermissionLevel();
 				boolean enabled = command.isEnabled();
 				boolean editable = command.canEdit();
 				int numOfResponses = command.getNumberOfResponses();
-				bot.sendMessage(bot.capitalizeName(sender) + ", The command's status is: Name: " + name + ", Permission Level: " + perm + ", Enabled: " + enabled + ", Editable: " + editable + ", Number of Responses: " + numOfResponses);
+				bot.sendWhisper("The command's status is: Name: " + name + ", Permission Level: " + perm + ", Enabled: " + enabled + ", Editable: " + editable + ", Number of Responses: " + numOfResponses, sender);
 			}
 			else
 			{
-				bot.sendMessage(bot.capitalizeName(sender) + ": That is not a valid command");
+				bot.sendWhisper("That is not a valid command", sender);
 			}
 		}
 		else

@@ -40,7 +40,7 @@ public class Profile
 	public Profile(String name)
 	{
 		this.profileName = name;
-		profileFolder = new File("C:" + File.separator + "TurkeyBot" + File.separator + name);
+		profileFolder = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + name);
 	}
 
 	public String getProfileName()

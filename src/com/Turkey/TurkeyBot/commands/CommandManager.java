@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import com.Turkey.TurkeyBot.TurkeyBot;
+import com.Turkey.TurkeyBot.gui.ConsoleTab;
+import com.Turkey.TurkeyBot.gui.ConsoleTab.Level;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class CommandManager
@@ -34,7 +37,7 @@ public class CommandManager
 		commands.put("!addResponse".toLowerCase(), new AddResponse("AddResponse"));
 		commands.put("!editPermission".toLowerCase(), new EditPermission("EditPermission"));
 		commands.put("!deleteCommand".toLowerCase(), new DeleteCommand("DeleteCommand"));
-		commands.put("!commandstatus".toLowerCase(), new StatusCommand("commandStatus"));
+		// commands.put("!commandstatus".toLowerCase(), new StatusCommand("commandStatus"));
 		commands.put("!setTitle".toLowerCase(), new UpdateTitleCommand("SetTitle"));
 		commands.put("!turkeybot".toLowerCase(), new TurkeyBotCommand("TurkeyBot"));
 		commands.put("!nightbot".toLowerCase(), new NightBotCommand("NightBot"));
@@ -42,9 +45,11 @@ public class CommandManager
 		commands.put("!funwaybot".toLowerCase(), new FunWayBotCommand("Funwaybot"));
 		commands.put("!autoTurtle".toLowerCase(), new AutoTurtleCommand("autoTurtle"));
 
-		File filesfolder = new File("C:" + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "commands");
+		File filesfolder = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + TurkeyBot.bot.getProfile().getProfileName() + File.separator + "commands");
 		for(String s : filesfolder.list())
 		{
+			if(!s.contains(".json"))
+				continue;
 			try
 			{
 				File f = new File(filesfolder.getAbsolutePath() + File.separator + s);
@@ -58,13 +63,20 @@ public class CommandManager
 				reader.close();
 
 				String name = f.getName().substring(0, f.getName().indexOf("."));
-				JsonObject obj = TurkeyBot.json.parse(result).getAsJsonObject();
+				JsonElement elem = TurkeyBot.json.parse(result);
+				if(elem == null)
+				{
+					ConsoleTab.output(Level.Error, "Command file " + f.getName() + " filed to load!");
+				}
+				JsonObject obj = elem.getAsJsonObject();
 
 				if(obj.get("LoadFile").getAsBoolean())
 				{
 					Command c = new Command(name, obj.get("Responses").getAsJsonObject().get("0").getAsString());
 					c.setPermissionLevel(obj.get("PermLevel").getAsString());
-					if(!obj.get("Enabled").getAsBoolean()) c.disable();
+					c.setCommandCooldown(obj.get("CoolDown") == null ? 0 : obj.get("CoolDown").getAsInt());
+					if(!obj.get("Enabled").getAsBoolean())
+						c.disable();
 					JsonObject responses = obj.get("Responses").getAsJsonObject();
 					for(int i = 1; i < obj.get("Number_Of_Responses").getAsInt(); i++)
 					{
@@ -75,7 +87,14 @@ public class CommandManager
 				else
 				{
 					Command c = getCommandFromName("!" + name);
-					if(c == null) c = commands.get(("!" + TurkeyBot.bot.getProfile().getCurrencyName().replaceAll(" ", "")).toLowerCase());
+					if(c == null)
+						c = commands.get(("!" + TurkeyBot.bot.getProfile().getCurrencyName().replaceAll(" ", "")).toLowerCase());
+
+					c.setPermissionLevel(obj.get("PermLevel").getAsString());
+					c.setCommandCooldown(obj.get("CoolDown") == null ? 0 : obj.get("CoolDown").getAsInt());
+					if(!obj.get("Enabled").getAsBoolean())
+						c.disable();
+
 					c.getFile().updateCommand();
 				}
 
@@ -89,16 +108,20 @@ public class CommandManager
 	{
 		int index = message.indexOf(" ");
 
-		if(index < 1) index = message.length();
+		if(index < 1)
+			index = message.length();
 
 		if(commands.containsKey(message.substring(0, index).toLowerCase()))
 		{
 			Command command = commands.get(message.substring(0, index).toLowerCase());
-			if(command.isEnabled() && TurkeyBot.bot.hasPermission(sender, command.getPermissionLevel()) && (!lastCommand.equalsIgnoreCase(command.getName()) || (lastCommandTime == 0 || System.currentTimeMillis() - lastCommandTime > 3000)))
+			if(command.isEnabled() && TurkeyBot.bot.hasPermission(sender, command.getPermissionLevel()) && (!lastCommand.equalsIgnoreCase(command.getName()) || (lastCommandTime == 0 || System.currentTimeMillis() - lastCommandTime > 1000)))
 			{
-				lastCommand = command.getName();
-				lastCommandTime = System.currentTimeMillis();
-				command.oncommand(TurkeyBot.bot, channel, sender, login, hostname, message);
+				if(command.runcommand())
+				{
+					lastCommand = command.getName();
+					lastCommandTime = System.currentTimeMillis();
+					command.oncommand(TurkeyBot.bot, channel, sender, login, hostname, message);
+				}
 			}
 		}
 	}

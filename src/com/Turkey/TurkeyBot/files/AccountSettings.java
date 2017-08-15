@@ -28,7 +28,7 @@ public class AccountSettings extends JsonFile
 	{
 		accounts = new HashMap<String, Entry<String, String>>();
 		gson = new Gson();
-		file = new File("C:" + File.separator + "TurkeyBot" + File.separator + "AccountSettings.json");
+		file = new File(System.getProperty("user.home") + File.separator + "TurkeyBot" + File.separator + "AccountSettings.json");
 		if(!file.exists())
 		{
 			file.getParentFile().mkdirs();

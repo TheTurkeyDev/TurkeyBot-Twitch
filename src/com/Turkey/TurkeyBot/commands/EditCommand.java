@@ -20,7 +20,7 @@ public class EditCommand extends Command
 		String response = message.substring(message.toLowerCase().indexOf(commandName.substring(1).toLowerCase()) + commandName.length());
 		if(c != null)
 		{
-			c.setFirstResponse(response);
+			c.editResponse(0, response);
 			c.getFile().updateCommand();
 			bot.sendMessage(bot.capitalizeName(sender) + ": The command !" + c.getName() + " has been changed!");
 		}

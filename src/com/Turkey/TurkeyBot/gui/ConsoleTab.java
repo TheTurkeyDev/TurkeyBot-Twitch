@@ -236,7 +236,7 @@ public class ConsoleTab extends Tab implements KeyListener, ActionListener
 
 	public enum Level
 	{
-		None(""), Chat("Chat"), Info("Info"), Important("IMPORTANT"), Alert("Alert"), Warning("Warning"), DeBug("DeBug"), Error("ERROR");
+		None(""), Chat("Chat"), Whisper("Whisper"), Info("Info"), Important("IMPORTANT"), Alert("Alert"), Warning("Warning"), DeBug("DeBug"), Error("ERROR");
 
 		private String level;
 
